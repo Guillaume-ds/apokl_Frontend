@@ -1,0 +1,162 @@
+.accueil{
+  box-shadow: 0px 3px 6px 3px rgba(0,0,0,0.4) ;
+  background: linear-gradient(135deg, hsla(308, 100%, 39%, 1) 10%, 
+                                      hsla(212, 100%, 25%, 1) 35%, 
+                                      hsla(276, 100%, 40%, 1) 50%,
+                                      hsla(276, 100%, 35%, 1) 55%, 
+                                      hsla(215, 100%, 35%, 1) 70%, 
+                                      hsla(308, 100%, 39%, 1) 90%);
+  background-size: 250% 200%;
+  animation: gradient 15s ease infinite;
+  @keyframes gradient {
+      0% {
+          background-position: 0% 50%;
+      }
+      50% {
+          background-position: 100% 50%;
+      }
+      100% {
+          background-position: 0% 50%;
+      }
+  }
+}
+
+
+
+  
+  .card {
+    background-color: rgba(175, 175, 175, .25);  
+    backdrop-filter: blur(15px);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.7);
+    z-index:1;
+    padding-bottom: 2em;
+  }
+  
+  .card__name{
+    margin: 15px;
+    font-size: 1.5em;
+    background: rgb(252,70,202);
+    background: linear-gradient(35deg, rgba(252,70,202,1) 1%, rgba(173,69,150,1) 7%, rgba(121,68,206,1) 18%, rgba(78,67,238,1) 53%, rgba(120,68,207,1) 84%, rgba(236,70,177,1) 97%);  
+    padding:0.5em;
+    border-radius:5px;
+    color:white;
+    font-family:"Arial";
+    text-align: center;
+  }
+
+  
+  .card__collections{
+    display: inline-flex;
+    justify-content: space-evenly;
+  }
+
+  .number__collections{
+    padding:5px;
+    border-radius: 5px;
+    background-color: rgba(78,67,238,0.3);
+    font-weight:700;
+    color:white;
+  }
+
+
+  
+  .social_icons a {
+    display: inline-block;
+  }
+  
+  .social_icons a:before {
+    transform: scale(1);
+    -ms-transform: scale(1);
+    -webkit-transform: scale(1);
+    content: " ";
+    width: 45px;
+    height: 45px;
+    border-radius: 100%;
+    display: block;
+    background: linear-gradient(45deg, #ff003c, #c648c8);
+    transition: all 265ms ease-out;
+  }
+  
+  .social_icons a:hover:before {
+    transform: scale(0);
+    transition: all 265ms ease-in;
+  }
+  
+  .social_icons a:hover i {
+    transform: scale(2.2);
+    -ms-transform: scale(2.2);
+    -webkit-transform: scale(2.2);
+    color: #ff003c;
+    background: -webkit-linear-gradient(45deg, #ff003c, #c648c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: all 265ms ease-in;
+  }
+  
+  .grid_container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    font-size: 1.2em;
+  }
+
+  /* Creator Card*/ 
+
+.creatorCard{
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	box-shadow: 0 .1rem 2rem rgba(0, 0, 0, 0.1);
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	border-bottom-right-radius: 16px;
+	border-bottom-left-radius: 16px;
+	background: #ECE9E6;
+	background: linear-gradient(to right, #FFFFFF, #ECE9E6);
+	height:50vh;
+	width: 100%;    
+}
+  
+.creatorCardHeader {
+	width: 100%;
+	height: 20%;
+	overflow: hidden;
+  box-shadow: 1px 0px 5px rgba(51, 51, 51, 0.4);
+  border-radius: 0 0 5% 5% / 5%;	
+  background-image: linear-gradient(135deg, hsla(308, 100%, 39%, 0.2) 10%, 
+                  hsla(212, 100%, 25%, 0.2) 35%, 
+                  hsla(276, 100%, 40%, 0.2) 50%,
+                  hsla(276, 100%, 35%, 0.2) 55%, 
+                  hsla(215, 100%, 35%, 0.2) 70%, 
+                  hsla(308, 100%, 39%, 0.2) 90%);
+}
+.creatorCardOverlay{
+	width: 100%;
+	height: 100%;
+	padding-top: 4em;    
+	color: #FFF;
+    border-radius: 0 0 10% 10% / 15%;	
+    box-shadow: 1px 0px 10px #333;
+    background-image: linear-gradient(135deg, hsla(308, 100%, 39%, 1) 10%, 
+                    hsla(212, 100%, 25%, 1) 35%, 
+                    hsla(276, 100%, 40%, 1) 50%,
+                    hsla(276, 100%, 35%, 1) 55%, 
+                    hsla(215, 100%, 35%, 1) 70%, 
+                    hsla(308, 100%, 39%, 1) 90%);	
+}
+
+.creatorCardImagePlaceholder{
+  width: 100%;
+  height:10 0px;
+  text-align: center; 
+  position:relative;
+  margin-top: -50px;
+
+}
+
+.creatorCardImage{
+  border-radius: 50%}
