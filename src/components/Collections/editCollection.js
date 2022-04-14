@@ -59,11 +59,12 @@ const EditCollection = ({collection}) => {
 	
 		return(
 			<>
+			<Grid item align="center"  sx={{my:2}}>
 				<div className={FormStyles.formCard}>
-					<h1 className={FormStyles.formCardTitle}>Change the main Picture</h1>
+					<h2 className={FormStyles.formCardTitle}>Change the main Picture</h2>
 					<div className={FormStyles.formCardContent}>
 						<form onSubmit={changePicture} >
-							<Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:3}}>
+							<Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:5,pb:4}}>
 								<Grid item >
 									<FormControl sx={{width: 300 }}>
 
@@ -85,23 +86,25 @@ const EditCollection = ({collection}) => {
 									}
 									</FormControl>
 								</Grid>
-								<Grid item align="center" >
+								<Grid item align="center"  >
 									<button type='submit' className={FormStyles.formButton}>Change picture</button>
 								</Grid>
 							</Grid>
 						</form>
 						</div>
 					</div>
-
+					</Grid>
+					<Grid item align="center"  sx={{mt:2}}>
 					<div className={FormStyles.formCard}>
-					<h1 className={FormStyles.formCardTitle}>Update the NFT giving acces to the collection</h1>
+					<h2 className={FormStyles.formCardTitle}>Update the NFT giving access to the collection</h2>
 					<div className={FormStyles.formCardContent}>
-							<Grid item align="center"  sx={{mt:2}}>
+							<Grid item align="center"  sx={{mt:4}}>
 								<button onClick={()=>changeNfts()} className={FormStyles.formButton}>Update NFTs</button>
 							</Grid>
 						<CreatedNfts setCollectionNftsIds={setCollectionNftsIds} collectionNftsIds={collectionNftsIds}/>
 						</div>
 					</div>
+					</Grid>
 				</>
 			)};
 

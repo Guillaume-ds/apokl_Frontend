@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from '../../hocs/Layout';
 import { useRouter } from 'next/router'
-import CardNft from "../../components/NFT/ownedNftsgetNft";
+import CardNft from "../../../components/NFT/ownedNftsgetNft";
 import { Grid } from "@mui/material";
 
 export default function Nft() {

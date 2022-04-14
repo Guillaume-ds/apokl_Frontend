@@ -1,5 +1,4 @@
 import React, { useState,useContext,useEffect } from 'react';
-import Layout from '../../hocs/Layout';
 import axios from 'axios';
 import cookie from 'cookie'
 import { getCookie } from 'cookies-next';
@@ -49,15 +48,12 @@ const Activate = () => {
 
   if(user && creator.count === 1 ){
     return (
-      <Layout>
         <Grid container direction="column" justifyContent="center" alignItems="center">  
           <p>You have an active account !</p>
         </Grid>
-      </Layout>
     )
   }else if(user && creator.count === 0 ){
     return (
-      <Layout>
         <Grid container direction="column" justifyContent="center" alignItems="center">
           <form>
               
@@ -74,14 +70,11 @@ const Activate = () => {
             </Grid> 
           </form>
         </Grid>  
-      </Layout>
 	)}else{
     return(
-    <Layout>
       <Grid container direction="column" justifyContent="center" alignItems="center">  
         <p>Please log in</p>
       </Grid>
-    </Layout>
     )};
 }
 

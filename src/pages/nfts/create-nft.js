@@ -11,27 +11,23 @@ import Web3Modal from 'web3modal'
 
 import {marketplaceAddress} from '../../../config'
 import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
-import Grid from "@mui/material/Grid";
 
+import CardNft from '../../components/NFT/cardNft';
 import FormStyles from "../../styles/Form.module.scss"
 
-import {Snackbar} from "@mui/material";
-import Box from "@mui/material";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import Alert from '@mui/material/Alert';
-import {TailSpin as Loader} from 'react-loader-spinner';
+import Grid from "@mui/material/Grid";
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Container from '@mui/material/Container';
-
 import Slider from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
+
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';  
 
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
@@ -110,11 +106,12 @@ const CreateItem = () => {
 
 	return (
 		<Layout>      
-      <Container sx={{mt:10}}>
+      <Grid container direction='row'sx={{pt:7, alignContent: 'flex-start', justifyContent:'space-around'}} >
+        <Grid item md={5} style={{height:'75vh'}}>
         <div className={FormStyles.formCard}>
           <h1 className={FormStyles.formCardTitle}>Create a new NFT</h1>
           <div className={FormStyles.formCardContent}>
-            <FormControl sx={{width: '80%', mt: 5}}> 
+            <FormControl sx={{width: '80%', mt:'2%'}}> 
               <TextField
                 margin="dense"
                 variant="outlined"
@@ -124,7 +121,7 @@ const CreateItem = () => {
                 name="title"
                 onChange={e => updateFormInput({ ...formInput, name: e.target.value, creator: user.username })}/>                      
                 </FormControl>
-                <FormControl sx={{width: '80%', mt: 1}} >   
+                <FormControl sx={{width: '80%', mt:'2%'}} >   
                   <TextField
                     margin="dense"
                     variant="outlined"
@@ -137,7 +134,7 @@ const CreateItem = () => {
                     rows={4}/>     
                 </FormControl>  
                  
-                  <Grid container justifyContent="space-around" sx={{width: '80%', mt: 1}}> 
+                  <Grid container justifyContent="space-around" sx={{width: '80%',mt:'2%'}}> 
                     <Grid item xs={12} md={5}>  
                     <FormControl >
                     <InputLabel >Price</InputLabel>
@@ -147,7 +144,6 @@ const CreateItem = () => {
                         type="number"
                         id="Price"
                         name="Price"
-                        label="Price"
                         onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
                       />  
                       </FormControl>
@@ -183,8 +179,8 @@ const CreateItem = () => {
                   min={0}
                   max={50}
                 />
-                
-                <Grid item container direction="column" justifyContent="center" alignItems="center" sx={{my:2}}>  
+                { !fileUrl?
+                <Grid item container direction="column" justifyContent="center" alignItems="center" sx={{my:'4vh'}}>  
                   <Button component="label" >
                    <CloudUploadIcon fontSize='small' sx={{mx:1}} style={{color:"rgb(0, 50, 150)"}}/>Upload Image
                     <input
@@ -197,18 +193,26 @@ const CreateItem = () => {
                       />
                   </Button>
                 </Grid>
-                {
-                  fileUrl && (
-                    <img className={FormStyles.formCardImage} width="350" src={fileUrl} />
-                  )
-                }
+                :
+								<LibraryAddCheckIcon sx={{ width:'100%', my:4 }} style={{color:"#004491"}}/>
+							}
                 
                 <button className={FormStyles.formButton} variant="contained" onClick={startSale} >
                   Create NFT
                 </button>
           </div>
         </div>
-      </Container>
+        </Grid>
+        <Grid item md={6} width='80%' sx={{ml:{md:2}, mt:{xs:5, md:0} }}>
+          <CardNft 
+            creator={user.username} 
+            name={formInput.name} 
+            image={fileUrl} 
+            description={formInput.description} 
+            price={formInput.price} 
+            royalties={formInput.royalties} />
+        </Grid>
+      </Grid>
 		</Layout>
   )
 }

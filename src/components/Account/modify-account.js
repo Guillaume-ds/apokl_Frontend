@@ -105,50 +105,50 @@ const tags = [
 	}
 
 	return (
-    <Layout>
       <Container sx={{mt:10}}>
+				<div className={FormStyles.formCard}>
 					<h1 className={FormStyles.formCardTitle}>Modify your profile</h1>
 					<div className={FormStyles.formCardContent}>
 						<form onSubmit={changeTags}>
-							<Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={{ xs: 2, md: 3 }}>
-							<Grid item >
-							<FormControl sx={{width: 300 }}>
-								<InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
-								<Select
-									labelId="demo-multiple-chip-label"
-									id="demo-multiple-chip"
-									multiple
-									value={myTags}
-									onChange={onTagsChange}
-									input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-									renderValue={(selected) => (
-										<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-											{selected.map((value) => (
-												<Chip key={value} label={value} />
-											))}
-										</Box>
-									)}>
+							<Grid container direction="row" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 3 }}>
+								<Grid item >
+								<FormControl sx={{width:{md:500}}} >
+									<InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
+									<Select
+										labelId="demo-multiple-chip-label"
+										id="demo-multiple-chip"
+										multiple										
+										value={myTags}
+										onChange={onTagsChange}
+										input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+										renderValue={(selected) => (
+											<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+												{selected.map((value) => (
+													<Chip key={value} label={value} />
+												))}
+											</Box>
+										)}>
 
-									{tags.map((tag) => (
-										<MenuItem
-											key={tag}
-											value={tag}
-										>
-											{tag}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
-							</Grid>
-							<Grid item align="center">
-							<button type='submit' className={FormStyles.formButton}>Modify tags</button>
-							</Grid>
+										{tags.map((tag) => (
+											<MenuItem
+												key={tag}
+												value={tag}
+											>
+												{tag}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+								</Grid>
+								<Grid item align="center">
+									<button type='submit' className={FormStyles.formButton}>Modify tags</button>
+								</Grid>
 							</Grid>
 						</form>
 						<form onSubmit={changePicture} >
-							<Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:3}}>
+							<Grid container direction="row" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:3, width: '80%'}}>
 								<Grid item >
-									<FormControl sx={{width: 300 }}>
+									<FormControl sx={{width:{md:500}}}>
 
 									{ !picture? 
 										<Button
@@ -174,9 +174,8 @@ const tags = [
 							</Grid>
 						</form>
           </div>
-					</div>
+				</div>
 			</Container>     
-		</Layout>
 	);
 }
 

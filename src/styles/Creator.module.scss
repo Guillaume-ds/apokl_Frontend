@@ -36,7 +36,7 @@
     padding-bottom: 2em;
   }
   
-  .card__name{
+  .cardName{
     margin: 15px;
     font-size: 1.5em;
     background: rgb(252,70,202);
@@ -49,12 +49,12 @@
   }
 
   
-  .card__collections{
+  .cardCollections{
     display: inline-flex;
     justify-content: space-evenly;
   }
 
-  .number__collections{
+  .numberCollections{
     padding:5px;
     border-radius: 5px;
     background-color: rgba(78,67,238,0.3);
@@ -64,11 +64,11 @@
 
 
   
-  .social_icons a {
+  .socialIcons a {
     display: inline-block;
   }
   
-  .social_icons a:before {
+  .socialIcons a:before {
     transform: scale(1);
     -ms-transform: scale(1);
     -webkit-transform: scale(1);
@@ -81,12 +81,12 @@
     transition: all 265ms ease-out;
   }
   
-  .social_icons a:hover:before {
+  .socialIcons a:hover:before {
     transform: scale(0);
     transition: all 265ms ease-in;
   }
   
-  .social_icons a:hover i {
+  .socialIcons a:hover i {
     transform: scale(2.2);
     -ms-transform: scale(2.2);
     -webkit-transform: scale(2.2);
@@ -97,7 +97,7 @@
     transition: all 265ms ease-in;
   }
   
-  .grid_container {
+  .gridContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 20px;

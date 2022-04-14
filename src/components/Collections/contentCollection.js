@@ -23,11 +23,8 @@ const ContentCollection = ({collection, access}) => {
 			<div>			
 				<div className={Collectionstyles.description}>
 					<h3>More about this collection</h3>
-					<p>{collection.results[0].description}</p>
+					<p>{collection.description}</p>
 				</div>	
-				<Grid container direction="row" sx={{mb:1}} alignItems='center' justifyContent='center'>
-					<p className={Collectionstyles.button}>Welcome {user.username} to {collection.results[0].name}</p>
-				</Grid> 
 			</div>
 		)
 

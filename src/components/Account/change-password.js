@@ -54,7 +54,6 @@ const ChangePassword = () => {
 		}
 	}		
 	return (
-    <Layout>
       <Container sx={{mt:10}}>
 				<div className={FormStyles.formCard}>
 				<h1 className={FormStyles.formCardTitle}>Change your password</h1>
@@ -95,7 +94,6 @@ const ChangePassword = () => {
           </div>
 				</div> 
         </Container>     
-      </Layout>
 	);
 }
 

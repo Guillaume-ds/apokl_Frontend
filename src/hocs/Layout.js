@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import Nav from '../components/navbar';
+import Navbar from '../components/navbar';
+import Footer from '../components/footer';
 
 const Layout = ({ title, content, children }) => {
 
@@ -9,10 +10,11 @@ const Layout = ({ title, content, children }) => {
                 <title>{title}</title>
                 <meta name='description' content={content} />
             </Head>
-            <Nav />
+            <Navbar />
             <div className='container mt-5'>
                 {children}
             </div>
+            <Footer />
         </>
     );
 };

@@ -2,10 +2,10 @@ import React, {useContext} from "react";
 import Layout from '../../hocs/Layout';
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
-import ModifyProfile from './modify-account.js';
-import ActivateAccount from './activate.js';
-import ChangePassword from './change-password.js';
-import Artist from '../../components/artist';
+import ModifyProfile from '../../components/Account/modify-account.js';
+import ActivateAccount from '../../components/Account/activate.js';
+import ChangePassword from '../../components/Account/change-password.js';
+import Artist from '../../components/Account/artist';
 import styles from '../../styles/Creator.module.scss';
 import { Grid, Container,Paper } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -33,9 +33,6 @@ const AccountPage = () => {
 				</Grid>
 
 				<Container sx={{mt:10}}>
-					<Grid item sx={{mt:3, textAlign:'center'}} >
-						 <ActivateAccount />
-					</Grid>
 					<Grid item sx={{mt:3, textAlign:'center'}} >
 						 <ModifyProfile user={user.username} />
 					</Grid>

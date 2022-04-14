@@ -23,7 +23,7 @@ export default async (req, res) => {
       const { data:accessResponse } = await axios.post('http://localhost:8000/api/token/', body, config)
       accessToken = accessResponse.access
       // in production change secure to true
-      res.setHeader('Set-Cookie', cookie.serialize('refresh', accessResponse.refresh, {httpOnly: false, secure: false, sameSite: 'strict', maxAge: 60 * 60 * 24, path: '/'}))
+      res.setHeader('Set-Cookie', cookie.serialize('refresh', accessResponse.refresh, {httpOnly: true, secure: false, sameSite: 'strict', maxAge: 60 * 60 * 24, path: '/'}))
     } catch(error) {
       if (error.response) {
         // The request was made and the server responded with a status code

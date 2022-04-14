@@ -3,26 +3,34 @@ import { useRouter } from 'next/router'
 import Link from 'next/link';
 import Image from 'next/image';
 
-import AuthenticationContext from '../../context/AuthenticationContext'
+import AuthenticationContext from '../../context/AuthenticationContext';
 import NavbarStyles from '../styles/Navbar.module.scss';
 
-import { AppBar, Drawer, IconButton, Toolbar } from '@material-ui/core'
 import { Grid } from '@mui/material';
-import MenuIcon from '@material-ui/icons/Menu'
-import AccountIcon from '@material-ui/icons/AccountCircle'
-import BrushIcon from '@mui/icons-material/Brush';
+import { AppBar, Drawer, IconButton, Toolbar } from '@material-ui/core';
+
 import { Button } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+
 import { Box } from '@mui/system';
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import LogoutIcon from '@mui/icons-material/Logout';
-import LoginIcon from '@mui/icons-material/Login';
+
 import Accordion from '@mui/material/Accordion';
+import Typography from '@mui/material/Typography';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
-import Typography from '@mui/material/Typography';
+
+import MenuIcon from '@material-ui/icons/Menu';
+import BrushIcon from '@mui/icons-material/Brush';
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountIcon from '@material-ui/icons/AccountCircle';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
+
+
+
 
 import Apokl from '../assets/images/logo.jpg';
 
