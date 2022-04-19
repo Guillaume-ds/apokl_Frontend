@@ -7,7 +7,7 @@ import Layout from "./Layout";
 
 import FormStyles from "../styles/Form.module.scss"
 
-import { Container } from "@mui/material";
+import { Grid } from "@mui/material";
 
 
 const withAuth = Component => {
@@ -16,18 +16,18 @@ const withAuth = Component => {
     if (!user) {
       return (
 				<Layout>
-          <Container sx={{mt:10}} >
-            <div className={FormStyles.FormCard}>
-            <h1 className={FormStyles.FormCardTitle}>Please Log In </h1>
-              <div className={FormStyles.FormCardContent}>
-                <div className={FormStyles.FormCardItem}>	
+          <Grid container direction="row" justifyContent="center" sx={{height:'70vh', pt:10}}>
+            <div className={FormStyles.formCard}>
+            <h1 className={FormStyles.formCardTitle}>Please Log In </h1>
+              <div className={FormStyles.formCardContent}>
+                <div className={FormStyles.formCardItem}>	
                   <Link href='/account/login'>
-                    <button className={FormStyles.FormButton} >Login</button>
+                    <button className={FormStyles.formButton} >Login</button>
                   </Link>
                 </div>              
               </div>
             </div>
-          </Container>      
+          </Grid>      
 				</Layout>
       );
     }

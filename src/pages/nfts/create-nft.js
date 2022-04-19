@@ -15,7 +15,8 @@ import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarke
 import CardNft from '../../components/NFT/cardNft';
 import FormStyles from "../../styles/Form.module.scss"
 
-import Grid from "@mui/material/Grid";
+import { Grid, Snackbar } from "@mui/material";
+import Alert from '@mui/material/Alert';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Typography from '@mui/material/Typography';
@@ -37,8 +38,12 @@ const CreateItem = () => {
 	const [fileUrl, setFileUrl] = useState(null)
   const [nbNft,setNbNft] = useState(1)
 	const [formInput, updateFormInput] = useState({ price: '', name: '', description: '', slug:'', creator:'', royalties:0 })
+  const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
 	const router = useRouter()
 
+  const handleClose = e => {
+    setMsg({...msg, content:'',open:false,severity:"error"})
+  }
 
 	async function onChange(e) {
 		/* upload image to IPFS */
@@ -59,8 +64,10 @@ const CreateItem = () => {
 
 
 	async function uploadToIPFS() {
+    var slugIPFS = user.username+formInput['name']+Date.now()
+    updateFormInput({ ...formInput, slug: slugIPFS })
     const { name, description, price, slug, creator } = formInput
-    if (!name || !description || !price || !fileUrl || !slug || !creator) return
+    if (!name || !description || !price || !fileUrl || !creator) return
     /* first, upload metadata to IPFS */
     const data = JSON.stringify({
       name, description, slug, creator, image: fileUrl
@@ -76,7 +83,6 @@ const CreateItem = () => {
 
 	async function listNFTForSale() {
     try{
-    updateFormInput({ ...formInput, slug: user.username+formInput['name']+Date.now() })
     const url = await uploadToIPFS()
     const web3Modal = new Web3Modal()
     const connection = await web3Modal.connect()
@@ -90,8 +96,8 @@ const CreateItem = () => {
     let listingPrice = await contract.getListingPrice()
     listingPrice = listingPrice.toString()
     const transaction = await contract.createToken(url, price, royalties, { value: listingPrice })
-
   }catch{
+    setMsg({...msg, content:'Error occured',open:true,severity:"error"})
   }}
 
   async function startSale() {
@@ -100,12 +106,21 @@ const CreateItem = () => {
       listNFTForSale();
       i++
     }
+    setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
     if(i===nbNft){
     router.push('/nfts/')}
   }
 
 	return (
-		<Layout>      
+		<Layout>
+      <Snackbar
+			anchorOrigin = {{ vertical: 'bottom', horizontal:'center' }}			
+			open = {msg.open}
+			onClose = {handleClose}
+			autoHideDuration={6000}
+			key = {'bottom_center'}>
+				<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
+			</Snackbar>      
       <Grid container direction='row'sx={{pt:7, alignContent: 'flex-start', justifyContent:'space-around'}} >
         <Grid item md={5} style={{height:'75vh'}}>
         <div className={FormStyles.formCard}>

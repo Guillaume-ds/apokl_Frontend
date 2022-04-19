@@ -42,6 +42,7 @@ const Collection = ({collection}) => {
 		}
 	})
 	
+	console.log(collection,'collection')
 
   async function verifyAccess() {
     const web3Modal = new Web3Modal({
@@ -149,8 +150,6 @@ const Collection = ({collection}) => {
 				<ContentCollection collection={collection.results[0]} access={true} />
 				</>
 			}
-
-			<p>{access}</p>
 			
 		</Layout>)}
 		
@@ -161,7 +160,7 @@ export default Collection;
 export async function getServerSideProps({ query: {creator,collection} }){
 	try {
     const {data} = await axios.get(`http://127.0.0.1:8000/api/creators/${creator}/collections/${collection}`)
-		console.log(data)
+		console.log(data, 'collection')
     return {
 			props : {
 				collection : data

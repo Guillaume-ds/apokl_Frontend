@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from '../../hocs/Layout';
 import { useRouter } from 'next/router'
-import CardNft from "../../../components/NFT/ownedNftsgetNft";
+import GetNft from "../../components/NFT/getNft";
 import { Grid } from "@mui/material";
 
 export default function Nft() {
@@ -18,7 +18,7 @@ export default function Nft() {
 				justifyContent="center" 
 				sx={{mt:10}}>
 					<Grid item >
-				<CardNft id={id} />
+				<GetNft id={id} />
 				</Grid>
 			</Grid>
 	  </Layout>

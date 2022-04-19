@@ -28,11 +28,7 @@ import AccountIcon from '@material-ui/icons/AccountCircle';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-
-
-
-
-import Apokl from '../assets/images/logo.jpg';
+import Apokl from '../assets/images/logo.png';
 
 
 function stringToColor(string) {
@@ -168,7 +164,7 @@ const Nav = (props) => {
 											id="panel4bh-header"
 										>
 											<MeetingRoomIcon />
-											<Typography sx={{pl:2, width: '100%', flexShrink: 0 }}>Rooms</Typography>
+											<Typography sx={{pl:2, width: '100%', flexShrink: 0 }}>My assets</Typography>
 										</AccordionSummary>
 										<AccordionDetails>
 										<ListItem button component="a" href='/nfts/my-assets' className={NavbarStyles.NavButton} >												
@@ -230,7 +226,7 @@ const Nav = (props) => {
 						
 						<Link href='/' >
 							<IconButton>
-								<Image src={Apokl} height={30} width={130}/>
+								<Image src={Apokl} width={280} height={50}/>
 							</IconButton>
 						</Link>
 						{user?

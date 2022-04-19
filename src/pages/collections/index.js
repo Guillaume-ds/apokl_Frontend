@@ -24,18 +24,23 @@ import Chip from '@mui/material/Chip';
 const MenuProps = {
   PaperProps: {
     style: {
-		width:70,
+      maxHeight:'35%',
+      width: 'fit',
+      overflow:'auto'
     },
   },
 };
 
 const listTags = [
-	'Music',
-	'Artist',
+  'Artist',
+	'Music',	
 	'Drawing',
-	'Singing',
-	'Sport',
-	'Design'
+  'Painting',
+  'Singing',
+  'Gaming',
+	'Sports',
+	'Social',
+  'Food',
 ];
 
 
@@ -99,6 +104,7 @@ const Collections = () => {
 								labelId="demo-multiple-chip-label"
 								id="demo-multiple-chip"
 								multiple
+								autoWidth
 								direction="column"
 								sx={{ background:'white', borderRadius:2 }}
 								value={tags}

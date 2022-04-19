@@ -5,6 +5,7 @@
     margin-right: 10%;
     background-color: rgb(254, 254, 254);
     height:100%;
+    width: 100%;
 }
 
 .formCardTitle{
@@ -27,7 +28,6 @@
     text-align: center;
     padding:2em;
 }
-
 
 .formButton{
     border: none;
@@ -55,9 +55,6 @@
 }
 
 
-
-
-
 .formUploadButton{
     display: block;
     background-color: #fafafa;
@@ -70,7 +67,12 @@
 }
 
 .multiSelect{
-    direction: column;
+    white-space: pre-line;
+    max-width:250;
+    
+}
+
+.multiSelectValues{
     display: block;
 }
 

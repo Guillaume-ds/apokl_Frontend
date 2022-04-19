@@ -1,4 +1,4 @@
-import React, {useState,useContext, useEffect} from "react";
+import React, {useState,useContext} from "react";
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 
@@ -9,17 +9,25 @@ import CreatedNfts from "../NFT/createdNfts";
 
 import FormStyles from "../../styles/Form.module.scss";
 
-import { Container,Grid, Divider } from "@mui/material";
+import { Grid, Snackbar } from "@mui/material";
+import Alert from '@mui/material/Alert';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import FormControl from '@mui/material/FormControl';
 import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 
-const EditCollection = ({collection}) => {	
+const EditCollection = ({collection}) => {
+	const {user,accessToken} = useContext(AuthenticationContext);
+	
 	const [collectionNftsIds, setCollectionNftsIds] = useState(collection.nfts.map(Number)); 
-	const [picture, setPicture] = useState(null);  
-	const {user,accessToken} = useContext(AuthenticationContext)
+	const [picture, setPicture] = useState(null);  	
+	const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"});
+
+	const handleClose = e => {
+		setMsg({...msg, content:'',open:false,severity:"error"})
+	}
 
 	const onPictureChange = e => setPicture(e.target.files[0]);
 	const changePicture = async() => {
@@ -53,36 +61,54 @@ const EditCollection = ({collection}) => {
 		'nfts': collectionNftsIds,
 		'slug': collection.slug}
 
-		const { data } = await axios.put('http://localhost:8000/api/creators/create-collection', formData, config)
+		try{
+			const { data } = await axios.put('http://localhost:8000/api/creators/create-collection', formData, config)
+			setMsg({...msg, content:'Collection updated',open:true,severity:"success", color:"#fafafa"})
+		}catch{
+			setMsg({...msg, content:'Error : please refresh the page',open:true,severity:"error", color:"#fafafa"})
+		}
+
+		
 	}
 
 	
 		return(
 			<>
-			<Grid item align="center"  sx={{my:2}}>
+			<Snackbar
+			anchorOrigin = {{ vertical: 'bottom', horizontal:'center' }}			
+			open = {msg.open}
+			onClose = {handleClose}
+			autoHideDuration={6000}
+			key = {'bottom_center'}>
+				<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
+			</Snackbar>
+			<Grid container sx={{my:2}} >
 				<div className={FormStyles.formCard}>
 					<h2 className={FormStyles.formCardTitle}>Change the main Picture</h2>
 					<div className={FormStyles.formCardContent}>
 						<form onSubmit={changePicture} >
 							<Grid container direction="row" justifyContent="space-between" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:5,pb:4}}>
 								<Grid item >
-									<FormControl sx={{width: 300 }}>
+									<FormControl sx={{width: 300 }} justifyContent="center">
 
 									{ !picture? 
-										<Button
-											variant="contained"
-											component="label">
-											Upload Image
-											<input
-												hidden
-												accept="image/*"
-												id="post-image"
-												onChange={onPictureChange}
-												name="image"
-												type="file"
-												/>
-										</Button>:
-										<LibraryAddCheckIcon />
+										<Grid item container direction="column" justifyContent="center" alignItems="center" >  
+											<Button component="label" >
+											<CloudUploadIcon fontSize='small' sx={{mx:1}} style={{color:"rgb(0, 50, 150)"}}/>Upload Image
+												<input
+													hidden
+													accept="image/*"
+													id="post-image"
+													onChange={onPictureChange}
+													name="image"
+													type="file"
+													/>
+											</Button>
+										</Grid>
+										:
+										<Grid item container direction="column" justifyContent="center" alignItems="center" >
+											<LibraryAddCheckIcon sx={{ width:'100%' }} style={{color:"#004491"}}/>
+										</Grid>
 									}
 									</FormControl>
 								</Grid>
@@ -91,21 +117,21 @@ const EditCollection = ({collection}) => {
 								</Grid>
 							</Grid>
 						</form>
-						</div>
 					</div>
-					</Grid>
-					<Grid item align="center"  sx={{mt:2}}>
-					<div className={FormStyles.formCard}>
-					<h2 className={FormStyles.formCardTitle}>Update the NFT giving access to the collection</h2>
-					<div className={FormStyles.formCardContent}>
-							<Grid item align="center"  sx={{mt:4}}>
-								<button onClick={()=>changeNfts()} className={FormStyles.formButton}>Update NFTs</button>
-							</Grid>
-						<CreatedNfts setCollectionNftsIds={setCollectionNftsIds} collectionNftsIds={collectionNftsIds}/>
-						</div>
+				</div>
+			</Grid>
+			<Grid container sx={{my:2}}>
+				<div className={FormStyles.formCard}>
+				<h2 className={FormStyles.formCardTitle}>Update the NFT giving access to the collection</h2>
+				<div className={FormStyles.formCardContent}>
+						<Grid item align="center"  sx={{mt:4}}>
+							<button onClick={()=>changeNfts()} className={FormStyles.formButton}>Update NFTs</button>
+						</Grid>
+					<CreatedNfts setCollectionNftsIds={setCollectionNftsIds} collectionNftsIds={collectionNftsIds}/>
 					</div>
-					</Grid>
-				</>
+				</div>
+			</Grid>
+			</>
 			)};
 
 export default withAuth(EditCollection);

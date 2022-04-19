@@ -49,7 +49,7 @@ contract NFTMarketplace is ERC721URIStorage {
       owner = payable(msg.sender);
     }
 
-    function getBalance(address _adrr) private view returns (uint256) {
+    function getBalance(address _adrr) private view onlyOwner returns (uint256) {
       return address(_adrr).balance;
     }
 
@@ -141,9 +141,7 @@ contract NFTMarketplace is ERC721URIStorage {
 
     /* Creates the sale of a marketplace item */
     /* Transfers ownership of the item, as well as funds between parties */
-    function createMarketSale(
-      uint256 tokenId
-      ) public payable {
+    function createMarketSale(uint256 tokenId) public payable {
       uint price = idToMarketItem[tokenId].price;
       require(msg.value == price, "Please submit the asking price in order to complete the purchase");
       address seller = idToMarketItem[tokenId].seller;
@@ -158,9 +156,9 @@ contract NFTMarketplace is ERC721URIStorage {
       idToMarketItem[tokenId].seller = payable(address(0));
       _itemsSold.increment();
       _transfer(address(this), msg.sender, tokenId);
-      payable(owner).transfer(listingPrice + marketPlaceReward);
-      payable(seller).transfer(sellerReward);
-      payable(creator).transfer(creatorReward);
+      (bool ownerSuccess, ) = owner.call{value:listingPrice + marketPlaceReward}("");
+      (bool sellerSuccess, ) = seller.call{value:sellerReward}("");
+      (bool creatorSuccess, ) = creator.call{value:creatorReward}("");
     }
 
     function fetchMarketItem(uint256 tokenId) public view returns (MarketItem memory) {
@@ -218,6 +216,30 @@ contract NFTMarketplace is ERC721URIStorage {
 
       for (uint i = 0; i < totalItemCount; i++) {
         if (idToMarketItem[i + 1].seller == msg.sender) {
+          itemCount += 1;
+        }
+      }
+
+      MarketItem[] memory items = new MarketItem[](itemCount);
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (idToMarketItem[i + 1].seller == msg.sender) {
+          uint currentId = i + 1;
+          MarketItem storage currentItem = idToMarketItem[currentId];
+          items[currentIndex] = currentItem;
+          currentIndex += 1;
+        }
+      }
+      return items;
+    }
+
+    /* Returns items a user has created */
+    function fetchItemsCreated() public view returns (MarketItem[] memory) {
+      uint totalItemCount = _tokenIds.current();
+      uint itemCount = 0;
+      uint currentIndex = 0;
+
+      for (uint i = 0; i < totalItemCount; i++) {
+        if (idToMarketItem[i + 1].creator == msg.sender) {
           itemCount += 1;
         }
       }

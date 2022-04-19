@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
-import { Button, Card, CardContent, makeStyles, TextField, Typography } from '@material-ui/core';
-import { Snackbar, Container } from '@mui/material';
+import { TextField } from '@material-ui/core';
+import { Snackbar, Grid } from '@mui/material';
 import Layout from '../../hocs/Layout';
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
@@ -48,33 +48,36 @@ export default function LoginPage() {
 			key = {'bottom_center'}>
 
 		</Snackbar>
-      <Container sx={{mt:10}}>
+      <Grid container direction="row" justifyContent="center" sx={{ py:{xs:5,md:10}, px:{xs:2,md:20,lg:30}}}>
 				<div className={FormStyles.formCard}>
-				<h1 className={FormStyles.formCardTitle}>Welcome back ! </h1>
+					<h1 className={FormStyles.formCardTitle}>Welcome back ! </h1>
 					<div className={FormStyles.formCardContent}>
 						<form onSubmit={submitHandler} className={FormStyles.formCardItem}>
+							<Grid item fullWidth sx={{my:2}}></Grid>
 							<TextField 
 								label='Username' 
 								fullWidth 
 								onChange={e => setUsername(e.target.value)} 
-								value={username} 
-								sx={{py:2}}/>
-
+								value={username} />
+							<Grid item sx={{my:1}}></Grid>
+							
 							<TextField 
 								label='Password' 
 								inputProps={{ 'type': 'password' }} 
-								fullWidth onChange={e => setPassword(e.target.value)} 
-								value={password} 
-								sx={{py:2}}/>
-		
+								fullWidth
+								onChange={e => setPassword(e.target.value)} 
+								value={password} />
+							
+							<Grid item sx={{my:4}}></Grid>
 							<button type='submit' className={FormStyles.formButton}>Login</button>
 						</form>
-						<Link href='/account/register'>
+						<Grid item sx={{my:4}}></Grid>
+						<Link href='/account/register' sx={{my:2}}>
 							<a className={FormStyles.formCardItem}>Don't have an account? Sign Up</a>
 						</Link>
 					</div>
 				</div>
-      </Container>
+      </Grid>
     </Layout>
   )
 }

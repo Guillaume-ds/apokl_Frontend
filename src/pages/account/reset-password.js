@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import Layout from '../../hocs/Layout';
 import axios from 'axios';
-import cookie from 'cookie'
-import { getCookie } from 'cookies-next';
 
 import Grid from "@mui/material/Grid";
 import {TailSpin as Loader} from 'react-loader-spinner';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import OutlinedInput from '@mui/material/OutlinedInput';
+
 
 const ManageAccount2 = () => {
   

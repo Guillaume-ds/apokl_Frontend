@@ -73,8 +73,14 @@ export default function CreatedNfts({setCollectionNftsIds, collectionNftsIds}) {
     setNfts(items)
     setLoadingState('loaded') 
   }
-  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No NFTs listed</h1>)
-  return (
+  if (loadingState === 'loaded' && !nfts.length) {
+    return (
+      <Grid container direction="row" style={{textAlign: "center",justifyContent:"space-evenly"}} sx={{mt:10}}>
+        <h1>No NFTs listed</h1>
+      </Grid>
+    )
+  }else{
+    return (
       <Container sx={{mt:10}}>
         <Grid container direction="row" style={{textAlign: "center",justifyContent:"space-evenly"}} columnSpacing={2} rowSpacing={4}>
           {
@@ -100,5 +106,5 @@ export default function CreatedNfts({setCollectionNftsIds, collectionNftsIds}) {
           }
         </Grid>      
       </Container>
-  )
+  )}
 }

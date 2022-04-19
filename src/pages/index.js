@@ -2,6 +2,8 @@ import Layout from '../hocs/Layout';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import GetNft from "../components/NFT/getNft";
+
 import Grid from "@mui/material/Grid";
 import { Container } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -17,7 +19,7 @@ import client_nft from '../assets/images/client_nft.jpg';
 import metamask from "../assets/images/metamask.PNG";
 import blockchain from "../assets/images/blockchain.png";
 import nft from "../assets/images/nft.png";
-import Apokl from '../assets/images/logo.jpg';
+import Apokl from '../assets/images/logo.png';
 import styles from '../styles/Home.module.scss';
 
 
@@ -25,12 +27,10 @@ export default function Home() {
   return (
     <Layout
 			title='Apokl | NFT social place'
-			content='New NFT market place with exclusive access'
-      sx={{height:1}}>
-        <Grid className={styles.accueil} id="accueil" >
-          <Container sx={{py:25}}>
-            <Grid item md={8}>
-              <Image src={Apokl} height='80px' alt="" />
+			content='New NFT market place with exclusive access'>
+        <Grid className={styles.accueil} id="accueil"  container direction="row" justifyContent="center" alignItems="center" sx={{pb:15}}>
+            <Grid item md={7}>
+              <Image src={Apokl} height='100px' alt="Apokl Logo" />
               <Typography textAlign={"left"} variant="h3" color={"#fce4ec"} sx={{py:3}}>
               Exclusivity by NFT
               </Typography>
@@ -38,8 +38,10 @@ export default function Home() {
               Exploit the full potential of the NFT on a single plateform.
               </Typography>
             </Grid>
+            <Grid item md={4} display={{ xs: 'none', md: 'block' }}>
+              <GetNft id={1}/>
+            </Grid>
             
-          </Container>
           <Grid container direction="column" justifyContent="center" alignItems="center" className={styles.gridBottom} sx={{py:3}}>
               <Grid item>
               <div className={styles.scrolldown}>
@@ -150,10 +152,7 @@ export default function Home() {
           </CardContent>
         </CardActionArea>
       </Card>    
-      </Grid>
-      <Grid mb={4} style={{width:'100%'}} sx={{display:'flex'}} >
-        <Link href='/account/login'> Login </Link>
-      </Grid>      
+      </Grid>    
     </Container> 
     </Layout>
   )

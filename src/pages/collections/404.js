@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import {useRouter} from 'next/router';
 
-import Layout from '../hocs/Layout';
+import Layout from '../../hocs/Layout';
 import NotFoundStyles from "../../styles/404.module.scss";
 import Grid from "@mui/material/Grid";
 

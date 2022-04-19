@@ -23,7 +23,7 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
 
-const ModifyProfile = ({user}) => {
+const ModifyProfile = ({user, accessToken}) => {
 
 const tags = [
 	'Music',
@@ -51,17 +51,6 @@ const tags = [
   const [loading, setLoading] = useState(false);
 
 	const changeTags = async() => {
-		const getRefreshToken = getCookie("refresh");
-		const config1 = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}
-		const body1 = {
-			"refresh":getRefreshToken
-		}		
-		const {data:access} = await axios.post('http://localhost:8000/api/token/refresh/', body1, config1)
-		const accessToken = access.access
 		
 		const config2 = {
 			headers: {

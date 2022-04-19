@@ -9,12 +9,13 @@ import Web3Modal from 'web3modal'
 import {marketplaceAddress} from '../../../config'
 import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
-
+import Box from '@mui/material/Box';
 import { Grid } from "@mui/material";
-
+import Drawer from '@mui/material/Drawer';
 
 
 const ActionsCollection = ({collection}) => {	
+	const [toggle, setToggle] = useState(false)
 	const [nftOwners, setNftOwners] = useState([])
 	const collectionNftIds = collection.nfts
 
@@ -30,23 +31,36 @@ const ActionsCollection = ({collection}) => {
     const contract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, signer)
 		const listOwner = []
 		for(const element of nftIds){
+			console.log(element)
 			const data = await contract.fetchMarketItem(element)
 			console.log(data.owner)
 			listOwner.push(data.owner)
-			
 		}
 		setNftOwners(listOwner)
 		console.log(nftOwners)
   }
 
+	const toggleDrawer = (value) => (event) => {
+  	if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {return}
+  	setToggle(value)}
+  
+
 
 	return(
 		<div className={Collectionstyles.description}>
 			<h3>Actions</h3>
-			<button onClick={()=>getOwners(collectionNftIds)}>click me</button>
-			<div>{collectionNftIds.map((nftId)=><p>{nftId}</p>)}</div>
-			<div>{nftOwners.map((owner)=><p>{owner}</p>)}</div>
-			<p>{nftOwners.length}</p>
+			
+			<button onClick={toggleDrawer(true)}>open me</button>
+
+				<Drawer
+            anchor={'top'}
+            open={toggle}
+            onClose={toggleDrawer(!toggle)}
+          >
+						<Grid container justifyContent='center' sx={{py:5}} alignItems='center'>
+            	<button onClick={()=>getOwners(collectionNftIds)} className={Collectionstyles.button}>Create a new event</button>
+						</Grid>
+      </Drawer>
 		</div>
 		)
 }

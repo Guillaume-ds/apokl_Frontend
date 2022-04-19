@@ -7,7 +7,7 @@ import ActivateAccount from '../../components/Account/activate.js';
 import ChangePassword from '../../components/Account/change-password.js';
 import Artist from '../../components/Account/artist';
 import styles from '../../styles/Creator.module.scss';
-import { Grid, Container,Paper } from "@mui/material";
+import { Grid, Container } from "@mui/material";
 import { Typography } from "@mui/material";
 import {useRouter} from "next/router";
 
@@ -15,7 +15,7 @@ import {useRouter} from "next/router";
 
 const AccountPage = () => {
 	const router = useRouter()
-	const {user} = useContext(AuthenticationContext)
+	const {user,accessToken} = useContext(AuthenticationContext)
 
 
 	if (user){
@@ -29,7 +29,7 @@ const AccountPage = () => {
           direction="column"
 					alignItems="center"
 					justifyContent="center">
-					<Artist name={user.username}/>
+					<Artist name={user.username} accessToken={accessToken}/>
 				</Grid>
 
 				<Container sx={{mt:10}}>
