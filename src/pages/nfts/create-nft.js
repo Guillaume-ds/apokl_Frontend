@@ -1,9 +1,11 @@
 import { useState, useContext } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import axios from "axios";
 
 import Layout from '../../hocs/Layout';
 import AuthenticationContext from "../../../context/AuthenticationContext"; 
-import withAuth from '../../hocs/WithAuth';
+import WithAuth from '../../hocs/WithAuth';
+import ActivateAccount from '../../components/Creators/activate.js';
 
 import { ethers } from 'ethers'
 import { create as ipfsHttpClient } from 'ipfs-http-client'
@@ -15,7 +17,7 @@ import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarke
 import CardNft from '../../components/NFT/cardNft';
 import FormStyles from "../../styles/Form.module.scss"
 
-import { Grid, Snackbar } from "@mui/material";
+import { Grid, Snackbar,ListItemText } from "@mui/material";
 import Alert from '@mui/material/Alert';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -25,6 +27,11 @@ import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Slider from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -33,17 +40,49 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight:'35%',
+      width: 'fit',
+      overflow:'auto'
+    },
+  },
+};
+
+const listTags = [
+  'Artist',
+	'Music',	
+	'Drawing',
+  'Painting',
+  'Singing',
+  'Gaming',
+	'Sports',
+	'Social',
+  'Food',
+];
+
 const CreateItem = () => {
-  const {user} = useContext(AuthenticationContext)
+  const {accessToken,creator} = useContext(AuthenticationContext)
 	const [fileUrl, setFileUrl] = useState(null)
   const [nbNft,setNbNft] = useState(1)
-	const [formInput, updateFormInput] = useState({ price: '', name: '', description: '', slug:'', creator:'', royalties:0 })
+  const [tags, setTags] = useState([])
+	const [formInput, updateFormInput] = useState({ price: '', title: '', description: '', creator:'', royalties:0 })
   const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
+  const [creationFail,setCreationFail] = useState(false)
 	const router = useRouter()
 
   const handleClose = e => {
     setMsg({...msg, content:'',open:false,severity:"error"})
   }
+  const handleTagsChange = (event) => {
+		const {
+			target: { value },
+		} = event;
+		setTags(
+			typeof value === 'string' ? value.split(',') : value,
+		);
+	};
 
 	async function onChange(e) {
 		/* upload image to IPFS */
@@ -58,19 +97,16 @@ const CreateItem = () => {
 			const url = `https://ipfs.infura.io/ipfs/${added.path}`
 			setFileUrl(url)
 		} catch (error) {
-			console.log('Error uploading file: ', error)
 		}  
 	}
 
-
 	async function uploadToIPFS() {
-    var slugIPFS = user.username+formInput['name']+Date.now()
-    updateFormInput({ ...formInput, slug: slugIPFS })
-    const { name, description, price, slug, creator } = formInput
-    if (!name || !description || !price || !fileUrl || !creator) return
+    
+    const { title, description, price, creator } = formInput
+    if (!title || !description || !price || !fileUrl || !creator) return
     /* first, upload metadata to IPFS */
     const data = JSON.stringify({
-      name, description, slug, creator, image: fileUrl
+      title, description, creator, image: fileUrl
     })
     try {
       const added = await client.add(data)
@@ -79,6 +115,27 @@ const CreateItem = () => {
       return url
     } catch (error) {
     } 
+  }
+
+  async function listNftBackend(tokenId){
+    const config = {
+			headers: {
+				'Content-Type': 'application/json',
+        'Authorization' : `Bearer ${accessToken}`
+			}
+		}
+		const body = {
+      "creator":creator.name,
+      "tokenId":tokenId,
+      "title":formInput.title,
+      "content":formInput.description,
+      "royalties":formInput.royalties,
+      "tags":tags,
+      "rarity":nbNft
+      
+  }
+  console.log(body)
+    axios.post("http://localhost:8000/nfts/", body, config )
   }
 
 	async function listNFTForSale() {
@@ -96,19 +153,43 @@ const CreateItem = () => {
     let listingPrice = await contract.getListingPrice()
     listingPrice = listingPrice.toString()
     const transaction = await contract.createToken(url, price, royalties, { value: listingPrice })
-  }catch{
-    setMsg({...msg, content:'Error occured',open:true,severity:"error"})
-  }}
+    const receipt = await transaction.wait()
+    let tokenId = receipt['events'][0]['args']['tokenId']['_hex']
+    tokenId = parseInt(tokenId,16)
+    return tokenId
+    }catch{
+      setMsg({...msg, content:'Error occured while creating the NFT on blockchain',open:true,severity:"error", color:"#fafafa"})
+      return 0
+    }
+  }
 
   async function startSale() {
     let i = 0;
+    setCreationFail(false)
     while(i<nbNft){
-      listNFTForSale();
+      let tk  = await listNFTForSale();
+      if(tk===0){
+        setMsg({...msg, content:'Error occured',open:true,severity:"success", color:"#fafafa"})
+        await setCreationFail(true)
+        break
+      }
+      await listNftBackend(tk)
       i++
     }
-    setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
-    if(i===nbNft){
-    router.push('/nfts/')}
+    if(creationFail){
+      setMsg({...msg, content:'Error occured',open:true,severity:"error", color:"#fafafa"})
+    }else{
+      setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
+    }        
+  }
+
+  if(!creator){
+    return(
+      <div>
+        Please activate your creator account 
+        <ActivateAccount />
+      </div>
+    )
   }
 
 	return (
@@ -121,8 +202,9 @@ const CreateItem = () => {
 			key = {'bottom_center'}>
 				<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
 			</Snackbar>      
-      <Grid container direction='row'sx={{pt:7, alignContent: 'flex-start', justifyContent:'space-around'}} >
-        <Grid item md={5} style={{height:'75vh'}}>
+      <Grid container direction={{xs:'column', md:'row'}} justifyContent='space-around' sx={{my:{md:10},pt:7}} >
+        <Grid item xs={12} md={6} >
+        <Grid container sx={{ justifyContent: 'center' }}>
         <div className={FormStyles.formCard}>
           <h1 className={FormStyles.formCardTitle}>Create a new NFT</h1>
           <div className={FormStyles.formCardContent}>
@@ -134,23 +216,56 @@ const CreateItem = () => {
                 id="title"
                 label="NFT Title"
                 name="title"
-                onChange={e => updateFormInput({ ...formInput, name: e.target.value, creator: user.username })}/>                      
-                </FormControl>
-                <FormControl sx={{width: '80%', mt:'2%'}} >   
-                  <TextField
-                    margin="dense"
-                    variant="outlined"
-                    required
-                    id="Description"
-                    label="Description"
-                    name="Description"
-                    onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
-                    multiline
-                    rows={4}/>     
-                </FormControl>  
+                onChange={e => updateFormInput({ ...formInput, title: e.target.value, creator: creator.name })}/>                      
+            </FormControl>
+            <FormControl sx={{width: '80%', mt:'2%'}} >   
+              <TextField
+                margin="dense"
+                variant="outlined"
+                required
+                id="Description"
+                label="Description"
+                name="Description"
+                onChange={e => updateFormInput({ ...formInput, description: e.target.value })}
+                multiline
+                rows={4}/>     
+            </FormControl> 
+            <FormControl sx={{width: '80%', mt:'2%'}}>
+							<InputLabel id="demo-multiple-chip-label" >Tags</InputLabel>
+							<Select
+								labelId="demo-multiple-chip-label"
+								id="demo-multiple-chip"
+								multiple
+                autoWidth
+								direction="column"
+								sx={{ background:'white', borderRadius:2 }}
+								value={tags}
+								className={FormStyles.multiSelect}
+								onChange={handleTagsChange}
+								input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+								renderValue={(selected) => (
+									<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+										{selected.map((value) => (
+											<Chip key={value} label={value} />
+										))}
+									</Box>
+								)}
+								MenuProps={MenuProps}
+							>
+								
+								{listTags.map((tag) => (
+									<MenuItem key={tag} value={tag}>
+										<Checkbox checked={tags.indexOf(tag) > -1}/>
+										<ListItemText primary={tag} />
+									</MenuItem>
+								))}
+								
+							</Select>
+						</FormControl>
+ 
                  
-                  <Grid container justifyContent="space-around" sx={{width: '80%',mt:'2%'}}> 
-                    <Grid item xs={12} md={5}>  
+                  <Grid container justifyContent="space-around" sx={{width: '80%'}}> 
+                    <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}>  
                     <FormControl >
                     <InputLabel >Price</InputLabel>
                       <OutlinedInput
@@ -163,7 +278,7 @@ const CreateItem = () => {
                       />  
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={5}> 
+                    <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}> 
                     <FormControl  >
                       <InputLabel >Number of NFT</InputLabel>
                       <OutlinedInput
@@ -218,18 +333,23 @@ const CreateItem = () => {
           </div>
         </div>
         </Grid>
-        <Grid item md={6} width='80%' sx={{ml:{md:2}, mt:{xs:5, md:0} }}>
-          <CardNft 
-            creator={user.username} 
-            name={formInput.name} 
-            image={fileUrl} 
-            description={formInput.description} 
-            price={formInput.price} 
-            royalties={formInput.royalties} />
+        </Grid>
+        <Grid item md={6} sx={{ mt:{xs:10, md:0} }}>
+          <Grid container sx={{ justifyContent: 'center', width:'100%'}}>
+              <CardNft 
+                creatorInfo={creator} 
+                title={formInput.title} 
+                image={fileUrl} 
+                description={formInput.description} 
+                price={formInput.price} 
+                royalties={formInput.royalties} />
+
+        </Grid>
         </Grid>
       </Grid>
+      
 		</Layout>
   )
 }
 
-export default withAuth(CreateItem);
+export default WithAuth(CreateItem);

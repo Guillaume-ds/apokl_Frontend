@@ -8,10 +8,19 @@ export const AuthenticationProvider = ({ children }) => {
 	const [user, setUser] = useState(null)
 	const [accessToken, setAccessToken] = useState(null)
 	const [error, setError] = useState(null)
+	const [creator,setCreator] = useState({"name":""})	
+	const [loaded, setLoaded] = useState(false);
 
 	const router = useRouter()
 
 	useEffect(() => checkIfUserLoggedIn(), [])
+	useEffect(() =>{
+		if(!loaded){
+			getCreator(accessToken)
+		}
+	})
+	
+	
 
 	// Login User
 	const login = async({username, password}) => {
@@ -82,7 +91,6 @@ export const AuthenticationProvider = ({ children }) => {
 			await axios.post('http://localhost:3000/api/register', body, config)
 			login({ username, password })
 		} catch(error) {
-			console.log(error.response.data.message)
 		  if (error.response && error.response.data) {
 		  	setError(error.response.data.message)
 		  	return      
@@ -93,9 +101,6 @@ export const AuthenticationProvider = ({ children }) => {
 			setError('Something went wrong')
 			return
 	      }
-	      console.error('Error', error.message);
-	      setError('Something went wrong')
-	      return
 		}
 	}
 
@@ -118,9 +123,6 @@ export const AuthenticationProvider = ({ children }) => {
 			setError('Something went wrong')
 			return
 	      }
-	      console.error('Error', error.message);
-	      setError('Something went wrong')
-	      return
 		}
 	}
 
@@ -153,8 +155,26 @@ export const AuthenticationProvider = ({ children }) => {
 		setError(null)
 	}
 
+	const getCreator = async (accessToken) => {
+		try {
+			// server request to get creator 
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization' : `Bearer ${accessToken}`
+				}
+			}
+			const res = await axios.post('http://localhost:8000/api/creators/context-creator',null,config)
+      setCreator(res.data)
+			setLoaded(true)
+			return res.data      
+		} catch(error) {
+		}
+	}
+
+
 	return (
-		<AuthenticationContext.Provider value={{ user, accessToken, error, login, register, logout, clearError }}>
+		<AuthenticationContext.Provider value={{ user, accessToken, error, creator, getCreator, login, register, logout, clearError }}>
 			{children}
 		</AuthenticationContext.Provider>
 	)

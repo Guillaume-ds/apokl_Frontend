@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import AuthenticationContext from "../../../context/AuthenticationContext";
 import Layout from '../../hocs/Layout';
-import withAuth from "../../hocs/WithAuth";
+import WithAuth from "../../hocs/WithAuth";
 
 import GetCollections from "../../components/Collections/getCollections";
 
@@ -19,7 +19,7 @@ const myCollections = () => {
 	return(
 		<Layout>
 			<Grid 
-				container xx
+				container 
 				className={Creatorstyles.accueil} 
 				id="accueil" 
 				sx={{ py:7 }} 
@@ -33,4 +33,4 @@ const myCollections = () => {
 		</Layout>
     )}
 
-export default withAuth(myCollections);
+export default WithAuth(myCollections);

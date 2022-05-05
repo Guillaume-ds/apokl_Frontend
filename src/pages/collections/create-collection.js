@@ -4,7 +4,7 @@ import Layout from '../../hocs/Layout';
 import { useRouter } from 'next/router';
 
 import AuthenticationContext from '../../../context/AuthenticationContext';
-import withAuth from "../../hocs/WithAuth";
+import WithAuth from "../../hocs/WithAuth";
 import CreatedNfts from "../../components/NFT/createdNfts";
 
 import FormStyles from "../../styles/Form.module.scss";
@@ -70,9 +70,26 @@ const CreateCollection = () => {
     }
     const onPictureChange = e => setPicture(e.target.files[0]);
 
-    const handleSubmit = async e => {
-			e.preventDefault();
+    const handleSubmit = async e =>{
+      e.preventDefault();
+      console.log('je me lance')
+      if(formInput['name']===''){
+        setMsg({...msg, content:'Please enter a valid name',open:true,severity:"error"})
+      }else if(formInput['description']===''){
+        setMsg({...msg, content:'Please add a description',open:true,severity:"error"})
+      }else if(collectionNftsIds.length===0){
+        setMsg({...msg, content:'Please add nfts to the collection',open:true,severity:"error"})
+      }else if(collectionTags.length===0){
+        setMsg({...msg, content:'Please add tags to the collection',open:true,severity:"error"})
+      }else if(picture===null){
+        setMsg({...msg, content:'Please add a picture',open:true,severity:"error"})
+      }else{
+        createCollection(e)
+      }
+    }
 
+    const createCollection = async e => {
+			e.preventDefault();
 			
 			const config = {
 				headers: {
@@ -92,15 +109,18 @@ const CreateCollection = () => {
       formData.append('picture', picture);
 
       const URL = 'http://127.0.0.1:8000/api/creators/create-collection';
-      axios
+      try{
+        axios
         .post(URL, formData, config)
-        .then((res) => {
-          console.log(res)
-					router.push(`http://localhost:3000/collections/${res.data.creator}/${res.data.slug}`)
+        .then((res) => {				
+          setMsg({...msg, content:'Collection created',open:true,severity:"success",color:"#fafafa"})
+          /*router.push(`http://localhost:3000/collections/${res.data.creator}/${res.data.slug}`)*/
         })
-        .catch((err) =>{ 
-          console.log(err);})
+      }catch{
+        setMsg({...msg, content:'Error',open:true,severity:"error"})
+      }
 			}
+
     
     return(
     <Layout>
@@ -189,7 +209,9 @@ const CreateCollection = () => {
                     type="file"
                     />
                 </Button>:
-                <LibraryAddCheckIcon sx={{ width:'100%'}} style={{color:"#004491"}}/>
+                <Grid sx={{ width:'100%'}}>
+                  <LibraryAddCheckIcon sx={{ width:'100%'}} style={{color:"#004491"}}/>
+                </Grid>
               }
               </FormControl> 
             </Grid>
@@ -205,4 +227,4 @@ const CreateCollection = () => {
     </Layout>
   )}
 
-export default withAuth(CreateCollection);
+export default WithAuth(CreateCollection);

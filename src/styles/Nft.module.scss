@@ -4,9 +4,28 @@
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
   overflow-y: scroll;
   overflow-x: hidden;
-  width: fill;
   height:60vh;
+  min-width:310px;
 }
+
+@media(min-width:1500px){
+  .nftCard{
+    width: 30vw;
+  }
+}
+
+@media(min-width:1000px)and(max-width:1599px){
+  .nftCard{
+    width: 40vw;
+  }
+}
+@media(min-width:400px) and (max-width:999px){
+  .nftCard{
+    width: 70vw;
+  }
+}
+
+
 
 .nftCard:hover .nftCardHeader{
   height:20vh;
@@ -53,6 +72,8 @@
 .nftCardName{
   color:#fafafa;
   font-size: 3vh;
+  padding-left: 3px;
+  padding-right: 3px;
   font-weight: bolder;
   text-align: center;
   overflow: auto;
@@ -67,6 +88,10 @@
 	padding-left: 1rem;
   padding-right: 1rem;
 
+}
+
+.nftCreatorPicture{
+	border-radius: 50%;
 }
 
 .nftCardUser {
@@ -85,8 +110,8 @@
 }
 
 .nftCardInfo::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+  width: 1px;
+  height: 1px;
 }
 
 .nftCardInfo::-webkit-scrollbar-track {

@@ -71,9 +71,12 @@ export default function LoginPage() {
 							<Grid item sx={{my:4}}></Grid>
 							<button type='submit' className={FormStyles.formButton}>Login</button>
 						</form>
-						<Grid item sx={{my:4}}></Grid>
-						<Link href='/account/register' sx={{my:2}}>
+						<Grid item sx={{my:3}}></Grid>
+						<Link href='/account/register'>
 							<a className={FormStyles.formCardItem}>Don't have an account? Sign Up</a>
+						</Link>
+						<Link href='/account/reset-password'>
+							<a className={FormStyles.formCardItem}>Forgot your password?</a>
 						</Link>
 					</div>
 				</div>

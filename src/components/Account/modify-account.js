@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {useRouter} from 'next/router';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 
-import Layout from '../../hocs/Layout';
 import withAuth from '../../hocs/WithAuth';
+import AuthenticationContext from '../../../context/AuthenticationContext';
 
 import FormStyles from "../../styles/Form.module.scss";
 
-import { Container, Grid } from '@mui/material';
-import { Router } from '@material-ui/icons';
+import { Grid } from '@mui/material';
 
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import {TailSpin as Loader} from 'react-loader-spinner';
@@ -21,63 +20,91 @@ import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Checkbox from '@mui/material/Checkbox';
+import ListItemText from '@mui/material/ListItemText';
+import TextField from '@mui/material/TextField';
 
-
-const ModifyProfile = ({user, accessToken}) => {
-
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight:'35%',
+      width: 100,
+      overflow:'auto'
+    },
+  },
+};
 const tags = [
-	'Music',
 	'Artist',
+	'Music',	
 	'Drawing',
-	'Singing'
-];
+	'Painting',
+	'Singing',
+	'Gaming',
+	'Sports',
+	'Social',
+	'Food',
+	];
+
+const ModifyProfile = () => {
+	const {accessToken,creator} = useContext(AuthenticationContext)
 	const [myTags, setTags] = useState([]);
-
-	useEffect(() => {
-		axios.get(`http://127.0.0.1:8000/api/creators/${user}`)
-			.then(res => {
-				setTags(res.data.results[0]['tags']);
-			})
-			.catch(err => {});
-			
-	},[]);
-
-  const router = useRouter()  
+	const [urls,setUrls] = useState({"twitterUrl":"","instagramUrl":"","youtubeUrl":"","discordUrl":""})
   const [picture, setPicture] = useState(null);
-
+	const [description, setDescription] = useState("");
+	const [loaded, setLoaded] = useState(false)
+	
   const onTagsChange = e => setTags(e.target.value);
   const onPictureChange = e => setPicture(e.target.files[0]);
 
-  const [loading, setLoading] = useState(false);
+	function creatorInfo (){
+		try{
+			if(creator.tags.length > 0){
+				setTags(creator.tags)
+			}
+		}catch{}/*if creator.tags exists, then it gives the values to the state, otherwise it remains an empty array*/	
+		try{
+			setUrls({
+				"twitterUrl":creator.twitterUrl,
+				"instagramUrl":creator.instagramUrl,
+				"youtubeUrl":creator.youtubeUrl,
+				"discordUrl":creator.discordUrl
+				})
+		}catch{}	
+		try{
+			setDescription(
+				creator.description
+				)
+		}catch{}
+							
+	}
+	console.log(creator)
+	
+	useEffect(()=>{		
+			creatorInfo()					
+	},[creator.name])
 
-	const changeTags = async() => {
-		
-		const config2 = {
+	const changeInfo = async() => {		
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + accessToken
 			}
 		}
-		const body2 = {
-			"tags":myTags}
-			const { data } = await axios.put('http://localhost:8000/api/creators/activate', body2, config2)
-			Router.push('/account/')	
-	}
-	const changePicture = async() => {
-		const getRefreshToken = getCookie("refresh");
-		const csrftoken = getCookie('csrftoken');
-		const config1 = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
+		const body = {
+			"twitterUrl":urls.twitterUrl,
+			"instagramUrl":urls.instagramUrl,
+			"youtubeUrl":urls.youtubeUrl,
+			"discordUrl":urls.discordUrl,
+			"tags":myTags,
+			"description":description
 		}
-		const body1 = {
-			"refresh":getRefreshToken
-		}		
-		const {data:access} = await axios.post('http://localhost:8000/api/token/refresh/', body1, config1)
-		const accessToken = access.access
+			const { data } = await axios.put('http://localhost:8000/api/creators/update-creator', body, config)
+	}
+
+	const changePicture = async() => {
+		const csrftoken = getCookie('csrftoken');
 		
-		const config2 = {
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Content-Type': 'multipart/form-data',
@@ -89,19 +116,52 @@ const tags = [
 		const formData = new FormData();
 		formData.append('picture', picture);
 
-		const { data } = await axios.put('http://localhost:8000/api/creators/activate', formData, config2)
-		Router.push('/account/')	
+		const { data } = await axios.put('http://localhost:8000/api/creators/update-creator', formData, config)	
 	}
 
 	return (
-      <Container sx={{mt:10}}>
+      <Grid container direction="row" justifyContent="center" sx={{ py:{xs:5,md:5}, px:{xs:2,md:20}}}>
 				<div className={FormStyles.formCard}>
 					<h1 className={FormStyles.formCardTitle}>Modify your profile</h1>
 					<div className={FormStyles.formCardContent}>
-						<form onSubmit={changeTags}>
-							<Grid container direction="row" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 3 }}>
+								
+						<form onSubmit={changePicture} >
+							<Grid container direction="column" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:3, width: '100%'}}>
 								<Grid item >
-								<FormControl sx={{width:{md:500}}} >
+									<FormControl sx={{width:{md:500,lg:700}}}>
+
+									{ !picture? 
+
+										<Button
+											variant="contained"
+											component="label">
+											Upload Image
+											<input
+												hidden
+												accept="image/*"
+												id="post-image"
+												onChange={onPictureChange}
+												name="image"
+												type="file"
+												/>
+										</Button>:
+										<Grid item container direction="column" justifyContent="center" alignItems="center" sx={{my:'2vh'}}>
+											<LibraryAddCheckIcon />
+										</Grid>
+										
+									}
+									</FormControl>
+								</Grid>
+								<Grid item align="center" >
+									<button type='submit' className={FormStyles.formButton}>Change picture</button>
+								</Grid>
+							</Grid>
+						</form>
+
+						<form onSubmit={changeInfo} className={FormStyles.formCardItem}>
+							<Grid container direction="column" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 1 }} sx={{pt:3, width: '80%'}}>
+							<Grid item >
+								<FormControl sx={{width:{md:500,lg:700}}} >
 									<InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
 									<Select
 										labelId="demo-multiple-chip-label"
@@ -116,55 +176,94 @@ const tags = [
 													<Chip key={value} label={value} />
 												))}
 											</Box>
-										)}>
-
+										)}
+										MenuProps={MenuProps} >
 										{tags.map((tag) => (
-											<MenuItem
-												key={tag}
-												value={tag}
-											>
-												{tag}
-											</MenuItem>
-										))}
+                    <MenuItem
+                      key={tag}
+                      value={tag}
+                      className={FormStyles.multiSelect} 
+                    >
+                      <Checkbox checked={myTags.indexOf(tag) > -1} />
+                      <ListItemText primary={tag} />
+                    </MenuItem>
+                  ))}
 									</Select>
 								</FormControl>
 								</Grid>
-								<Grid item align="center">
-									<button type='submit' className={FormStyles.formButton}>Modify tags</button>
-								</Grid>
-							</Grid>
-						</form>
-						<form onSubmit={changePicture} >
-							<Grid container direction="row" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:3, width: '80%'}}>
 								<Grid item >
-									<FormControl sx={{width:{md:500}}}>
-
-									{ !picture? 
-										<Button
-											variant="contained"
-											component="label">
-											Upload Image
-											<input
-												hidden
-												accept="image/*"
-												id="post-image"
-												onChange={onPictureChange}
-												name="image"
-												type="file"
-												/>
-										</Button>:
-										<LibraryAddCheckIcon />
-									}
+								<FormControl sx={{width:{md:500,lg:700}}}>
+									<TextField
+										margin="dense"
+										variant="outlined"
+										fullWidth
+										multiline										
+										rows={4}
+										id="Description"
+										label="Description"	
+										value={description}																		
+										onChange={e => setDescription(e.target.value)}/> 
+									</FormControl>
+								</Grid>
+								<Grid item >
+								<FormControl sx={{width:{md:500,lg:700}}}>
+									<TextField
+										margin="dense"
+										variant="outlined"
+										fullWidth
+										id="Youtube account"
+										label="Youtube account"
+										value={urls.youtubeUrl===""?"Youtube account":urls.youtubeUrl}									
+										onChange={e => setUrls({ ...urls, youtubeUrl: e.target.value })}/> 
+									</FormControl>
+								</Grid>
+								<Grid item >
+									<FormControl sx={{width:{md:500,lg:700}}}>
+									<TextField
+										margin="dense"
+										variant="outlined"
+										fullWidth
+										id="Twitter account"
+										label="Twitter account"
+										value={urls.twitterUrl===""?"Twitter account":urls.twitterUrl}
+										name="Twitter account"										
+										onChange={e => setUrls({ ...urls, twitterUrl: e.target.value })}/> 
+									</FormControl>
+								</Grid>
+								<Grid item >
+									<FormControl sx={{width:{md:500,lg:700}}}>
+									<TextField
+										margin="dense"
+										variant="outlined"
+										fullWidth
+										id="Instagram account"
+										label="Instagram account"
+										value={urls.instagramUrl===""?"Instagram account":urls.instagramUrl}									
+										onChange={e => setUrls({ ...urls, instagramUrl: e.target.value })}/> 
+									</FormControl>
+								</Grid>
+								<Grid item >
+									<FormControl sx={{width:{md:500,lg:700}}} >
+									<TextField
+										margin="dense"
+										variant="outlined"
+										fullWidth
+										id="Discord account"
+										label="Discord account"
+										value={urls.discordUrl===""?"Discord account":urls.discordUrl}
+										name="Discord account"										
+										onChange={e => setUrls({ ...urls, discordUrl: e.target.value })}/> 
 									</FormControl>
 								</Grid>
 								<Grid item align="center" >
-									<button type='submit' className={FormStyles.formButton}>Change picture</button>
+									<button type='submit' className={FormStyles.formButton}>Save changes</button>
 								</Grid>
 							</Grid>
 						</form>
+						
           </div>
 				</div>
-			</Container>     
+			</Grid>     
 	);
 }
 

@@ -132,12 +132,12 @@ const Nav = (props) => {
 										<AccordionDetails>
 											<ListItem button component="a" href='/collections/' className={NavbarStyles.navButton} >												
 													<ListItemText primary='Collections' sx={{pl:1}} />
+											</ListItem>											
+											<ListItem button component="a" href='/nfts/' className={NavbarStyles.navButton} >												
+													<ListItemText primary='Nfts' sx={{pl:1}} />
 											</ListItem>
 											<ListItem button component="a" href='/creators/' className={NavbarStyles.navButton} >												
 													<ListItemText primary='Creators' sx={{pl:1}} />
-											</ListItem>
-											<ListItem button component="a" href='/nfts/' className={NavbarStyles.navButton} >												
-													<ListItemText primary='Nfts' sx={{pl:1}} />
 											</ListItem>
 										</AccordionDetails>
 									</Accordion>
@@ -150,12 +150,12 @@ const Nav = (props) => {
 											<Typography sx={{pl:2, width: '100%', flexShrink: 0 }}>Create</Typography>
 										</AccordionSummary>
 										<AccordionDetails >
-											<ListItem button component="a" href='/nfts/create-nft' className={NavbarStyles.navButton} >												
-													<ListItemText primary='Nft' sx={{pl:1}} />
-											</ListItem>
 											<ListItem button component="a" href='/collections/create-collection' className={NavbarStyles.navButton} >												
 													<ListItemText primary='Collection' sx={{pl:1}} />
 											</ListItem>
+											<ListItem button component="a" href='/nfts/create-nft' className={NavbarStyles.navButton} >												
+													<ListItemText primary='Nft' sx={{pl:1}} />
+											</ListItem>											
 										</AccordionDetails>
 									</Accordion>
 									<Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}  sx={{mx:2,my:1,pl:2}} className={NavbarStyles.accordionTitle}>
@@ -167,12 +167,15 @@ const Nav = (props) => {
 											<Typography sx={{pl:2, width: '100%', flexShrink: 0 }}>My assets</Typography>
 										</AccordionSummary>
 										<AccordionDetails>
-										<ListItem button component="a" href='/nfts/my-assets' className={NavbarStyles.NavButton} >												
-													<ListItemText primary='My Nfts' sx={{pl:1}} />
+										<ListItem button component="a" href='/collections/my-access' className={NavbarStyles.NavButton} >												
+													<ListItemText primary='My exclusive accesses' sx={{pl:1}} />
 											</ListItem>
 											<ListItem button component="a" href='/collections/my-collections' className={NavbarStyles.NavButton} >												
-													<ListItemText primary='My collections' sx={{pl:1}} />
+													<ListItemText primary='My Collections' sx={{pl:1}} />
 											</ListItem>
+											<ListItem button component="a" href='/nfts/my-assets' className={NavbarStyles.NavButton} >												
+													<ListItemText primary='My Nfts' sx={{pl:1}} />
+											</ListItem>											
 										</AccordionDetails>
 									</Accordion>
 									<Accordion expanded={expanded === 'panel1'}  
@@ -192,9 +195,6 @@ const Nav = (props) => {
 										<AccordionDetails >
 											<ListItem button component="a" href='/account/' className={NavbarStyles.navButton} >												
 													<ListItemText primary='My account' sx={{pl:1}} />
-											</ListItem>
-											<ListItem button component="a" href='/account/change-password' className={NavbarStyles.navButton} >												
-													<ListItemText primary='Change password' sx={{pl:1}} />
 											</ListItem>
 										</AccordionDetails>
 									</Accordion>
@@ -225,8 +225,8 @@ const Nav = (props) => {
 						</Drawer>
 						
 						<Link href='/' >
-							<IconButton>
-								<Image src={Apokl} width={280} height={50}/>
+							<IconButton >
+								<Image src={Apokl} width={180} height={50} />
 							</IconButton>
 						</Link>
 						{user?

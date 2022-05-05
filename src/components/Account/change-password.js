@@ -1,65 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 
-import Layout from '../../hocs/Layout';
 import withAuth from '../../hocs/WithAuth';
+import AuthenticationContext from '../../../context/AuthenticationContext'
 
 import FormStyles from "../../styles/Form.module.scss";
 
-import { Container,Grid } from '@mui/material';
+import { Grid,Snackbar } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
-import { Router } from '@material-ui/icons';
 
 const ChangePassword = () => {
-  
+  const {accessToken} = useContext(AuthenticationContext)  
   const [old_password, setOldPassword] = useState('');
   const [new_password, setNewPassword] = useState('');
   const [renew_password, setReNewPassword] = useState('');
+  const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
 
   const onOldPasswordChange = e => setOldPassword(e.target.value);
   const onNewPasswordChange = e => setNewPassword(e.target.value);
 	const onReNewPasswordChange = e => setReNewPassword(e.target.value);
 
-  const [loading, setLoading] = useState(false);
+  const handleClose = e => {
+    setMsg({...msg, content:'',open:false,severity:"error"})
+  }
 
-	const changePassword = async() => {
-		const getRefreshToken = getCookie("refresh");
-		const config1 = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}
-		const body1 = {
-			"refresh":getRefreshToken
-		}
-		
-		const {data:access} = await axios.post('http://localhost:8000/api/token/refresh/', body1, config1)
-		const accessToken = access.access
-		
-		const config2 = {
+	const changePassword = async() => {		
+		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + accessToken
 			}
 		}
-		const body2 = {
+		const body = {
 			"old_password":old_password,
 			"new_password":new_password
 		}
 		try{
-		const { data:changePasswordRes } = await axios.put('http://localhost:8000/api/change-password/', body2, config2)
-		Router.push('/account/')
+		const { data:changePasswordRes } = await axios.put('http://localhost:8000/api/change-password/', body, config)
+    setMsg({...msg, content:'Password successfully updated',open:true,severity:"success",color:"#fafafa"})
 		}catch{
+    setMsg({...msg, content:'Error occured',open:true,severity:"error"})
 		}
 	}		
 	return (
-      <Container sx={{mt:10}}>
+      <Grid container direction="row" justifyContent="center" sx={{ py:{xs:5,md:5}, px:{xs:2,md:20}}}>
+        <Snackbar
+			anchorOrigin = {{ vertical: 'bottom', horizontal:'center' }}			
+			open = {msg.open}
+			onClose = {handleClose}
+			autoHideDuration={6000}
+			key = {'bottom_center'}>
+				<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
+			</Snackbar>
 				<div className={FormStyles.formCard}>
 				<h1 className={FormStyles.formCardTitle}>Change your password</h1>
 					<div className={FormStyles.formCardContent}>
 						<form onSubmit={changePassword} className={FormStyles.formCardItem}>
-              <TextField
+            <Grid container direction="column" justifyContent="space-around" alignItems="center" spacing={{ xs: 2, md: 3 }} sx={{pt:3, width: '80%'}}>
+              <TextField sx={{width:{md:500,lg:700}}}
               margin="dense"
               variant="outlined"
               required
@@ -69,7 +69,7 @@ const ChangePassword = () => {
               name="Old password"
               autoComplete="Old password"
               onChange={onOldPasswordChange}/>
-            <TextField
+            <TextField sx={{width:{md:500,lg:700}}}
               margin="dense"
               variant="outlined"
               required
@@ -79,7 +79,7 @@ const ChangePassword = () => {
               name="New password"
               autoComplete="New password"
               onChange={onNewPasswordChange}/>    
-            <TextField
+            <TextField sx={{width:{md:500,lg:700}}}
               margin="dense"
               variant="outlined"
               required
@@ -90,10 +90,11 @@ const ChangePassword = () => {
               autoComplete="Re new password"
               onChange={onReNewPasswordChange}/>
 							<button type='submit' className={FormStyles.formButton}>Change Password</button>
+              </Grid>
 						</form>
           </div>
 				</div> 
-        </Container>     
+        </Grid>     
 	);
 }
 

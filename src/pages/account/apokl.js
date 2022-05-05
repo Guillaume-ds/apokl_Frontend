@@ -50,8 +50,8 @@ export default function Nfts() {
 
     return (
     <Layout>
-      <h1 className="px-20 py-10 text-3xl">No items in marketplace</h1>
-      <Button onClick={()=> getBalance()}>
+      <Grid sx={{pt:5}}></Grid>
+      <Button onClick={()=> getBalance()} >
         click me 
       </Button>
       <div>

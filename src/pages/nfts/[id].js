@@ -1,26 +1,22 @@
 import React from "react";
 import Layout from '../../hocs/Layout';
 import { useRouter } from 'next/router'
-import GetNft from "../../components/NFT/getNft";
+import GetNftsBackend from "../../components/NFT/getNftsBackend";
+import GetCollections from "../../components/collections/getCollections";
 import { Grid } from "@mui/material";
 
 export default function Nft() {
 	const router = useRouter()
 	const slug = router.query
 	const id = slug.id
+	console.log(id)
 
 	return (
-	  <Layout>
-		  <Grid 
-				container
-				direction="column"
-				alignItems="center"
-				justifyContent="center" 
-				sx={{mt:10}}>
-					<Grid item >
-				<GetNft id={id} />
-				</Grid>
-			</Grid>
+	  <Layout>					
+		<GetNftsBackend id={[parseInt(id)]} creator={""} buyable={false}/>
+			<h1>Collection it gives access to :</h1>
+					
+			<GetCollections nfts={id}/>
 	  </Layout>
 	)
   }

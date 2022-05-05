@@ -1,11 +1,13 @@
 import { useState, useContext, useEffect } from 'react'
-import { TextField } from '@material-ui/core'
-import { Snackbar, Container } from '@mui/material';
-import Layout from '../../hocs/Layout'
-import AuthenticationContext from '../../../context/AuthenticationContext'
-import FormStyles from "../../styles/Form.module.scss"
 import {useRouter} from 'next/router'
 import Link from 'next/link'
+
+import Layout from '../../hocs/Layout'
+import AuthenticationContext from '../../../context/AuthenticationContext'
+
+import FormStyles from "../../styles/Form.module.scss"
+import { TextField } from '@material-ui/core'
+import { Snackbar, Grid } from '@mui/material';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -48,7 +50,7 @@ export default function RegisterPage() {
           message={errorMessage}
           key={'top_center'}
         />
-        <Container sx={{mt:10}}>
+        <Grid container direction="row" justifyContent="center" sx={{ py:{xs:5,md:10}, px:{xs:2,md:20,lg:30}}}>
 				<div className={FormStyles.formCard}>
 				<h1 className={FormStyles.formCardTitle}>Welcome to Apokl ! </h1>
 					<div className={FormStyles.formCardContent}>
@@ -87,8 +89,8 @@ export default function RegisterPage() {
               <a className={FormStyles.formCardItem}>Already have an account? Sign In</a>
             </Link>
 					</div>
-				</div>
-      </Container>      
+				</div>   
+        </Grid> 
     </Layout>
   )
 }

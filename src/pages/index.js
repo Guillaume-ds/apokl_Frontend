@@ -1,8 +1,13 @@
+import React, { useEffect, useContext, useState } from "react";
 import Layout from '../hocs/Layout';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import GetNft from "../components/NFT/getNft";
+import AuthenticationContext from "../../context/AuthenticationContext"; 
+
+import GetNfts from "../components/NFT/getNftsBackend";
+import CarouselCollections from "../components/Collections/carouselCollection";
+import CarouselCreators from '../components/Creators/carouselCreators'
 
 import Grid from "@mui/material/Grid";
 import { Container } from '@mui/material';
@@ -24,22 +29,38 @@ import styles from '../styles/Home.module.scss';
 
 
 export default function Home() {
+  
   return (
     <Layout
 			title='Apokl | NFT social place'
-			content='New NFT market place with exclusive access'>
-        <Grid className={styles.accueil} id="accueil"  container direction="row" justifyContent="center" alignItems="center" sx={{pb:15}}>
-            <Grid item md={7}>
-              <Image src={Apokl} height='100px' alt="Apokl Logo" />
-              <Typography textAlign={"left"} variant="h3" color={"#fce4ec"} sx={{py:3}}>
-              Exclusivity by NFT
-              </Typography>
-              <Typography textAlign={"left"} variant="h5" color={"#fce4ec"} sx={{py:2}}>
-              Exploit the full potential of the NFT on a single plateform.
-              </Typography>
+			content='New NFT social market place with exclusive access'>
+        
+        <Grid container
+              className={styles.accueil} 
+              id="accueil"   
+              direction="row" 
+              justifyContent="center" 
+              alignItems="center" 
+              sx={{pb:15}}>
+            <Grid 
+              item 
+              md={7} 
+              sx={{pr:5,ml:2}}>
+              <h3 className={styles.accueilTextTitle}>
+                Exclusivity by NFT
+              </h3>
+              <h5 className={styles.accueilText}>
+                Exploit the full potential of the NFT on a single plateform.
+              </h5>
+              <h5 className={styles.accueilText}>
+                Join unique communities, interact with creators and get access to exclusive events.
+              </h5>
+
             </Grid>
             <Grid item md={4} display={{ xs: 'none', md: 'block' }}>
-              <GetNft id={1}/>
+              <Grid container justifyContent={'center'}>
+              <GetNfts id={[7]} buyable={false}/>
+              </Grid>
             </Grid>
             
           <Grid container direction="column" justifyContent="center" alignItems="center" className={styles.gridBottom} sx={{py:3}}>
@@ -53,9 +74,15 @@ export default function Home() {
             </Grid>
           </Grid>
         </Grid>
-				<Container>
+				
       
       <Grid container justifyContent="center" alignItems="center" sx={{mt:8}}>
+        <Grid item sx={{py:4}}>
+          <CarouselCollections creator={''} tags={[]} nfts={[]} keywords={''} ids={[]}/>
+        </Grid>
+        <Grid item sx={{py:4}}>
+          <CarouselCreators name={''} tags={[]}/>
+        </Grid>
         <Grid direction={{xs:"column", sm:"row"}} sx={{display:{ xs: 'flex', md: 'inline-flex' }}} my={4}>
           <Grid item xs={12} sm={5}
                 sx={{alignSelf:{xs:'center',sm:'left' }}}>
@@ -153,7 +180,7 @@ export default function Home() {
         </CardActionArea>
       </Card>    
       </Grid>    
-    </Container> 
+
     </Layout>
   )
 }

@@ -10,7 +10,7 @@ import FormStyles from "../styles/Form.module.scss"
 import { Grid } from "@mui/material";
 
 
-const withAuth = Component => {
+const WithAuth = Component => {
   const Auth = (props) => {
     const { user } = useContext(AuthenticationContext);
     if (!user) {
@@ -46,4 +46,4 @@ const withAuth = Component => {
   return Auth;
 };
 
-export default withAuth;
+export default WithAuth;

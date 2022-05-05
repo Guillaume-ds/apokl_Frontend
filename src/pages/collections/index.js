@@ -62,26 +62,6 @@ const Collections = () => {
 		);
 	};
  
-	const getCollections = async() => {
-		const config = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}
-		const body = {
-				"tags":tags,
-				"nfts":[],
-				"creator":creator,
-				"keywords":keywords
-		}
-
-		const collectionsReceived = await axios.post("http://localhost:8000/api/creators/search-collection", body, config )
-		setCollections(collectionsReceived.data)
-		console.log(collectionsReceived.data)
-	}
-
-
-
     return (
 			<Layout>
 			<Grid 
@@ -153,9 +133,8 @@ const Collections = () => {
 							onChange={e => setKeywords( e.target.value)}/>     
 					</FormControl>  
 				</Grid>
-				<button className={Formstyles.formButton}  onClick={()=>getCollections()}>Search</button>
 			</Grid>
-			<GetCollection tags={tags} nfts={nfts} creator={creator} keywords={keywords} />
+			<GetCollection tags={tags} nfts={nfts} creator={creator} keywords={keywords} ids={[]} />
 			</Layout>
     )
 }

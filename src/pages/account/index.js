@@ -3,9 +3,9 @@ import Layout from '../../hocs/Layout';
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
 import ModifyProfile from '../../components/Account/modify-account.js';
-import ActivateAccount from '../../components/Account/activate.js';
+import ActivateAccount from '../../components/Creators/activate.js';
 import ChangePassword from '../../components/Account/change-password.js';
-import Artist from '../../components/Account/artist';
+import Artist from '../../components/Creators/artist';
 import styles from '../../styles/Creator.module.scss';
 import { Grid, Container } from "@mui/material";
 import { Typography } from "@mui/material";
@@ -16,7 +16,6 @@ import {useRouter} from "next/router";
 const AccountPage = () => {
 	const router = useRouter()
 	const {user,accessToken} = useContext(AuthenticationContext)
-
 
 	if (user){
 		return(
@@ -30,18 +29,16 @@ const AccountPage = () => {
 					alignItems="center"
 					justifyContent="center">
 					<Artist name={user.username} accessToken={accessToken}/>
+					<ActivateAccount />
 				</Grid>
 
-				<Container sx={{mt:10}}>
-					<Grid item sx={{mt:3, textAlign:'center'}} >
-						 <ModifyProfile user={user.username} />
-					</Grid>
-					
-					<Grid item sx={{mt:3, textAlign:'center'}} >
+				<Grid container direction="column" justifyContent="center" sx={{ py:{xs:5,md:10}}}>
+						 <ModifyProfile user={user.username} accessToken={accessToken}/>
+
 						 <ChangePassword />
-					</Grid>
+
           
-				</Container>
+				</Grid>
 			</Layout>
 		)
 	}else{

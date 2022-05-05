@@ -73,9 +73,9 @@ const Artists = ({backend}) => {
 			"keywords":keywords
 	}
 
-		const artistRecieved = await axios.post(`${backend}/api/creators/search-creator`, body, config )
-		setArtists(artistRecieved.data)
-		console.log(artistRecieved.data)
+		const artistRecieved = await axios.post(`http://localhost:8000/api/creators/search-creators`, body, config )
+		setArtists(artistRecieved.data.results)
+		console.log(artistRecieved.data.results)
 	}
 
     return (
@@ -151,7 +151,7 @@ const Artists = ({backend}) => {
 				<button className={Formstyles.formButton}  onClick={()=>getCollections()}>Search</button>
 			</Grid>
 			<Grid container direction='row' justifyContent='space-around' alignItems='center' sx={{p:7}} rowSpacing={10} columnSpacing={{ sm: 2, md: 6 }}>				
-				{artists?
+				{artists==={}?
 				artists.map((artist,i) => (
 					<Grid item md={5} lg={4} xl={3} sx={{width:'100%'}} >
 						<div className={Creatorstyles.creatorCard}>
@@ -165,10 +165,12 @@ const Artists = ({backend}) => {
 											<AccountIcon fontSize="large" style={{ color: "white" }}/>}	
 							</div>	
 							<p className={Collectionstyles.description}>{artist.description}</p>
-								tt 
+								
 						</div>
 					</Grid>				
-				)):null}				
+				)):
+				<Grid item sx={{ mt: '10%',mb:'10%' }}>
+					<h1>No creator corresponding</h1></Grid>}				
 			</Grid>
 			</Layout>
     )

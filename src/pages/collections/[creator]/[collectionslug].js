@@ -1,6 +1,7 @@
 import React, { useState,useContext, useEffect} from "react";
 
 import { useRouter } from 'next/router'
+import Image from 'next/image';
 import axios from "axios";
 
 import Layout from '../../../hocs/Layout';
@@ -9,9 +10,11 @@ import AuthenticationContext from '../../../../context/AuthenticationContext';
 import Collectionstyles from '../../../styles/Collection.module.scss';
 import ContentCollection from "../../../components/Collections/contentCollection";
 import EditCollection from "../../../components/Collections/editCollection";
-import ActionsCollection from "../../../components/Collections/actionsCollection";
+import CreatePostCollection from "../../../components/Collections/createPostCollection";
+import CreateRoomCollection from "../../../components/Collections/CreateRoomCollection";
 
 import AccountIcon from '@material-ui/icons/AccountCircle';
+import {TailSpin as Loader} from 'react-loader-spinner';
 
 
 import { Grid, Snackbar } from "@mui/material";
@@ -24,15 +27,40 @@ import {marketplaceAddress} from '../../../../config'
 import NFTMarketplace  from '../../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
 
-const Collection = ({collection}) => {
+const Collection = () => {
 	const router = useRouter()
-	const { creator } = router.query
+	const {creator,collectionslug} = router.query
 	const {user} = useContext(AuthenticationContext)
 	const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
 	const [access, setAccess] = useState(false)
 	const [edit, setEdit] = useState(false)
+	const [collection,setCollection] = useState([])
 	var [isCreator, setIsCreator] = useState(false)
 	const [ownedNftsId, setOwnedNftsId] = useState([])
+
+	const fetchCollection = async() => {
+		const config = {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}
+		const body = {
+			"creator":creator,
+			"slug":collectionslug
+		}
+		try{
+			const collectionsReceived = await axios.post("http://localhost:8000/api/creators/search-collections", body, config )
+			setCollection(collectionsReceived.data.results[0])
+		}catch{
+
+		}
+		
+	}
+	console.log(collection,"la2")
+
+	useEffect(()=>{
+		fetchCollection()
+	},[])
  
 	useEffect(()=>{
 		if(user){
@@ -40,9 +68,7 @@ const Collection = ({collection}) => {
 				setIsCreator(true)
 			}
 		}
-	})
-	
-	console.log(collection,'collection')
+	})	
 
   async function verifyAccess() {
     const web3Modal = new Web3Modal({
@@ -76,9 +102,9 @@ const Collection = ({collection}) => {
 		setEdit(!edit)
 	}
 
-  if(collection.results[0].picture){
+  if(collection){
     var styling = {
-      backgroundImage: `url('${collection.results[0].picture}')`,
+      backgroundImage: `url('${collection.picture}')`,
 	  	objectFit: 'fill',
       backgroundPosition:'center'
       } 
@@ -98,18 +124,24 @@ const Collection = ({collection}) => {
 
 			<div className={Collectionstyles.header} >
 				<div className={Collectionstyles.overlay}  style={styling}>
-					<h1 className={Collectionstyles.collectionTitle}>{collection.results[0].name}</h1>															
+					<h1 className={Collectionstyles.collectionTitle}>{collection.name}</h1>															
 				</div>
-				<Grid container direction="row" sx={{mb:1, px:10}} alignItems='center' justifyContent='space-around'>
+				<Grid container direction="row" sx={{mb:2, px:10}} alignItems='center' justifyContent='space-around'>
 					<Grid item>
 						<Grid container direction="row" sx={{mb:1}} alignItems='center'>
-							<AccountIcon fontSize='large' className={Collectionstyles.userIcon} onClick={()=>router.push(`http://localhost:3000/creators/${creator}`)}/>
+						{
+                collection.creator?
+                <Image src={collection.creator.picture} width={40} height={40} className={Collectionstyles.collectionCreatorPicture}/> 
+                :
+                <AccountIcon fontSize='large' onClick={()=>router.push(`http://localhost:3000/creators/${collection.creator}`)}/>
+              }
 							<Grid item direction="column" sx={{ml:1}}>
 								<p className={Collectionstyles.userInfo} >Created by</p>
 								<p>{creator}</p>
 							</Grid>
 							</Grid>
 						</Grid>
+
 					<Grid item>
 						{!user ?
 							<Grid container direction="row" alignItems='center' justifyContent='center'>
@@ -117,7 +149,8 @@ const Collection = ({collection}) => {
 							</Grid>	
 							:
 							null
-						}						
+						}	
+
 						{(user && !isCreator)?
 							<Grid container direction="row" alignItems='center' justifyContent='center'>
 								<input hidden type="checkbox" id="btnControl"  onClick={()=>verifyAccess()} />
@@ -126,6 +159,7 @@ const Collection = ({collection}) => {
 							:
 							null					
 						}
+
 						{(user && isCreator)?
 							<Grid container direction="row" alignItems='center' justifyContent='center'>
 								<input hidden type="checkbox" id="btnControl"  onClick={()=>editCollection()} />
@@ -143,35 +177,34 @@ const Collection = ({collection}) => {
 			
 			{
 				(edit && isCreator) ?
-				<EditCollection collection={collection.results[0]} />
+				<EditCollection collection={collection} />
 				:
-				<>
-				<ActionsCollection collection={collection.results[0]} />
-				<ContentCollection collection={collection.results[0]} access={true} />
-				</>
+				null
 			}
+			{
+				(!edit && isCreator) ?
+				<>
+				<CreateRoomCollection collection={collection} />
+				<CreatePostCollection collection={collection} />			
+				<ContentCollection collection={collection} access={true} />
+				</>
+				:
+				null
+			}
+			{
+				(!isCreator) ?
+				<>
+				<ContentCollection collection={collection} access={access} />
+				</>
+				:
+				null
+			}
+			
+
 			
 		</Layout>)}
 		
-
-
 export default Collection;
 
-export async function getServerSideProps({ query: {creator,collection} }){
-	try {
-    const {data} = await axios.get(`http://127.0.0.1:8000/api/creators/${creator}/collections/${collection}`)
-		console.log(data, 'collection')
-    return {
-			props : {
-				collection : data
-			}
-    }
-	} catch {
-		return {
-			props : {
-				collection : {count:0}
-			}
-    }
-	}
-}
+
 

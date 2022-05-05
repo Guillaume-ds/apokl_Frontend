@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 
+import AuthenticationContext from '../../../context/AuthenticationContext'
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,26 +22,29 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 const Artist = ({name}) => {
 	const [artist, setArtist] = useState({});
 	const [collections,setCollection] = useState({});
-	const [collectionsCount,setCollectionCount] = useState(0);
 
-	useEffect(() => {
-		axios.get(`http://127.0.0.1:8000/api/creators/${name}`)
+	function getArtist(){
+		const config = {
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}
+		const body = {
+			"tags":[],
+			"name":name
+		}
+		axios.post(`http://127.0.0.1:8000/api/creators/search-creators`,body,config)
 			.then(res => {
 				setArtist(res.data.results[0]);
+				
 			})
-			.catch(err => {});
-			
-	}, [name]);
+			.catch(err => {});		
+	}
 
 	useEffect(() => {
-		axios.get(`http://127.0.0.1:8000/api/creators/${name}/collections`)
-			.then(res => {
-				setCollection(res.data.results);
-				setCollectionCount(res.data.count)
-			})
-			.catch(err => {});
-			
-	}, [artist]);
+		getArtist()			
+	}, [name]);
+
 
 	if(artist !== undefined){
 	return (
@@ -49,22 +53,22 @@ const Artist = ({name}) => {
 			sx={{ pt:5,width:{xs:1/2,md:1/4} }} 
 			direction="column" 
 			>
+
 			<Image src={artist.picture?artist.picture:User} alt="Person" height="80px" width="80px"  sx={{m:2}}/>
 			<p className={CreatorStyles.cardName}>{name}</p>
 				<Grid container className={CreatorStyles.cardCollections} direction="row" >
-					<p className={CreatorStyles.numberCollections}>{collectionsCount} collections</p>
+					<p className={CreatorStyles.numberCollections}>{artist.collections?artist.collections.length:"0"} collections</p>
 				</Grid>
 			<Grid>
-			<Button onClick={() => router.push('/account/')}>							
-					<InstagramIcon/> 
-				</Button>
-				<Button onClick={() => router.push('/account/')}>							
-					<TwitterIcon/> 
-				</Button>
-				<Button onClick={() => router.push('/account/')}>							
-					<YouTubeIcon/> 
-				</Button>
-				
+				<a href={artist.instagramUrl}>					
+						<InstagramIcon/> 
+				</a>
+				<a href={artist.youtubeUrl}>							
+						<YouTubeIcon/> 
+				</a>
+				<a href={artist.twitterUrl}>						
+						<TwitterIcon/> 
+				</a>				
 			</Grid>
 		</Grid>
 	)}else{

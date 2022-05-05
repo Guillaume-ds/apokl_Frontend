@@ -1,7 +1,6 @@
 import React, { useState,useContext,useEffect } from 'react';
 import axios from 'axios';
-import cookie from 'cookie'
-import { getCookie } from 'cookies-next';
+
 
 import FormStyles from "../../styles/Form.module.scss";
 
@@ -12,47 +11,29 @@ import AuthenticationContext from '../../../context/AuthenticationContext'
 
 const Activate = () => {
 
-  const [tags, setTags] = useState(['musique']);
-  const {user} = useContext(AuthenticationContext)
-  const [creator,setCreator] = useState({})
-
+  const [tags, setTags] = useState([]);
+  const {user,accessToken,creator} = useContext(AuthenticationContext)
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
-    try{
-      axios.get(`http://127.0.0.1:8000/api/creators/${user.username}`).then(res=>{
-        console.log(res.data)
-        setCreator(res.data)
-      })
-    }catch{err=>{console.log(err)}}},[user])
-  
-  
 	const activate = async() => {
     const config = {
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+        'Authorization':`Bearer ${accessToken}`
 			}
 		}
 		const body = {
-			"name":user.username,
-			"tags":tags
+      "user":user.id,
+			"name":user.username
 		}
-		try{
-      const { data } = await axios.post('http://127.0.0.1:8000/api/creators/activate', body,config)
-      console.log(data)
-      router.push('/');
-		}catch{
-
-		}
+    const { data } = await axios.post('http://localhost:8000/creators/',body,config)
 	}
 
-  if(user && creator.count === 1 ){
+  if(user && creator.name!=="" ){
     return (
-        <Grid container direction="column" justifyContent="center" alignItems="center">  
-          <p>You have an active account !</p>
-        </Grid>
+      null
     )
-  }else if(user && creator.count === 0 ){
+  }else if(user && creator.name===""){
     return (
         <Grid container direction="column" justifyContent="center" alignItems="center">
           <form>

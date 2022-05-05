@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Layout from '../../hocs/Layout';
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import axios from 'axios'
@@ -42,6 +43,7 @@ export default function ResellNFT() {
   }
 
   return (
+    <Layout>
     <div className="flex justify-center">
       <div className="w-1/2 flex flex-col pb-12">
         <input
@@ -59,5 +61,6 @@ export default function ResellNFT() {
         </button>
       </div>
     </div>
+    </Layout>
   )
 }

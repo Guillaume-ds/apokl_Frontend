@@ -50,7 +50,7 @@ export default function CreatedNfts({setCollectionNftsIds, collectionNftsIds}) {
     const signer = provider.getSigner()
 
     const contract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, signer)
-    const data = await contract.fetchItemsListed()
+    const data = await contract.fetchItemsCreated()
 
     const items = await Promise.all(data.map(async i => {
       const tokenUri = await contract.tokenURI(i.tokenId)
