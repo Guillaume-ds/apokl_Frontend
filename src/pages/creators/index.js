@@ -1,9 +1,12 @@
 import React, {useState} from "react";
 import axios from "axios";
 import Image from "next/image";
+
 import Creatorstyles from '../../styles/Creator.module.scss';
 import Formstyles from '../../styles/Form.module.scss';
 import Collectionstyles from '../../styles/Collection.module.scss';
+
+import GetCreator from "../../components/Creators/getCreator";
 
 import { Grid, Typography,ListItemText } from "@mui/material";
 import Checkbox from '@mui/material/Checkbox';
@@ -45,12 +48,12 @@ const listTags = [
 ];
 
 
-const Artists = ({backend}) => {
+const Creators = () => {
 
 	const [tags, setTags] = useState([])
 	const [name, setName] = useState('')
 	const [keywords, setKeywords] = useState('')
-  const [artists, setArtists] = useState([])
+
 
 	const handleTagsChange = (event) => {
 		const {
@@ -61,22 +64,7 @@ const Artists = ({backend}) => {
 		);
 	};
  
-	const getCollections = async() => {
-		const config = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}
-		const body = {
-			"tags":tags,
-			"name":name,
-			"keywords":keywords
-	}
 
-		const artistRecieved = await axios.post(`http://localhost:8000/api/creators/search-creators`, body, config )
-		setArtists(artistRecieved.data.results)
-		console.log(artistRecieved.data.results)
-	}
 
     return (
 			<Layout>
@@ -150,30 +138,9 @@ const Artists = ({backend}) => {
 				</Grid>
 				<button className={Formstyles.formButton}  onClick={()=>getCollections()}>Search</button>
 			</Grid>
-			<Grid container direction='row' justifyContent='space-around' alignItems='center' sx={{p:7}} rowSpacing={10} columnSpacing={{ sm: 2, md: 6 }}>				
-				{artists==={}?
-				artists.map((artist,i) => (
-					<Grid item md={5} lg={4} xl={3} sx={{width:'100%'}} >
-						<div className={Creatorstyles.creatorCard}>
-							<div className={Creatorstyles.creatorCardHeader}>
-								<div className={Creatorstyles.creatorCardOverlay}>											
-								</div>
-							</div>
-							<div className={Creatorstyles.creatorCardImagePlaceholder}>
-								{artist.picture?
-											<Image className={Creatorstyles.creatorCardImage} src={artist.picture} width='100px' height='100px'/> :
-											<AccountIcon fontSize="large" style={{ color: "white" }}/>}	
-							</div>	
-							<p className={Collectionstyles.description}>{artist.description}</p>
-								
-						</div>
-					</Grid>				
-				)):
-				<Grid item sx={{ mt: '10%',mb:'10%' }}>
-					<h1>No creator corresponding</h1></Grid>}				
-			</Grid>
+			<GetCreator  tags={tags} creator={name}keywords={keywords}/>
 			</Layout>
     )
 }
 
-export default Artists;
+export default Creators;

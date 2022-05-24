@@ -1,23 +1,43 @@
+@import "variables";
+
+/*
+Visible navbar
+*/
 .navbarTop{
     display: flex;
     justify-content: space-between;
+    background-color:$apoklMediumBlue;
 }
 
+.menuIcon{
+  color:$apoklLightBlue;
+}
+
+.loginLink{
+  color: $apoklLightBlue;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/*
+drawerBox 
+*/
+
 .drawerBox{
-  background: rgba(227,47,184,0.9);
-  background: linear-gradient(340deg, 
-            rgba(205,68,200,0.95) 5%, 
-            rgb(95, 70, 200) 20%, 
-            rgba(70, 29, 236, 0.9) 41%, 
-            rgba(112, 69, 187, 0.9) 90%, 
-            rgba(215,70,200,0.95) 95%, 
-            rgba(236,70,210,1) 97%);
+  background: $apoklLightBlue;
+}
+
+/*
+drawerBox - card user
+*/
+
+.creatorPicture{
+	border-radius: 50%;
 }
 
 .cardUser{
-  background-color: rgba(225, 225, 235, .45);  
-  backdrop-filter: blur(15px);
-  border-radius: 15px;
+  background-color: $apoklMediumBlue;  
+  border-radius: 5px;  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,23 +49,24 @@
   color:whitesmoke;
 }
 
-
-.link{
-    color: aliceblue;
-    text-decoration: none;
-    font-weight: 500;
+.username{
+  font-size: 1em;
+  padding-top: 0.5em;
+  margin-bottom: 0;
 }
 
 
+/*
+drawerBox - login link
+*/
+
 .navbarLink{
-    color:black;
+    color:$apoklLightBlue;
     font-family: 'Arial';
     font-weight:bold;
-    border-image-slice: 1;
     border-radius: 5px;
-    background-color: rgba(245, 245, 245, 0.4);
-    box-shadow: 0px 0px 5px rgba(250, 250, 250, 0.6);
-    padding: 4px;
+    border: 1px $apoklLightBlue solid ;
+    padding: 5px;
 }
 
 .navbarLink:hover {
@@ -57,8 +78,13 @@
     color:white
 }
 
+/*
+drawerBox - nav links
+*/
+
 .accordionTitle{
-  background-color: rgba(225, 225, 225, .30);
+  background-color: $apoklLightPurple;
+  box-shadow: none;
 }
 
 .accordionTitle:hover{
@@ -71,4 +97,6 @@
   border-radius: 5px;
   background-color: rgba(240, 235, 240, 1);
 }
+
+
 

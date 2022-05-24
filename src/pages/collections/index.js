@@ -45,7 +45,7 @@ const listTags = [
 
 
 const Collections = () => {
-	const router = useRouter();
+
 	const [tags, setTags] = useState([])
 	const [nfts, setNfts] = useState([])
 	const [creator, setCreator] = useState('')

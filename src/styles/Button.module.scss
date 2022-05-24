@@ -1,0 +1,24 @@
+@import "variables";
+
+
+.button{
+    background: center;
+    text-align: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url("../assets/images/button.png");
+    color:$apoklLightBlue;
+    cursor: pointer;
+}
+
+.buttonContent{
+    padding: 5px;
+}
+
+.buttonIcon{
+    color:$apoklDarkBlue;
+}
+
+.buttonIcon:hover{
+    color:$apoklLight2Blue;
+}

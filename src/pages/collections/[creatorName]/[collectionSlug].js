@@ -2,12 +2,12 @@ import React, { useState,useContext, useEffect} from "react";
 
 import { useRouter } from 'next/router'
 import Image from 'next/image';
-import axios from "axios";
 
 import Layout from '../../../hocs/Layout';
 import AuthenticationContext from '../../../../context/AuthenticationContext';
 
 import Collectionstyles from '../../../styles/Collection.module.scss';
+import PresentationCollection from "../../../components/Collections/presentationCollection";
 import ContentCollection from "../../../components/Collections/contentCollection";
 import EditCollection from "../../../components/Collections/editCollection";
 import CreatePostCollection from "../../../components/Collections/createPostCollection";
@@ -16,83 +16,68 @@ import CreateRoomCollection from "../../../components/Collections/CreateRoomColl
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import {TailSpin as Loader} from 'react-loader-spinner';
 
-
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
 
-import { ethers } from 'ethers'
-import Web3Modal from "web3modal"
+import { getMyNftsIds } from "../../../components/NFT/functionNFT";
+import { fetchCollection } from "../../../components/Collections/functionCollection";
 
-import {marketplaceAddress} from '../../../../config'
-import NFTMarketplace  from '../../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
 
 const Collection = () => {
 	const router = useRouter()
-	const {creator,collectionslug} = router.query
+	const {creatorName,collectionSlug} = router.query
 	const {user} = useContext(AuthenticationContext)
 	const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
 	const [access, setAccess] = useState(false)
 	const [edit, setEdit] = useState(false)
-	const [collection,setCollection] = useState([])
+	const [collection,setCollection] = useState(null)
+	const [creatorInfo,setCreatorInfo] = useState({"name":"","picture":null})
 	var [isCreator, setIsCreator] = useState(false)
-	const [ownedNftsId, setOwnedNftsId] = useState([])
+	const [loaded,setLoaded] = useState(false)
 
-	const fetchCollection = async() => {
-		const config = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}
-		const body = {
-			"creator":creator,
-			"slug":collectionslug
-		}
-		try{
-			const collectionsReceived = await axios.post("http://localhost:8000/api/creators/search-collections", body, config )
-			setCollection(collectionsReceived.data.results[0])
-		}catch{
-
-		}
-		
-	}
-	console.log(collection,"la2")
 
 	useEffect(()=>{
-		fetchCollection()
-	},[])
+		if(!collection && !loaded){
+			getCollection()
+		}					
+	})
  
 	useEffect(()=>{
 		if(user){
-			if(user.username === creator){
+			if(user.username === creatorName){
 				setIsCreator(true)
 			}
 		}
 	})	
 
-  async function verifyAccess() {
-    const web3Modal = new Web3Modal({
-      network: "mainnet",
-      cacheProvider: true,
-    })
-
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-    const marketplaceContract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, signer)
-    const data = await marketplaceContract.fetchMyNFTs()
-
+	async function getCollection(){
+		const collectionRes = await fetchCollection(creatorName,collectionSlug)	
+		setCollection(collectionRes)
 		try{
-			data.map(array => setOwnedNftsId(ownedNftsId.push(array.tokenId.toString())))
-			const ownsNft = collection.results[0].nfts.some(item => ownedNftsId.includes(item))
-			{ownsNft?
-				setMsg({...msg, content:'You can access the collection',open:true,severity:"success",color:"blue"})
-				:
-				setMsg({...msg, content:'You cannot access the collection',open:true,severity:"error",color:"red"})
-			}		
-			setAccess(ownsNft)
-		}catch{}		
+			setCreatorInfo(collectionRes['creator'])
+		}catch{
+
+		}		
+		
+	}
+	
+
+  async function verifyAccess() {
+		const ownedNftsId = await getMyNftsIds()
+		const ownsNft = collection.nfts_array.some(item => ownedNftsId.includes(item))	
+		return ownsNft
   }
+
+	async function setAccessFunction(){
+		const ownsNft = await verifyAccess()
+		{ownsNft?
+			setMsg({...msg, content:'You can access the collection',open:true,severity:"success",color:"#fafafa"})
+			:
+			setMsg({...msg, content:'You cannot access the collection',open:true,severity:"error",color:"#fafafa"})
+		}	
+		setAccess(ownsNft)		
+	}
 
 	const handleClose = e => {
 	  setMsg({...msg, content:'',open:false,severity:"error"})
@@ -111,6 +96,7 @@ const Collection = () => {
     }else{  
     } 
 
+
 	return(
 		<Layout>
 			<Snackbar
@@ -124,20 +110,20 @@ const Collection = () => {
 
 			<div className={Collectionstyles.header} >
 				<div className={Collectionstyles.overlay}  style={styling}>
-					<h1 className={Collectionstyles.collectionTitle}>{collection.name}</h1>															
+					<h1 className={Collectionstyles.collectionTitle}>{collection?collection.name:""}</h1>															
 				</div>
 				<Grid container direction="row" sx={{mb:2, px:10}} alignItems='center' justifyContent='space-around'>
 					<Grid item>
 						<Grid container direction="row" sx={{mb:1}} alignItems='center'>
 						{
-                collection.creator?
-                <Image src={collection.creator.picture} width={40} height={40} className={Collectionstyles.collectionCreatorPicture}/> 
+                creatorInfo.picture?
+                <Image src={creatorInfo.picture} width={40} height={40} className={Collectionstyles.collectionCreatorPicture}/> 
                 :
                 <AccountIcon fontSize='large' onClick={()=>router.push(`http://localhost:3000/creators/${collection.creator}`)}/>
               }
 							<Grid item direction="column" sx={{ml:1}}>
 								<p className={Collectionstyles.userInfo} >Created by</p>
-								<p>{creator}</p>
+								<p>{creatorName}</p>
 							</Grid>
 							</Grid>
 						</Grid>
@@ -153,7 +139,7 @@ const Collection = () => {
 
 						{(user && !isCreator)?
 							<Grid container direction="row" alignItems='center' justifyContent='center'>
-								<input hidden type="checkbox" id="btnControl"  onClick={()=>verifyAccess()} />
+								<input hidden type="checkbox" id="btnControl"  onClick={()=>setAccessFunction()} />
 								<label className={Collectionstyles.button} for="btnControl">Check access</label>
 							</Grid>
 							:
@@ -174,6 +160,12 @@ const Collection = () => {
 					</Grid>
 				</Grid>
 			</div>
+			{
+				collection?
+				<PresentationCollection collection={collection} />
+				:
+				null
+			}
 			
 			{
 				(edit && isCreator) ?
@@ -198,7 +190,7 @@ const Collection = () => {
 				</>
 				:
 				null
-			}
+			} 
 			
 
 			

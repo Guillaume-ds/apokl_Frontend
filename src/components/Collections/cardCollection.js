@@ -10,19 +10,22 @@ import Grid from "@mui/material/Grid";
 export default function CardNft({collection}) {
   const router = useRouter();
 
-  if(collection.picture){
-    var styling = {
-      backgroundImage: `url('${collection.picture}')`,
-      objectFit: 'scale-down',
-      backgroundPosition:'center',
-      backgroundRepeat: 'no-repeat',
-      height: '100%',
-      } 
-    }else{  
-    } 
 
+  
+
+  if(collection){
+    if(collection.picture){
+      var styling = {
+        backgroundImage: `url('${collection.picture}')`,
+        objectFit: 'scale-down',
+        backgroundPosition:'center',
+        backgroundRepeat: 'no-repeat',
+        height: '100%',
+        } 
+      }else{  
+      } 
   return (
-    <Grid item sx={{width:'100%'}} >
+    <Grid container >
       <div className={Collectionstyles.collectionCard}>
         <div className={Collectionstyles.collectionCardHeader} >
           <div className={Collectionstyles.collectionCardOverlay} style={styling}>
@@ -58,5 +61,7 @@ export default function CardNft({collection}) {
         </div>
       </div>
     </Grid>
-  );
+  );}else{
+    return null
+  }
 }

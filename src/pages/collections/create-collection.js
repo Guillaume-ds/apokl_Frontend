@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import AuthenticationContext from '../../../context/AuthenticationContext';
 import WithAuth from "../../hocs/WithAuth";
-import CreatedNfts from "../../components/NFT/createdNfts";
+import SelectCreatedNfts from "../../components/NFT/selectCreatedNfts";
 
 import FormStyles from "../../styles/Form.module.scss";
 
@@ -49,7 +49,7 @@ const tags = [
 
 
 const CreateCollection = () => {
-    const {user, accessToken} = useContext(AuthenticationContext)
+    const {user, accessToken, creator} = useContext(AuthenticationContext)
 		const router = useRouter();
     const [formInput, updateFormInput] = useState({ name: '', description: '', nfts:[] })    
     const [picture, setPicture] = useState(null);
@@ -72,7 +72,6 @@ const CreateCollection = () => {
 
     const handleSubmit = async e =>{
       e.preventDefault();
-      console.log('je me lance')
       if(formInput['name']===''){
         setMsg({...msg, content:'Please enter a valid name',open:true,severity:"error"})
       }else if(formInput['description']===''){
@@ -90,8 +89,25 @@ const CreateCollection = () => {
 
     const createCollection = async e => {
 			e.preventDefault();
+      const slug = creator.name+formInput['name']+Date.now()
 			
 			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer ' + accessToken,
+				}
+			}
+
+      const body = {
+        'creator' : creator.name,
+        'slug':slug,
+        'name': formInput['name'],
+        'tags':collectionTags,
+        'nfts_array':collectionNftsIds
+      }
+      
+
+      const config2 = {
 				headers: {
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + accessToken,
@@ -99,23 +115,18 @@ const CreateCollection = () => {
 				}
 			}
 
-      const formData = new FormData();      
-      formData.append('creator', user.username);
-      formData.append('slug', user.username+formInput['name']+Date.now());
-      formData.append('name', formInput['name']);
-      formData.append('description', formInput['description']);
-      formData.append('tags', collectionTags);
-      formData.append('nfts', collectionNftsIds);
+      const formData = new FormData();  
       formData.append('picture', picture);
+      formData.append('slug',slug);
 
-      const URL = 'http://127.0.0.1:8000/api/creators/create-collection';
+      const URL_create = 'http://127.0.0.1:8000/collections/';
+      const URL_picture = 'http://127.0.0.1:8000/api/creators/update-collection';
       try{
-        axios
-        .post(URL, formData, config)
-        .then((res) => {				
-          setMsg({...msg, content:'Collection created',open:true,severity:"success",color:"#fafafa"})
-          /*router.push(`http://localhost:3000/collections/${res.data.creator}/${res.data.slug}`)*/
-        })
+        const cre = await axios.post(URL_create,body,config)
+        const pic = await axios.put(URL_picture,formData,config2)
+			
+        setMsg({...msg, content:'Collection created',open:true,severity:"success",color:"#fafafa"})
+
       }catch{
         setMsg({...msg, content:'Error',open:true,severity:"error"})
       }
@@ -220,7 +231,7 @@ const CreateCollection = () => {
                 Create collection
               </button>
             </Grid>
-          <CreatedNfts setCollectionNftsIds={setCollectionNftsIds} collectionNftsIds={collectionNftsIds}/>
+          <SelectCreatedNfts setCollectionNftsIds={setCollectionNftsIds} collectionNftsIds={collectionNftsIds} creator={creator.name}/>
           </div>
         </div>
       </Grid>

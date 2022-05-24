@@ -1,29 +1,12 @@
 .nftCard {
   background: linear-gradient(to right, #FFFFFF, #f0f0f0);
-  border-radius: 5px;
+  border-radius: 2px;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
   overflow-y: scroll;
   overflow-x: hidden;
-  height:60vh;
-  min-width:310px;
+  height:60vh;  
 }
 
-@media(min-width:1500px){
-  .nftCard{
-    width: 30vw;
-  }
-}
-
-@media(min-width:1000px)and(max-width:1599px){
-  .nftCard{
-    width: 40vw;
-  }
-}
-@media(min-width:400px) and (max-width:999px){
-  .nftCard{
-    width: 70vw;
-  }
-}
 
 
 

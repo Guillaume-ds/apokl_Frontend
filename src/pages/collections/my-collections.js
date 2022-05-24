@@ -15,7 +15,7 @@ import { Divider, Grid, Typography } from "@mui/material";
 
 const myCollections = () => {
 
-	const {user} = useContext(AuthenticationContext)
+	const {user,creator} = useContext(AuthenticationContext)
 	return(
 		<Layout>
 			<Grid 
@@ -29,7 +29,7 @@ const myCollections = () => {
 				justifyContent="center">
 					<Typography variant="h3">Welcome {user.username} </Typography>		
 			</Grid>
-			<GetCollections creator={user.username} tags={[]} nfts={[]} keywords={''}/>				
+			<GetCollections creator={creator.name} />				
 		</Layout>
     )}
 

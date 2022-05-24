@@ -1,4 +1,4 @@
-import React, {useState,useContext} from "react";
+import React, {useState,useContext,useEffect} from "react";
 import axios from "axios";
 
 import AuthenticationContext from '../../../context/AuthenticationContext';
@@ -19,21 +19,16 @@ import Drawer from '@mui/material/Drawer';
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
 import {TailSpin as Loader} from 'react-loader-spinner';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 const CreateRoomCollection = ({collection}) => {	
-	const {user, accessToken} = useContext(AuthenticationContext)
+	const {user, accessToken,creator} = useContext(AuthenticationContext)
 	const [toggle, setToggle] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
-	const collectionNftIds = collection.nfts
+	const [collectionNftIds,setCollectionNftIds] = useState([])
 	const [formInput, updateFormInput] = useState({ title: '', content: ''}) 
 	const [picture, setPicture] = useState("");
 	const onPictureChange = e => setPicture(e.target.files[0]);
@@ -43,7 +38,13 @@ const CreateRoomCollection = ({collection}) => {
 	const handleClose = e => {
     setMsg({...msg, content:'',open:false,severity:"error"})
   }
-	
+	useEffect(()=>{
+		if(collection){
+			setCollectionNftIds(collection.nfts_array)
+		}
+		
+	},[collection])
+
 	async function getOwners(nftIds) {
     const web3Modal = new Web3Modal({
       network: 'mainnet',
@@ -59,7 +60,6 @@ const CreateRoomCollection = ({collection}) => {
 			const data = await contract.fetchMarketItem(element)
 			listOwner.push(data.owner.toLowerCase())
 		}
-		setNftOwners(listOwner)
 		return listOwner;
 		
   }
@@ -75,8 +75,8 @@ const CreateRoomCollection = ({collection}) => {
 		if(formInput['title']==="" || formInput['content']===""){
 			setMsg({...msg, content:'Please add title and content',open:true,severity:"error"})
 		}else{
-			try{
-				var getNftOwners = await getOwners(collection.nfts)
+			
+				var getNftOwners = await getOwners(collectionNftIds)
 				const config = {
 					headers: {
 						'Content-Type': 'application/json',
@@ -87,21 +87,17 @@ const CreateRoomCollection = ({collection}) => {
 				const data = {
 					"title":formInput['title'],
 					"content":formInput['content'],
-					"collection":String(collection.id),
-					"creator":String(user.id),
+					"collection":collection.id,
+					"creator":creator.id,
 					"addresses":getNftOwners,
-					"users":[],    
-					"picture":"",
-					"picture2":""
+					"users":[]
 				}
 		
-				const URL = `http://localhost:8000/api/rooms/collection/create-room`;
+				const URL = `http://localhost:8000/rooms/`;
 				const res = await axios.post(URL,data,config)
 				setLoading(false)
 				setMsg({...msg, content:'Room successfully created',open:true,severity:"success",color:"#fafafa"})
-			}catch{
-				setMsg({...msg, content:'Error occured',open:true,severity:"error",color:"#fafafa"})
-			}
+
 		}
 	}
 

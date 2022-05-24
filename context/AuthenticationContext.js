@@ -8,7 +8,7 @@ export const AuthenticationProvider = ({ children }) => {
 	const [user, setUser] = useState(null)
 	const [accessToken, setAccessToken] = useState(null)
 	const [error, setError] = useState(null)
-	const [creator,setCreator] = useState({"name":""})	
+	const [creator,setCreator] = useState({"name":"","picture":null})	
 	const [loaded, setLoaded] = useState(false);
 
 	const router = useRouter()

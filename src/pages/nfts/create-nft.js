@@ -44,7 +44,7 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight:'35%',
-      width: 'fit',
+      width: '7vw',
       overflow:'auto'
     },
   },
@@ -69,7 +69,6 @@ const CreateItem = () => {
   const [tags, setTags] = useState([])
 	const [formInput, updateFormInput] = useState({ price: '', title: '', description: '', creator:'', royalties:0 })
   const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
-  const [creationFail,setCreationFail] = useState(false)
 	const router = useRouter()
 
   const handleClose = e => {
@@ -134,7 +133,6 @@ const CreateItem = () => {
       "rarity":nbNft
       
   }
-  console.log(body)
     axios.post("http://localhost:8000/nfts/", body, config )
   }
 
@@ -165,22 +163,27 @@ const CreateItem = () => {
 
   async function startSale() {
     let i = 0;
-    setCreationFail(false)
-    while(i<nbNft){
-      let tk  = await listNFTForSale();
-      if(tk===0){
-        setMsg({...msg, content:'Error occured',open:true,severity:"success", color:"#fafafa"})
-        await setCreationFail(true)
-        break
+    let creationFail = false
+    if(nbNft>0 && formInput.price>0){
+      while(i<nbNft){
+        let tk = await listNFTForSale();
+        if(tk===0){
+          setMsg({...msg, content:'Error occured',open:true,severity:"success", color:"#fafafa"})
+          creationFail = true
+          break
+        }
+        await listNftBackend(tk)
+        i++
       }
-      await listNftBackend(tk)
-      i++
-    }
-    if(creationFail){
-      setMsg({...msg, content:'Error occured',open:true,severity:"error", color:"#fafafa"})
+      if(creationFail){
+        setMsg({...msg, content:'Error occured',open:true,severity:"error", color:"#fafafa"})
+      }else{
+        setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
+      }  
     }else{
-      setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
-    }        
+      setMsg({...msg, content:'Select a positive price and number of NFT',open:true,severity:"error", color:"#fafafa"})
+    } 
+        
   }
 
   if(!creator){
@@ -264,34 +267,34 @@ const CreateItem = () => {
 						</FormControl>
  
                  
-                  <Grid container justifyContent="space-around" sx={{width: '80%'}}> 
-                    <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}>  
-                    <FormControl >
-                    <InputLabel >Price</InputLabel>
-                      <OutlinedInput
-                      label="NFT Title"
-                        required
-                        type="number"
-                        id="Price"
-                        name="Price"
-                        onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
-                      />  
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}> 
-                    <FormControl  >
-                      <InputLabel >Number of NFT</InputLabel>
-                      <OutlinedInput
-                        required
-                        type="number"
-                        id="Number"
-                        name="Number"
-                        label="Number"
-                        onChange={e => setNbNft(e.target.value)}
-                      />   
-                      </FormControl>
-                    </Grid>
-                  </Grid>             
+              <Grid container justifyContent="space-around" sx={{width: '80%'}}> 
+                <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}>  
+                <FormControl >
+                <InputLabel >Price</InputLabel>
+                  <OutlinedInput
+                  label="NFT Title"
+                    required
+                    type="number"
+                    id="Price"
+                    name="Price"
+                    onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
+                  />  
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}> 
+                <FormControl  >
+                  <InputLabel >Number of NFT</InputLabel>
+                  <OutlinedInput
+                    required
+                    type="number"
+                    id="Number"
+                    name="Number"
+                    label="Number"
+                    onChange={e => setNbNft(e.target.value)}
+                  />   
+                  </FormControl>
+                </Grid>
+              </Grid>             
                  
                 <Tooltip title="How much you will earn from each transaction" placement="top" arrow>
                   <Typography variant="caption" display="inline" sx={{mt:3, mb:-1}} textAlign="left">
@@ -334,16 +337,20 @@ const CreateItem = () => {
         </div>
         </Grid>
         </Grid>
-        <Grid item md={6} sx={{ mt:{xs:10, md:0} }}>
+        <Grid item md={6} sx={{ mt:{xs:10, md:0}, px:{xs:1, md:5, xl:10} }}>
           <Grid container sx={{ justifyContent: 'center', width:'100%'}}>
+          <Grid item xs={12} >
               <CardNft 
                 creatorInfo={creator} 
-                title={formInput.title} 
-                image={fileUrl} 
-                description={formInput.description} 
-                price={formInput.price} 
-                royalties={formInput.royalties} />
-
+                nft={{
+                  "title":formInput.title,
+                  "image":fileUrl,
+                  "description":formInput.description,
+                  "price":formInput.price,
+                  "royalties":formInput.royalties
+                }}
+                 />
+           </Grid>
         </Grid>
         </Grid>
       </Grid>

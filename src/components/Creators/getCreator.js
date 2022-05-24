@@ -2,23 +2,23 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import { useRouter } from 'next/router';
 
-import CardCollection from "./cardCollection";
+import CardCreator from "./cardCreator";
 
 import { Grid } from "@mui/material";
 
 
-const getCollections = ({tags,nfts,creator,keywords}) => {
+const getCreator = ({tags,creator,keywords}) => {
 	const router = useRouter();
-  const [collections, setCollections] = useState([])
+  const [creators, setCreators] = useState([])
   const [nextBackendUrl,setNextBackendUrl]=useState(null)
   const [previousBackendUrl,setPreviousBackendUrl]=useState(null)
-	const searchURL = "http://localhost:8000/api/creators/search-collections"
+	const searchURL = "http://localhost:8000/api/creators/search-creators"
 
 	useEffect(()=>{
-		fetchCollections(searchURL);
-	},[tags,nfts,creator,keywords])
+		fetchCreators(searchURL);
+	},[tags,creator,keywords])
 
-	const fetchCollections = async(url) => {
+	const fetchCreators = async(url) => {
 		const config = {
 			headers: {
 				'Content-Type': 'application/json'
@@ -26,14 +26,12 @@ const getCollections = ({tags,nfts,creator,keywords}) => {
 		}
 		const body = {
 			"tags":tags,
-			"nfts":nfts,
-			"creator":creator,
+			"name":creator,
 			"keywords":keywords
 		}
 
-
 		const collectionsReceived = await axios.post(url, body, config )
-		setCollections(collectionsReceived.data.results)
+		setCreators(collectionsReceived.data.results)
 		setNextBackendUrl(collectionsReceived.data.next)
     setPreviousBackendUrl(collectionsReceived.data.previous)
 	}
@@ -79,10 +77,10 @@ const getCollections = ({tags,nfts,creator,keywords}) => {
 			sx={{p:7}} 
 			rowSpacing={10} 
 			columnSpacing={{ sm: 2, md: 6 }}>				
-			{collections.length>0?
-			collections.map((collection,i) => (
+			{creators.length>0?
+			creators.map((creator,i) => (
 				<Grid item xs={12} md={5} xl={4}>
-					<CardCollection collection={collection} key={i} />
+					<CardCreator creator={creator} key={i} />
 				</Grid>				
 			))
 			:
@@ -95,4 +93,4 @@ const getCollections = ({tags,nfts,creator,keywords}) => {
 	)
 }
 
-export default getCollections;
+export default getCreator;

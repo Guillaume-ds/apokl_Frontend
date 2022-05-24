@@ -1,10 +1,8 @@
 import React from "react";
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import Collectionstyles from '../../styles/Collection.module.scss'
 import CreatorStyles from '../../styles/Creator.module.scss'
 
-import AccountIcon from '@material-ui/icons/AccountCircle'
 import UserPicture from '../../assets/images/user.png';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import Grid from "@mui/material/Grid";
@@ -16,60 +14,43 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 
 export default function CardCreator({creator}) {
   const router = useRouter();
-  console.log("là",creator)
-
 
 	if(!creator){
 		return(
-		<Grid item 
-			className={CreatorStyles.card} 
-			sx={{ pt:5 }} 
-			direction="column" 
-			>
-			<Image src={UserPicture} alt="Person" height="80px" width="80px"  sx={{m:2}}/>
-			<p className={CreatorStyles.cardName}>No name</p>
-				<Grid container className={CreatorStyles.cardCollections} direction="row" >
-					<p className={CreatorStyles.numberCollections}>0 collections</p>
-				</Grid>
-			<Grid>
-			<Button onClick={() => router.push('/account/')}>							
-					<InstagramIcon/> 
-				</Button>
-				<Button onClick={() => router.push('/account/')}>							
-					<TwitterIcon/> 
-				</Button>
-				<Button onClick={() => router.push('/account/')}>							
-					<YouTubeIcon/> 
-				</Button>
-				
-			</Grid>
-		</Grid>
+		<div className={CreatorStyles.col} ontouchstart="this.classList.toggle('hover');">
+			<div className={CreatorStyles.container}>
+				<div className={CreatorStyles.front}>
+					<div className={CreatorStyles.inner}>
+						<p>No creator</p>
+						<span>0 collections</span>
+					</div>
+				</div>
+				<div className={CreatorStyles.back}>
+					<div className={CreatorStyles.inner}>
+						<p>No creator with this name</p>
+					</div>
+				</div>
+			</div>
+		</div>
   );
 
 	}else{
   return (
-    <Grid item 
-			className={CreatorStyles.card} 
-			sx={{ pt:5 }} 
-			direction="column" 
-			>
-			<Image src={creator.picture?creator.picture:UserPicture} alt="Person" height="80px" width="80px"  sx={{m:2}}/>
-			<p className={CreatorStyles.cardName}>{creator.name}</p>
-				<Grid container className={CreatorStyles.cardCollections} direction="row" >
-					<p className={CreatorStyles.numberCollections}>{creator.collectionsCount} collections</p>
-				</Grid>
-			<Grid>
-			<Button onClick={() => router.push('/account/')}>							
-					<InstagramIcon/> 
-				</Button>
-				<Button onClick={() => router.push('/account/')}>							
-					<TwitterIcon/> 
-				</Button>
-				<Button onClick={() => router.push('/account/')}>							
-					<YouTubeIcon/> 
-				</Button>
-				
-			</Grid>
-		</Grid>
+    <div className={CreatorStyles.col} ontouchstart="this.classList.toggle('hover');" onClick={()=>router.push(`/creators/${creator.name}`)}>
+		<div className={CreatorStyles.container}>
+			<div className={CreatorStyles.front} style={{ backgroundImage: `url(${creator.picture})` }}>
+				<div className={CreatorStyles.inner}>
+					<p>{creator.name}</p>
+					<span>{creator.collectionsCount} collections</span>
+				</div>
+			</div>
+			<div className={CreatorStyles.back}>
+				<div className={CreatorStyles.inner}>
+					<p className={CreatorStyles.description}>{creator.description}sss</p>
+				</div>
+			</div>
+		</div>
+	</div>
   );}
 }
+

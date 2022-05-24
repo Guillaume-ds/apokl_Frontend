@@ -2,65 +2,51 @@ import { useEffect, useState } from 'react'
 import Layout from '../../hocs/Layout';
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
-import axios from 'axios'
-import Web3Modal from 'web3modal'
-
-import {marketplaceAddress} from '../../../config'
-import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
+import ButtonStyles from '../../styles/Button.module.scss'
+import FormStyles from "../../styles/Form.module.scss";
+import { listNFTForSale } from '../../components/NFT/functionNFT';
+import GetNftsBackend from "../../components/NFT/getNftsBackend";
+import { Grid,FormControl,InputLabel,OutlinedInput } from '@mui/material';
 
 export default function ResellNFT() {
-  const [formInput, updateFormInput] = useState({ price: '', image: '' })
+  const [price,setPrice] = useState(1)
   const router = useRouter()
-  const { id, tokenURI } = router.query
-  const { image, price } = formInput
-
-  useEffect(() => {
-    fetchNFT()
-  }, [id])
-
-  async function fetchNFT() {
-    if (!tokenURI) return
-    const meta = await axios.get(tokenURI)
-    updateFormInput(state => ({ ...state, image: meta.data.image }))
-  }
-
-  async function listNFTForSale() {
-    if (!price) return
-    const web3Modal = new Web3Modal()
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
-
-    const priceFormatted = ethers.utils.parseUnits(formInput.price, 'ether')
-    let contract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, signer)
-    let listingPrice = await contract.getListingPrice()
-
-    listingPrice = listingPrice.toString()
-    let transaction = await contract.resellToken(id, priceFormatted, { value: listingPrice })
-    await transaction.wait()
-
-    router.push('/nfts/')
-  }
+  
+  const { id } = router.query
+  
 
   return (
     <Layout>
-    <div className="flex justify-center">
-      <div className="w-1/2 flex flex-col pb-12">
-        <input
-          placeholder="Asset Price in Eth"
-          className="mt-2 border rounded p-4"
-          onChange={e => updateFormInput({ ...formInput, price: e.target.value })}
-        />
-        {
-          image && (
-            <img className="rounded mt-4" width="350" src={image} />
-          )
-        }
-        <button onClick={listNFTForSale} className="font-bold mt-4 bg-pink-500 text-white rounded p-4 shadow-lg">
-          List NFT
-        </button>
-      </div>
-    </div>
-    </Layout>
+    <Grid container 
+        direction={"column"}
+        sx={{pt:10,my:5}}
+        justifyContent="center" 
+        alignItems="center"
+        >
+      <Grid item sx={{width:'50%'}}>
+        <GetNftsBackend id={id} unique={true} />
+      </Grid>
+      <Grid item sx={{my:4}}>
+        <FormControl >
+        <InputLabel >Price</InputLabel>
+          <OutlinedInput
+          label="NFT Title"
+            required
+            type="number"
+            id="Price"
+            name="Price"
+            onChange={e => setPrice(e.target.value)}
+          />  
+          </FormControl>
+      </Grid>
+      <Grid item>
+
+        <div onClick={()=>listNFTForSale(id,price)} className={ButtonStyles.button}>
+          <p className={ButtonStyles.buttonContent}>List NFT</p>
+        </div>
+
+      </Grid>        
+    </Grid>
+  </Layout>
   )
 }

@@ -3,8 +3,10 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Web3Modal from 'web3modal'
 
-import {marketplaceAddress} from '../../../config'
-import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
+import CarouselNFT from '../components/NFT/carouselNFT';
+
+import {marketplaceAddress} from '../config'
+import NFTMarketplace  from '../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
 export default function CreatorDashboard() {
   const [nfts, setNfts] = useState([])
@@ -59,6 +61,7 @@ export default function CreatorDashboard() {
           }
         </div>
       </div>
+      <CarouselNFT creatorName="guillaume"/>
     </div>
   )
 }

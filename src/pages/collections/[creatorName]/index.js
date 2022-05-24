@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import axios from "axios";
 
 import Layout from '../../../hocs/Layout';
-import Artist from '../../../components/Account/artist';
+import Artist from '../../../components/Creators/artist';
 import styles from '../../../styles/Creator.module.scss';
 import { Grid } from "@mui/material";
 

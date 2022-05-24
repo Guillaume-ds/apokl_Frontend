@@ -1,3 +1,11 @@
+
+
+/* 
+CSS for collection, from top to bottom
+First collection page, then collection card
+*/
+
+/* Global Header */ 
 .header {
 	text-align: center;
 	color:white;
@@ -7,21 +15,22 @@
 	position: relative;
 	overflow: hidden;
 	box-shadow: 0px 0px 5px 3px rgba(51, 51, 51, 0.5);
-	border-radius: 0 0 2% 2% / 2%;		
-	background-image: linear-gradient(135deg, hsla(308, 100%, 39%,1) 10%, 
-									rgb(0, 70, 150) 35%, 
+	border-radius: 0 0 1% 1% / 1%;		
+	background-image: linear-gradient(135deg, hsla(308, 100%, 39%,1) 5%, 
+									rgb(0, 70, 150) 20%, 
 									hsla(276, 100%, 40%, 1) 50%,
 									hsla(276, 100%, 35%, 1) 55%, 
-									hsla(215, 100%, 35%, 1) 70%, 
-									hsla(308, 100%, 39%, 1) 90%);
+									hsla(215, 100%, 35%, 1) 80%, 
+									hsla(308, 100%, 39%, 1) 95%);
 }
+
 .overlay{
 	margin-top: -1.2em;
 	width: 100%;  
 	background-position: center;  
 	background-size: cover;
 	color: #FFF;
-	border-radius: 0 0 4% 4% / 4%;		
+	border-radius: 0 0 1% 1% / 1%;		
 	box-shadow: 1px 0px 10px #333;
 }
 
@@ -32,6 +41,8 @@
 	padding-top: 20vh;
 	padding-bottom: 4vh;
 }
+
+/* Content */ 
 
 .collectionCreator {
 	font-family: 'Open Sans', sans-serif;
@@ -105,7 +116,13 @@
 	border-bottom-left-radius: 25px;
   }
 
-/*Card*/
+/*
+Collection Card
+*/
+
+/*
+Collection Card Header
+*/
   
 .collectionCard {
 	display: flex;
@@ -114,16 +131,16 @@
 	box-shadow: 0 .1rem 2rem rgba(0, 0, 0, 0.1);
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
-	border-bottom-right-radius: 16px;
-	border-bottom-left-radius: 16px;
+	border-bottom-right-radius: 8px;
+	border-bottom-left-radius: 8px;
 	background: #ECE9E6;
 	background: linear-gradient(to right, #FFFFFF, #ECE9E6);
 	height:60vh;
-	width: 100%;
+	min-width: 100%;
+	justify-content: center;
 }
 
-.collectionCardHeader {
-	text-align: center;
+.collectionCardHeader {	
     color:#fafafa;
 	width: 100%;
 	background-size: cover;
@@ -131,7 +148,7 @@
 	position: relative;
 	overflow: hidden;
     box-shadow: 0px 1px 10px rgba(51, 51, 51, 0.4);
-    border-radius: 0 0 5% 5% / 20%;	
+    border-radius: 0 0 2% 2% / 4%;	
 	background-image: linear-gradient(135deg, hsla(308, 100%, 39%,1) 10%, 
 					hsla(212, 100%, 25%, 1) 35%, 
 					hsla(276, 100%, 40%, 1) 50%,
@@ -143,16 +160,29 @@
 
 .collectionCardOverlay{
 	margin-top: -1em;
+	padding-top: 20%;
+	
 }
 
 .collectionCardTitle {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding-left: 4px;
+	padding-right: 4px;
     text-shadow: 1px 0px 10px #333;
 	color: #f5f5f5;
 	font-family: sans-serif;
 	font-size: 1.5em;
-	padding-top: 20%;
-	padding-bottom: 5%;
+	background-color: rgba(135, 135, 135, .2);  
+ 	backdrop-filter: blur(1px);
+	width: fit-content;
+	border-radius: 5px;
 }
+
+/*
+Collection Card Boddy
+*/
   
 .collectionCardBody {
 	padding: 1rem;
@@ -172,15 +202,14 @@
 	align-self: flex-start;
 	padding: .25em .75em;
 	margin:0em .25em; 
-	border-radius: 1em;
+	border-radius: 0.75em;
 	font-size: .75rem;
 	display: inline-block;
 	overflow: auto;
-	background: rgb(82, 0, 204);
 	background-image: linear-gradient(-15deg, 
 					rgb(204, 0, 143) 3%,  
-                    rgb(82, 0, 204) 35%,
-                    rgb(104, 0, 179) 55%, 
+                    rgb(80, 0, 200) 25%,
+                    rgb(15, 15, 75) 55%, 
                     rgb(57, 0, 179) 70%,
 					rgb(204, 0, 143) 97%);
 	color: #fafafa;
@@ -236,11 +265,14 @@
 }
 
 .carouselCollection{
-	display: inline-block;
-	width: 100%;
-	height: 100px;
-	padding: 5px;
-	border: 1px solid blue;    
-	background-color: yellow; 
-
+	display: inline-block; 
+	animation: fadeIn ease-in-out 0s ;
 }
+.carouselCollectionMain{
+	display: inline-block; 
+	animation: fadeIn ease-in-out 0.4s ;
+}
+@keyframes fadeIn {
+	0% {opacity:0;}
+	100% {opacity:1;}
+  }

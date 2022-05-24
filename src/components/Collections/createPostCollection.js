@@ -1,4 +1,4 @@
-import React, {useState,useContext} from "react";
+import React, {useState,useContext,useEffect} from "react";
 import axios from "axios";
 
 import AuthenticationContext from '../../../context/AuthenticationContext';
@@ -29,44 +29,55 @@ import Button from '@mui/material/Button';
 
 
 const CreatePostCollection = ({collection}) => {	
-	const {user, accessToken} = useContext(AuthenticationContext)
-	const collectionNftIds = collection.nfts
+	const {user, accessToken,creator} = useContext(AuthenticationContext)
+  const [collectionNftIds,setCollectionNftIds] = useState([])
 	const [formInput, updateFormInput] = useState({ title: '', content: ''}) 
 	const [picture, setPicture] = useState("");
 	const onPictureChange = e => setPicture(e.target.files[0]);
 	const [picture2, setPicture2] = useState("");
 	const onPicture2Change = e => setPicture2(e.target.files[0]);
 	
+	useEffect(()=>{
+		if(collection){
+			setCollectionNftIds(collection.nfts_array)
+		}
+		
+	},[collection])
 
 	const createPost = async e => {
-		e.preventDefault();
+		
 		
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + accessToken,
-				'Content-Type': 'multipart/form-data'
+				'Authorization': 'Bearer ' + accessToken
 			}
 		}
+
+    const body = {
+      "title":formInput['title'],
+      "content":formInput['content'],
+      "creator":creator.id,
+      "collection":collection.id
+    }
 
 		const formData = new FormData();     
 		formData.append('title', formInput['title']);
     formData.append('content', formInput['content']); 
-		formData.append('creator', user.id);
+		formData.append('creator', creator.id);
 		formData.append('collection',collection.id);
-		formData.append('picture', picture);
-		formData.append('picture2', picture2);
-    console.log(formData);
+    if(picture){
+      formData.append('picture', picture);
+    }
+    if(picture2){
+      formData.append('picture', picture2);
+    }
 		
-		const URL = `http://localhost:8000/api/rooms/collection/create-post`;
+		const URL = `http://localhost:8000/posts/`;
 		axios
-			.post(URL, formData, config)
-			.then((res) => {
-				console.log(res)
-				router.push(`http://localhost:3000/collections/${res.data.creator}/${res.data.slug}`)
-			})
-			.catch((err) =>{ 
-				console.log(err);})
+			.post(URL, body, config)
+			.catch((err) =>{ })
+    console.log("formData")
 	}
 
 
@@ -78,7 +89,7 @@ const CreatePostCollection = ({collection}) => {
 				<h3>Posts</h3>
 				<Grid container sx={{mt:10}} justifyContent='center' >
         <div className={FormStyles.formCard}>
-        <h1 className={FormStyles.formCardTitle}>Create a new collection </h1>
+        <h1 className={FormStyles.formCardTitle}>Create a new post </h1>
         <div className={FormStyles.formCardContent}>
             <FormControl  sx={{mt: 4, width:'80%'}}> 
               <TextField

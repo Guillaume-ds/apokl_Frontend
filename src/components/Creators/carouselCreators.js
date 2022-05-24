@@ -13,6 +13,7 @@ const CarouselCreators = ({tags,name}) => {
 	const router = useRouter();
   const [creators, setCreators] = useState([])
 	const [carouselIndex,setCarouselIndex] = useState(0);
+	const [refreshToken,setRefreshToken] = useState(0);
  
 	const fetchCreators = async() => {
 		const config = {
@@ -26,13 +27,12 @@ const CarouselCreators = ({tags,name}) => {
 		}
 
 		const creatorsReceived = await axios.post("http://localhost:8000/api/creators/search-creators", body, config )
-		setCreators(creatorsReceived.data)
-		console.log(creatorsReceived.data)
+		setCreators(creatorsReceived.data.results)
 		}
 
 		useEffect(()=>{
 			fetchCreators();
-		},[tags,name])
+		},[tags,name,refreshToken])
 
 		if(creators.length>0){
 			return (		
