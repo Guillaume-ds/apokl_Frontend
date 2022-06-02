@@ -1,70 +1,34 @@
 import React, {useState, useContext} from "react";
 import axios from "axios";
 import Layout from '../../hocs/Layout';
-import { useRouter } from 'next/router';
 
 import AuthenticationContext from '../../../context/AuthenticationContext';
 import WithAuth from "../../hocs/WithAuth";
 import SelectCreatedNfts from "../../components/NFT/selectCreatedNfts";
+import SelectTags from "../../components/Actions/selectTags";
 
 import FormStyles from "../../styles/Form.module.scss";
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
-import {TailSpin as Loader} from 'react-loader-spinner';
-import InputLabel from '@mui/material/InputLabel';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Checkbox from '@mui/material/Checkbox';
-import ListItemText from '@mui/material/ListItemText';
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight:'35%',
-      width: 100,
-      overflow:'auto'
-    },
-  },
-};
 
-const tags = [
-  'Artist',
-	'Music',	
-	'Drawing',
-  'Painting',
-  'Singing',
-  'Gaming',
-	'Sports',
-	'Social',
-  'Food',
-];
+
 
 
 const CreateCollection = () => {
-    const {user, accessToken, creator} = useContext(AuthenticationContext)
-		const router = useRouter();
+    const {accessToken, creator} = useContext(AuthenticationContext)
     const [formInput, updateFormInput] = useState({ name: '', description: '', nfts:[] })    
     const [picture, setPicture] = useState(null);
-		const [collectionTags, setCollectionTags] = useState([]);
+		const [tags, setTags] = useState([]);
 		const [collectionNftsIds, setCollectionNftsIds] = useState([]);
     const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
 
-		const handleTagsChange = (event) => {
-			const {
-				target: { value },
-			} = event;
-			setCollectionTags(
-				typeof value === 'string' ? value.split(',') : value,
-			);
-		};
+
     const handleClose = e => {
       setMsg({...msg, content:'',open:false,severity:"error"})
     }
@@ -172,38 +136,7 @@ const CreateCollection = () => {
                 rows={4}/>     
             </FormControl>  
             <Grid sx={{mt: 1, width:'80%'}} container direction="row" justifyContent="space-around" alignItems="center">
-              <FormControl sx={{width:'45%'}}>
-                <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
-                <Select
-                  labelId="demo-multiple-chip-label"
-                  id="demo-multiple-chip"
-                  multiple
-                  
-                  value={collectionTags}
-                  onChange={handleTagsChange}
-                  input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  MenuProps={MenuProps}      
-                >
-                  
-                {tags.map((tag) => (
-                    <MenuItem
-                      key={tag}
-                      value={tag}
-                      className={FormStyles.multiSelect} 
-                    >
-                      <Checkbox checked={collectionTags.indexOf(tag) > -1} />
-                      <ListItemText primary={tag} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <SelectTags tags={tags} setTags={setTags}/>
               <FormControl sx={{ width:'45%'}}>
 
               { !picture? 

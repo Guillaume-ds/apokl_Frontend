@@ -1,22 +1,14 @@
 import React, {useContext} from "react";
 import Layout from '../hocs/Layout';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router'
 
 import AuthenticationContext from "../../context/AuthenticationContext"; 
 
-import ApoklButton from "../components/apoklButton";
 import PresentationComponent from "../components/Home/presentationComponent";
 
 import CarouselCollections from "../components/Collections/carouselCollection";
 import CarouselCreators from '../components/Creators/carouselCreators'
 
 import Grid from "@mui/material/Grid";
-
-import influenceur_nft from '../assets/images/influenceur_nft.jpg';
-import entreprise_nft from '../assets/images/entreprise_nft.png';
-import client_nft from '../assets/images/client_nft.jpg';
 
 import VariousStyles from '../styles/Various.module.scss';
 
@@ -36,21 +28,23 @@ export default function Home() {
       </Grid>
 
 
-      <Grid container direction="column" sx={{mt:15,mx:2}} style={{backgroundColor:"#f8f8ff"}}>
+      <Grid container direction="column" sx={{mt:15,px:{xs:1,sm:2,md:4}}}  justifyContent="center">
 
-        <Grid item textAlign={'center'}  sx={{py:4}}>
-          <h1>Apokl collections</h1>
+        <Grid item textAlign={'center'} style={{backgroundColor:"#f8f8ff"}}>
+          <h1>Exclusive collections</h1>
+          <p>Get access to exclusive events and chatrooms through the NFT collections.</p>
         </Grid>
-        <Grid item  sx={{py:4}}>
+        <Grid item  sx={{py:4}} style={{backgroundColor:"#f8f8ff"}}>
           <CarouselCollections tags={[]}/>
         </Grid>
+
       </Grid>
       
-      <Grid container direction="column" sx={{mt:15,mx:2}} style={{backgroundColor:"#f8f8ff"}}>
-        <Grid item textAlign={'center'} sx={{py:4}}>
+      <Grid container direction="column" sx={{mt:15,px:{xs:1,sm:2,md:4}}} >
+        <Grid item textAlign={'center'} style={{backgroundColor:"#f8f8ff"}}>
           <h1>Apokl creators</h1>
         </Grid>
-        <Grid item sx={{py:4}}>
+        <Grid item sx={{py:4}} style={{backgroundColor:"#f8f8ff"}}>
           <CarouselCreators name={''} tags={[]}/>
         </Grid>
       </Grid>     

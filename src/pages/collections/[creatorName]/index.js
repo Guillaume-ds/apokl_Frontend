@@ -17,7 +17,7 @@ import NFTMarketplace  from '../../../../artifacts/contracts/NFTMarket.sol/NFTMa
 
 const Creator = () => {
 	const router = useRouter()
-	const { creator } = router.query
+	const { creatorName } = router.query
 	return (
 		<Layout>
 			<Grid 
@@ -28,9 +28,9 @@ const Creator = () => {
 				direction="column"
 				alignItems="center"
 				justifyContent="center">
-				<Artist name={creator} /> 
+				<Artist name={creatorName} /> 
 			</Grid> 
-			<GetCollections creator={creator} tags={[]} ids={[]} nfts={[]} keywords={''}/>			         
+			<GetCollections creator={creatorName} tags={[]} ids={[]} nfts={[]} keywords={''}/>			         
 		</Layout>	
 	)
 }

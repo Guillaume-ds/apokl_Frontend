@@ -17,15 +17,13 @@ export default function CardNft({collection}) {
     if(collection.picture){
       var styling = {
         backgroundImage: `url('${collection.picture}')`,
-        objectFit: 'scale-down',
         backgroundPosition:'center',
         backgroundRepeat: 'no-repeat',
-        height: '100%',
         } 
       }else{  
       } 
   return (
-    <Grid container >
+    <div>
       <div className={Collectionstyles.collectionCard}>
         <div className={Collectionstyles.collectionCardHeader} >
           <div className={Collectionstyles.collectionCardOverlay} style={styling}>
@@ -33,7 +31,7 @@ export default function CardNft({collection}) {
           </div>
         </div>	
         <div className={Collectionstyles.collectionCardBody}>
-          <Grid className={Collectionstyles.collectionInfo} container direction='row' justifyContent='space-between' alignItems='center' sx={{mt:-3}}>
+          <Grid className={Collectionstyles.collectionInfo} container direction='row' justifyContent='space-between' alignItems='center'>
             <div>{collection.tags.map(tag =>(<p className={Collectionstyles.collectionTag}>{tag}</p>))}</div>
             <p>{collection.nfts_array.length} NFTs</p> 
           </Grid>
@@ -60,7 +58,7 @@ export default function CardNft({collection}) {
           </Grid>
         </div>
       </div>
-    </Grid>
+    </div>
   );}else{
     return null
   }

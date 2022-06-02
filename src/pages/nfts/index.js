@@ -3,60 +3,22 @@ import React, { useState } from "react";
 import Layout from '../../hocs/Layout';
 import GetNftsBackend from "../../components/NFT/getNftsBackend";
 import Creatorstyles from '../../styles/Creator.module.scss';
-import FormStyles from "../../styles/Form.module.scss";
+import SelectTags from "../../components/Actions/selectTags";
 
-import { Grid, Typography,ListItemText } from "@mui/material";
-import Checkbox from '@mui/material/Checkbox';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
+import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight:'35%',
-      width: 'fit',
-      overflow:'auto'
-    },
-  },
-};
 
-const listTags = [
-  'Artist',
-	'Music',	
-	'Drawing',
-  'Painting',
-  'Singing',
-  'Gaming',
-	'Sports',
-	'Social',
-  'Food',
-];
 
 export default function Nfts() {
   const [tags, setTags] = useState([])
 	const [nfts, setNfts] = useState([])
-	const [creator, setCreator] = useState('')
-	const [keywords, setKeywords] = useState('')
+	const [creator, setCreator] = useState(null)
+	const [keywords, setKeywords] = useState(null)
   const [loadingState, setLoadingState] = useState('not-loaded')
 
-  const handleTagsChange = (event) => {
-		const {
-			target: { value },
-		} = event;
-		setTags(
-			typeof value === 'string' ? value.split(',') : value,
-		);
-	};
-
   
-
-
 
   if (loadingState === 'loaded' && !nfts.length) {
     return (
@@ -66,7 +28,7 @@ export default function Nfts() {
   } else { 
     return(
     <Layout>
-      			<Grid 
+			<Grid 
 				container 
 				className={Creatorstyles.accueil} 
 				id="accueil" 
@@ -76,42 +38,13 @@ export default function Nfts() {
 				alignItems="center"
 				justifyContent="center">
 
-					<Typography vairant="h3">NFT Collections</Typography>
+					<h1>NFT Marketplace</h1>
 
 					<Grid container sx={{mt:4, mb:3}} justifyContent='space-around' alignItems='center'>
-
-						<FormControl sx={{width:{ xs: '80%', md: '25%'}}}>
-							<InputLabel id="demo-multiple-chip-label" >Tags</InputLabel>
-							<Select
-								labelId="demo-multiple-chip-label"
-								id="demo-multiple-chip"
-								multiple
-                autoWidth
-								direction="column"
-								sx={{ background:'white', borderRadius:2 }}
-								value={tags}
-								className={FormStyles.multiSelect}
-								onChange={handleTagsChange}
-								input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-								renderValue={(selected) => (
-									<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-										{selected.map((value) => (
-											<Chip key={value} label={value} />
-										))}
-									</Box>
-								)}
-								MenuProps={MenuProps}
-							>
-								
-								{listTags.map((tag) => (
-									<MenuItem key={tag} value={tag}>
-										<Checkbox checked={tags.indexOf(tag) > -1}/>
-										<ListItemText primary={tag} />
-									</MenuItem>
-								))}
-								
-							</Select>
-						</FormControl>
+						
+						<Grid item sx={{width:{ xs: '80%', md: '25%' }}}>
+							<SelectTags tags={tags} setTags={setTags} />
+						</Grid>
 
 						<FormControl sx={{width:{ xs: '80%', md: '25%' }}}> 
 						<TextField
@@ -135,7 +68,6 @@ export default function Nfts() {
 							onChange={e => setKeywords( e.target.value)}/>     
 					</FormControl>  
 				</Grid>
-				<button className={FormStyles.formButton}  onClick={()=>getCollections()}>Search</button>
 			</Grid> 
       <Grid container 
         justifyContent="space-around"

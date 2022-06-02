@@ -10,7 +10,7 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 
-const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
+const CarouselCollections = ({tags=null,nfts=null,creator=null,keywords=null,ids=null}) => {
 	const router = useRouter();
   const [collections, setCollections] = useState([])
 	const [carouselIndex,setCarouselIndex] = useState(0)
@@ -24,8 +24,9 @@ const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
 		}
 		const body = {
 			"ids":ids,
-			"creator":"",
-			"tags":tags
+			"creator":creator,
+			"tags":tags,
+			"nfts":nfts
 		}
 
 		const collectionsReceived = await axios.post("http://localhost:8000/api/creators/search-collections", body, config )
@@ -43,11 +44,11 @@ const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
 					direction='row' 
 					justifyContent='space-around' 
 					alignItems='center' 
-					columnSpacing={{ sm: 2, md:4}}
-					sx={{px:{xs:1,md:3}}}>	
+					columnSpacing={{ xs:0, sm: 1, md:4}}
+					sx={{px:{xs:0,md:3}}}>	
 					<Grid item style={{textAlign: "right"}}>
 						{carouselIndex>0?
-							<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)} fontSize='large' style={{color:"#004691"}} />
+							<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />
 							:
 							<ArrowCircleLeftIcon style={{color:"#96aac8"}} />
 						}	
@@ -55,7 +56,7 @@ const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
 					<Grid item 
 						key={carouselIndex} 
 						sm={3} 
-						sx={{ display: { xs: 'none', sm: 'block' } }} 
+						sx={{ display: { xs: 'none', md: 'block' } }} 
 						style={{textAlign: "center"}} 
 						className={CollectionStyles.carouselCollection}
 					>			
@@ -64,7 +65,7 @@ const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
 					<Grid item 
 						key={carouselIndex+3} 						
 						xs={10} 
-						sm={4} 
+						md={4} 
 						style={{textAlign: "center"}}
 						className={CollectionStyles.carouselCollectionMain}
 					>				
@@ -73,7 +74,7 @@ const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
 					<Grid item 
 						key={carouselIndex+6} 
 						sm={3} 
-						sx={{ display: { xs: 'none', sm: 'block' } }} 
+						sx={{ display: { xs: 'none', md: 'block' } }} 
 						style={{textAlign: "center"}} 
 						className={CollectionStyles.carouselCollection}
 					>				
@@ -81,7 +82,7 @@ const CarouselCollections = ({tags,nfts,creator,keywords,ids}) => {
 					</Grid>	
 					<Grid item style={{textAlign: "left"}}>			
 						{carouselIndex<collections.length-3?
-							<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} fontSize='large' style={{color:"#004691"}} />:
+							<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />:
 							<ArrowCircleRightIcon style={{color:"#96aac8"}} />
 						}
 					</Grid>									

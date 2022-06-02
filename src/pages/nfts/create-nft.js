@@ -16,6 +16,7 @@ import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarke
 
 import CardNft from '../../components/NFT/cardNft';
 import FormStyles from "../../styles/Form.module.scss"
+import SelectTags from "../../components/Actions/selectTags";
 
 import { Grid, Snackbar,ListItemText } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -40,27 +41,8 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight:'35%',
-      width: '7vw',
-      overflow:'auto'
-    },
-  },
-};
 
-const listTags = [
-  'Artist',
-	'Music',	
-	'Drawing',
-  'Painting',
-  'Singing',
-  'Gaming',
-	'Sports',
-	'Social',
-  'Food',
-];
+
 
 const CreateItem = () => {
   const {accessToken,creator} = useContext(AuthenticationContext)
@@ -233,43 +215,38 @@ const CreateItem = () => {
                 multiline
                 rows={4}/>     
             </FormControl> 
-            <FormControl sx={{width: '80%', mt:'2%'}}>
-							<InputLabel id="demo-multiple-chip-label" >Tags</InputLabel>
-							<Select
-								labelId="demo-multiple-chip-label"
-								id="demo-multiple-chip"
-								multiple
-                autoWidth
-								direction="column"
-								sx={{ background:'white', borderRadius:2 }}
-								value={tags}
-								className={FormStyles.multiSelect}
-								onChange={handleTagsChange}
-								input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-								renderValue={(selected) => (
-									<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-										{selected.map((value) => (
-											<Chip key={value} label={value} />
-										))}
-									</Box>
-								)}
-								MenuProps={MenuProps}
-							>
-								
-								{listTags.map((tag) => (
-									<MenuItem key={tag} value={tag}>
-										<Checkbox checked={tags.indexOf(tag) > -1}/>
-										<ListItemText primary={tag} />
-									</MenuItem>
-								))}
-								
-							</Select>
-						</FormControl>
- 
-                 
-              <Grid container justifyContent="space-around" sx={{width: '80%'}}> 
-                <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}>  
-                <FormControl >
+            <Grid container justifyContent="space-between" sx={{width: '80%', mt:2}} alignItems="center"> 
+              <Grid item xs={12} md={5.5}>
+              <SelectTags tags={tags} setTags={setTags} />
+              </Grid>
+              <Grid item 
+                xs={12} md={5.5} 
+                style={{border:"rgba(100,100,100,0.4) 1px solid", height:"60px",borderRadius:"5px"}} >
+                { !fileUrl?
+                  <Grid container direction="column" alignItems="center" justifyContent="center"  
+                    style={{height:"60px"}}>
+                    <Grid item>
+                    <Button component="label" >
+                      <CloudUploadIcon fontSize='small' sx={{px:1}} style={{color:"rgb(0, 50, 150)"}}/>Upload Image
+                        <input
+                          hidden
+                          accept="image/*"
+                          id="post-image"
+                          onChange={onChange}
+                          name="image"
+                          type="file"
+                          />
+                      </Button>
+                      </Grid>
+                    </Grid>
+                    :
+                    <LibraryAddCheckIcon sx={{ width:'100%', my:4 }} style={{color:"#004491"}}/>
+                  }   
+                </Grid>   
+            </Grid>            
+              <Grid container justifyContent="space-between" sx={{width: '80%', mt:2}} alignItems="center"> 
+                <Grid item xs={12} md={5.5} sx={{mt:{xs:3,md:2}}}>  
+                <FormControl sx={{ width:'100%'}}>
                 <InputLabel >Price</InputLabel>
                   <OutlinedInput
                   label="NFT Title"
@@ -281,8 +258,8 @@ const CreateItem = () => {
                   />  
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} md={5} sx={{mt:{xs:3,md:2}}}> 
-                <FormControl  >
+                <Grid item xs={12} md={5.5} sx={{mt:{xs:3,md:2}}}> 
+                <FormControl  sx={{ width:'100%'}}>
                   <InputLabel >Number of NFT</InputLabel>
                   <OutlinedInput
                     required
@@ -302,7 +279,7 @@ const CreateItem = () => {
                   </Typography>
                 </Tooltip>
                 <Slider
-                  sx={{width: '80%', mt: 1}}
+                  sx={{width: '80%', mt: 1, mb:2}}
                   aria-label="Royalties"
                   defaultValue={0}
                   onChange={e => updateFormInput({ ...formInput, royalties: e.target.value })}
@@ -312,23 +289,7 @@ const CreateItem = () => {
                   min={0}
                   max={50}
                 />
-                { !fileUrl?
-                <Grid item container direction="column" justifyContent="center" alignItems="center" sx={{my:'4vh'}}>  
-                  <Button component="label" >
-                   <CloudUploadIcon fontSize='small' sx={{mx:1}} style={{color:"rgb(0, 50, 150)"}}/>Upload Image
-                    <input
-                      hidden
-                      accept="image/*"
-                      id="post-image"
-                      onChange={onChange}
-                      name="image"
-                      type="file"
-                      />
-                  </Button>
-                </Grid>
-                :
-								<LibraryAddCheckIcon sx={{ width:'100%', my:4 }} style={{color:"#004491"}}/>
-							}
+                
                 
                 <button className={FormStyles.formButton} variant="contained" onClick={startSale} >
                   Create NFT

@@ -33,7 +33,6 @@ export default function RegisterPage() {
 
   const submitHandler = e => {
   	e.preventDefault();
-    // console.log({username, email, password, password2})
   	register({username, email, password, password2})
   }
 

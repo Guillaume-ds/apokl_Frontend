@@ -1,14 +1,17 @@
 import React, {useState, useEffect,useContext} from "react";
+import { useRouter } from 'next/router';
 
 import CardNft from './cardNft';
 import {buyNft , loadNFT} from './functionNFT';
 import { Grid } from "@mui/material";
 import FormStyles from '../../styles/Form.module.scss';
 import AuthenticationContext from '../../../context/AuthenticationContext'
+import ApoklButton from "../apoklButton";
 
 
 export default function GetNFT({id,buyable,creatorInfo,unique=false}) {
   const [nft, setNft] = useState({})
+  const router = useRouter();
   const {user} = useContext(AuthenticationContext)
 
   useEffect(() => {
@@ -31,7 +34,14 @@ export default function GetNFT({id,buyable,creatorInfo,unique=false}) {
               <button className={FormStyles.formButton} onClick={() => buyNft(nft)}>Buy</button>
             </Grid>
             :
-            null
+            <Grid 
+              container 
+              direction="column" 
+              sx={{mt:0}} 
+              alignItems='center' 
+              onClick={() => router.push('/account/login')}>
+              <ApoklButton text={"Login"}  />
+            </Grid>
           }
       </Grid>
     )

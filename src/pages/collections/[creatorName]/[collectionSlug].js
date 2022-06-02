@@ -7,14 +7,13 @@ import Layout from '../../../hocs/Layout';
 import AuthenticationContext from '../../../../context/AuthenticationContext';
 
 import Collectionstyles from '../../../styles/Collection.module.scss';
+import VariousStyles from '../../../styles/Various.module.scss';
 import PresentationCollection from "../../../components/Collections/presentationCollection";
 import ContentCollection from "../../../components/Collections/contentCollection";
 import EditCollection from "../../../components/Collections/editCollection";
-import CreatePostCollection from "../../../components/Collections/createPostCollection";
-import CreateRoomCollection from "../../../components/Collections/CreateRoomCollection";
+import CreatorActions from "../../../components/Collections/creatorActions";
 
 import AccountIcon from '@material-ui/icons/AccountCircle';
-import {TailSpin as Loader} from 'react-loader-spinner';
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -47,6 +46,7 @@ const Collection = () => {
 		if(user){
 			if(user.username === creatorName){
 				setIsCreator(true)
+				setAccess(true)
 			}
 		}
 	})	
@@ -176,8 +176,12 @@ const Collection = () => {
 			{
 				(!edit && isCreator) ?
 				<>
-				<CreateRoomCollection collection={collection} />
-				<CreatePostCollection collection={collection} />			
+				<Grid 
+					item      
+					className={VariousStyles.separator40}
+					sx={{mt:{xs:10,md:20},mb:10, mr:"30%"}}>
+				</Grid>
+				<CreatorActions collection={collection} />			
 				<ContentCollection collection={collection} access={true} />
 				</>
 				:

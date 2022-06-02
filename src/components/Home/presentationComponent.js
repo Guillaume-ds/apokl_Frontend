@@ -20,11 +20,11 @@ const PresentationComponent = () => {
 
             <Grid 
               item 
-              md={6} 
+              md={5} 
               sx={{ml:{xs:1,sm:2,md:3,lg:4},pr:{xs:0,sm:2,md:3,lg:4}}}>
                 
                 <Grid container direction="column">
-                  <Grid item sx={{px:{xs:1,sm:2,md:3,lg:4}}}>
+                  <Grid item sx={{px:{xs:1,sm:2,md:3,lg:4}}} textAlign="justify">
                   <h1>
                     Exclusivity by NFT
                   </h1>
@@ -36,8 +36,8 @@ const PresentationComponent = () => {
                   </h3>
                   </Grid>
 
-                  <Grid item sx={{my:5}}>
-                  <hr className={VariousStyles.separator80}></hr>
+                  <Grid item sx={{my:5, px:"20%"}}>
+                    <hr className={VariousStyles.smallSeparatorGradient}></hr>
                   </Grid>
 
                   <div onClick={()=>router.push(`http://localhost:3000/account/login`)}>
@@ -51,7 +51,7 @@ const PresentationComponent = () => {
 
             <Grid 
               item 
-              md={5} 
+              md={6} 
               sx={{ml:{xs:1,sm:2,md:3,lg:4},
                 pr:{xs:0,sm:2,md:3,lg:4},
                 mt:{xs:5,md:0}}}>

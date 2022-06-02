@@ -1,6 +1,6 @@
 @import "variables";
 
-
+//classic button with apokl logo in background
 .button{
     background: center;
     text-align: center;
@@ -12,13 +12,40 @@
 }
 
 .buttonContent{
-    padding: 5px;
+    padding: 0.25em;
+    margin:0px;
 }
 
+//button with mui Icon
 .buttonIcon{
     color:$apoklDarkBlue;
 }
 
 .buttonIcon:hover{
     color:$apoklLight2Blue;
+}
+
+//Div select button
+.divButton{
+    background-color: $apoklLightBlue;
+    color:$apoklDarkBlue;
+    padding-top:2px;
+    padding-bottom:1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    border: 1px solid $apoklDarkBlue;
+    cursor: pointer;
+}
+
+.divButtonActive{
+    background-color: $apoklDarkBlue;
+    color: $apoklLightBlue;
+    padding-top:2px;
+    padding-bottom:1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    border: 1px solid $apoklDarkBlue;
+    cursor: pointer;
 }

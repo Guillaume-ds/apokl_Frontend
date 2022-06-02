@@ -5,9 +5,11 @@ import { useRouter } from 'next/router';
 import CardCollection from "./cardCollection";
 
 import { Grid } from "@mui/material";
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 
-const getCollections = ({tags,nfts,creator,keywords}) => {
+const getCollections = ({tags=null,nfts=null,creator=null,keywords=null,slug=null}) => {
 	const router = useRouter();
   const [collections, setCollections] = useState([])
   const [nextBackendUrl,setNextBackendUrl]=useState(null)
@@ -28,48 +30,57 @@ const getCollections = ({tags,nfts,creator,keywords}) => {
 			"tags":tags,
 			"nfts":nfts,
 			"creator":creator,
-			"keywords":keywords
+			"keywords":keywords,
+			"slug":slug
 		}
 
+		console.log(body)
 
 		const collectionsReceived = await axios.post(url, body, config )
+		console.log(collectionsReceived)
 		setCollections(collectionsReceived.data.results)
-		setNextBackendUrl(collectionsReceived.data.next)
-    setPreviousBackendUrl(collectionsReceived.data.previous)
+		await setNextBackendUrl(collectionsReceived.data.next)
+    	await setPreviousBackendUrl(collectionsReceived.data.previous)
+		
 	}
+	console.log(nextBackendUrl,"next")
+		console.log(previousBackendUrl,"previous")
 
 
 	const ElementToLoad = () =>{
-    try{
-      if(nextBackendUrl || previousBackendUrl){
-        return(
-          <Grid item 
-                sx={{mt:15}} 
-                textAlign={'center'}>
-            <h1>Load more</h1>
-            <Grid container 
-                  direction={"row"} 
-                  justifyContent="space-around">
-              {nextBackendUrl?
-                <ArrowCircleLeftIcon onClick={()=>fetchCollections(nextBackendUrl)} fontSize='large' style={{color:"#004691"}} />
-                :
-                <ArrowCircleLeftIcon style={{color:"#96aac8"}} fontSize='large'/>
-              }
-              {previousBackendUrl?
-                <ArrowCircleRightIcon onClick={()=>fetchCollections(previousBackendUrl)} fontSize='large' style={{color:"#004691"}} />:
-                <ArrowCircleRightIcon style={{color:"#96aac8"}} fontSize='large'/>
-              }
-            </Grid>
-          </Grid>
-        )
-      }else{
-        return(null)
-      }
-    }catch{
-      return(null)
-    }
+ 
+	if(nextBackendUrl || previousBackendUrl){
+	return(
+		<Grid item 
+			sx={{mt:15}} 
+			textAlign={'center'}>
+		<h1>Load more</h1>
+		<Grid container 
+				direction={"row"} 
+				justifyContent="space-around">
+			{previousBackendUrl?
+			<ArrowCircleLeftIcon onClick={()=>fetchCollections(previousBackendUrl)} fontSize='large' style={{color:"#004691"}} />
+			:
+			<ArrowCircleLeftIcon style={{color:"#96aac8"}} fontSize='large'/>
+			}
+			{nextBackendUrl?
+			<ArrowCircleRightIcon onClick={()=>fetchCollections(nextBackendUrl)} fontSize='large' style={{color:"#004691"}} />:
+			<ArrowCircleRightIcon style={{color:"#96aac8"}} fontSize='large'/>
+			}
+		</Grid>
+		</Grid>
+	)
+	}else{
+	return(null)
+	}
+
     
   }
+
+	useEffect(()=>{
+		ElementToLoad();
+	},[nextBackendUrl,previousBackendUrl])
+
 
 	return (		
 		<Grid container 
@@ -86,11 +97,14 @@ const getCollections = ({tags,nfts,creator,keywords}) => {
 				</Grid>				
 			))
 			:
-		<Grid container
-			sx={{height:'60vh', p:7}}>
-				There are no collection corresponding
-		</Grid>}	
-		<ElementToLoad />				
+			<Grid container
+				sx={{height:'60vh', p:7}}>
+					There are no collection correspondingss
+			</Grid>}
+			<Grid item xs={12}>
+				<ElementToLoad />				
+			</Grid>	
+						
 		</Grid>
 	)
 }

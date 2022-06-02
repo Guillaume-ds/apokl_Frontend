@@ -11,13 +11,13 @@ const CollectionPresentation = ({collection}) => {
         justifyContent="space-around"
         alignItems="center"
         sx={{mt:15}}>
-        <Grid item xs={7} md={4}>
+        <Grid item xs={10} md={4}>
             <Artist name={collection.creator.name} />
         </Grid>	
-        <Grid item xs={9} md={7}>
+        <Grid item xs={12} md={7}>
         <div className={Collectionstyles.description}>
-            <h3>More about this collection</h3>
-            <p>{collection.description}</p>				
+            <h3 className={Collectionstyles.postCommentTitle}>More about this collection</h3>
+            <p className={Collectionstyles.postCommentContent}>{collection.description}</p>				
         </div>
         </Grid>					
     </Grid>

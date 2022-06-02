@@ -88,7 +88,7 @@ export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creato
     return(
       <Grid container direction="row" justifyContent="center" sx={{height:'70vh', pt:10}}>
       <div className={FormStyles.formCard}>
-      <h1 className={FormStyles.formCardTitle}>No NFT yet</h1>
+      <h1 className={FormStyles.formCardTitle}>No NFT available yet</h1>
         <div className={FormStyles.formCardContent}>
           <div className={FormStyles.formCardItem}>	
             <Link href='/nfts/create-nft'>

@@ -3,15 +3,6 @@ import axios from "axios";
 
 import CardCreator from "./cardCreator";
 
-import Image from 'next/image';
-import Link from 'next/link';
-
-import CreatorStyles from '../../styles/Creator.module.scss';
-import Activate from './activate';
-
-import User from '../../assets/images/user.png';
-
-import Grid from "@mui/material/Grid";
 
 
 

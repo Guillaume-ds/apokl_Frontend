@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import AuthenticationContext from '../../context/AuthenticationContext';
 import NavbarStyles from '../styles/Navbar.module.scss';
+import VariousStyles from '../styles/Various.module.scss';
 
 import { Grid } from '@mui/material';
 import { AppBar, Drawer, IconButton, Toolbar } from '@material-ui/core';
@@ -16,17 +17,13 @@ import { Box } from '@mui/system';
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 
 import Accordion from '@mui/material/Accordion';
-import Typography from '@mui/material/Typography';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 
 import MenuIcon from '@material-ui/icons/Menu';
-import BrushIcon from '@mui/icons-material/Brush';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountIcon from '@material-ui/icons/AccountCircle';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import Apokl from '../assets/images/logo.png';
 
@@ -79,7 +76,7 @@ const Nav = (props) => {
   const handleLogout = async e => {
   	e.preventDefault()
   	await logout()
-  }/*Mui function for logout*/
+  }
 
 	const UserIcon = () => {
 		if(creator){
@@ -202,15 +199,37 @@ const Nav = (props) => {
 								My assets
 							</AccordionSummary>
 							<AccordionDetails>
-							<ListItem button component="a" href='/collections/my-access' className={NavbarStyles.NavButton} >												
+
+								<ListItem button component="a" href='/my-access' className={NavbarStyles.NavButton} >												
 										<ListItemText primary='My exclusive accesses' sx={{pl:1}} />
 								</ListItem>
+
+								<Grid 
+									item      
+									className={VariousStyles.separator80}
+									sx={{my:1, mr:"30%"}}>
+								</Grid>
+
 								<ListItem button component="a" href='/collections/my-collections' className={NavbarStyles.NavButton} >												
 										<ListItemText primary='My Collections' sx={{pl:1}} />
 								</ListItem>
+								<ListItem button component="a" href='/collections/my-collections' className={NavbarStyles.NavButton} >												
+										<ListItemText primary='Created Collections' sx={{pl:1}} />
+								</ListItem>
+
+								<Grid 
+									item      
+									className={VariousStyles.separator80}
+									sx={{my:1, mr:"30%"}}>
+								</Grid>
+
 								<ListItem button component="a" href='/nfts/my-nfts' className={NavbarStyles.NavButton} >												
 										<ListItemText primary='My Nfts' sx={{pl:1}} />
-								</ListItem>											
+								</ListItem>		
+								<ListItem button component="a" href='/nfts/my-nfts' className={NavbarStyles.NavButton} >												
+										<ListItemText primary='Created Nfts' sx={{pl:1}} />
+								</ListItem>		
+
 							</AccordionDetails>
 						</Accordion>
 

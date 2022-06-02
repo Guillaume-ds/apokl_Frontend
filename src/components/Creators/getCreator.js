@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import CardCreator from "./cardCreator";
 
 import { Grid } from "@mui/material";
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 
 const getCreator = ({tags,creator,keywords}) => {
@@ -48,13 +50,13 @@ const getCreator = ({tags,creator,keywords}) => {
             <Grid container 
                   direction={"row"} 
                   justifyContent="space-around">
-              {nextBackendUrl?
-                <ArrowCircleLeftIcon onClick={()=>fetchCollections(nextBackendUrl)} fontSize='large' style={{color:"#004691"}} />
+              {previousBackendUrl?
+                <ArrowCircleLeftIcon onClick={()=>fetchCollections(previousBackendUrl)} fontSize='large' style={{color:"#004691"}} />
                 :
                 <ArrowCircleLeftIcon style={{color:"#96aac8"}} fontSize='large'/>
               }
-              {previousBackendUrl?
-                <ArrowCircleRightIcon onClick={()=>fetchCollections(previousBackendUrl)} fontSize='large' style={{color:"#004691"}} />:
+              {nextBackendUrl?
+                <ArrowCircleRightIcon onClick={()=>fetchCollections(nextBackendUrl)} fontSize='large' style={{color:"#004691"}} />:
                 <ArrowCircleRightIcon style={{color:"#96aac8"}} fontSize='large'/>
               }
             </Grid>

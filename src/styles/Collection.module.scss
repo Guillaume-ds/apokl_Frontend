@@ -1,8 +1,8 @@
-
+@import "variables";
 
 /* 
 CSS for collection, from top to bottom
-First collection page, then collection card
+First collection page, then posts and comments, then collection card
 */
 
 /* Global Header */ 
@@ -65,17 +65,28 @@ First collection page, then collection card
 	color: rgb(200, 0, 200)
 
 }
+/* description and post are subjected to rezing below*/ 
 .description{
-	margin:3em;
-	padding-left:2em;
-	padding-right:2em;
+	margin:1em;
+	padding-left:1em;
+	padding-right:1em;
   border-radius: 5px;  
 	background-color: #fefefe;
   color:#333;
 	min-height:80px;/* // body's heigth*/
 	overflow-y: auto;
-  -webkit-box-shadow: 0px 0px 10px 5px rgba(170, 130, 170,0.2),inset 0px 0px 10px 3px rgba(170, 130, 170,0.2);
-  box-shadow: 0px 0px 4px 1px rgba(170, 130, 170,0.2),inset 0px 0px 4px 1px rgba(170, 130, 170,0.2);
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(170, 130, 170,0.2),inset 0px 0px 3px 1px rgba(170, 130, 170,0.2);
+  box-shadow: 0px 0px 2px 0px rgba(170, 130, 170,0.2),inset 0px 0px 3px 1px rgba(170, 130, 170,0.2);
+}
+
+
+@media screen and (min-width: 900px) {
+	.description{
+		margin:3em;
+		padding-left:2em;
+		padding-right:2em;
+	}
+	
 }
 
 .button {
@@ -117,17 +128,13 @@ First collection page, then collection card
   }
 
 /*
-Collection Card
+Collection Card - height : 60 vh - header: 20vh, body:40vh
 */
 
-/*
-Collection Card Header
-*/
-  
 .collectionCard {
-	display: flex;
+	display: block;
 	flex-direction: column;
-	overflow: hidden;
+	overflow: auto;
 	box-shadow: 0 .1rem 2rem rgba(0, 0, 0, 0.1);
 	border-top-right-radius: 4px;
 	border-top-left-radius: 4px;
@@ -140,15 +147,19 @@ Collection Card Header
 	justify-content: center;
 }
 
+/*
+Collection Card Header
+*/ 
+
+
 .collectionCardHeader {	
+	height:20vh;	
     color:#fafafa;
-	width: 100%;
 	background-size: cover;
 	background-attachment: fixed;
 	position: relative;
-	overflow: hidden;
     box-shadow: 0px 1px 10px rgba(51, 51, 51, 0.4);
-    border-radius: 0 0 2% 2% / 4%;	
+    border-radius: 0 0 2% 2% / 1%;	
 	background-image: linear-gradient(135deg, hsla(308, 100%, 39%,1) 10%, 
 					hsla(212, 100%, 25%, 1) 35%, 
 					hsla(276, 100%, 40%, 1) 50%,
@@ -159,14 +170,14 @@ Collection Card Header
 
 
 .collectionCardOverlay{
-	margin-top: -1em;
-	padding-top: 20%;
-	
+	height:100%;
+	padding-top: 1px;
 }
 
 .collectionCardTitle {
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10vh;
 	text-align: center;
 	padding-left: 4px;
 	padding-right: 4px;
@@ -185,12 +196,12 @@ Collection Card Boddy
 */
   
 .collectionCardBody {
-	padding: 1rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
 	padding-bottom: 0px;
 	display: flex;
 	flex-direction: column;
-	gap: .5rem;
-	height: 45vh;/*3x header's heigth*/ 	
+	height: 40vh;/*2x header's heigth*/ 	
 	overflow: auto;
 }
 
@@ -201,7 +212,6 @@ Collection Card Boddy
 .collectionTag {
 	align-self: flex-start;
 	padding: .25em .75em;
-	margin:0em .25em; 
 	border-radius: 0.75em;
 	font-size: .75rem;
 	display: inline-block;
@@ -218,10 +228,12 @@ Collection Card Boddy
 .collectionCardDescription{
     margin:0.5em;
     color:#333;
-	height:35vh;/* // body's heigth*/
+	height:25vh;/* // body's heigth*/
 	overflow-y: auto;
 	border-radius: 5px;
 	padding: 0px;
+	margin-top:5px;
+	margin-bottom:15px;
 	background-color: #f5f5f5ce;
 	text-align: left;
 }
@@ -249,7 +261,6 @@ Collection Card Boddy
 
 .collectionCreator {
 	display: flex;
-	gap: .5rem;
 }
 .collectionCardFooter {
 	display: inline;
@@ -263,9 +274,36 @@ Collection Card Boddy
 	font-size:.7rem;
 	margin-bottom: -1rem;
 }
+/*
+Small Collection Card 
+*/
+
+.smallCollectionCard{
+	background-color: #666;
+	border-radius: 2px;
+	text-align: center;
+	white-space: normal;
+	word-wrap: break-word;
+	height: 100%;
+}
+
+.smallCollectionCardTitle{
+	color:$apoklLightBlue;
+	width:100%;
+	margin-left: 5%;
+	margin-right: 5%;
+	border-radius: 5px;
+	padding:5px;
+	text-shadow: 0px 1px 10px rgba(51, 51, 51, 0.4);
+	background-color: rgba(170,170,170,0.2);
+}
+
+
+/*
+Collection carousel
+*/
 
 .carouselCollection{
-	display: inline-block; 
 	animation: fadeIn ease-in-out 0s ;
 }
 .carouselCollectionMain{

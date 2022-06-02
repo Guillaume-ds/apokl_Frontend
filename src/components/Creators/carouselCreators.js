@@ -37,29 +37,43 @@ const CarouselCreators = ({tags,name}) => {
 		if(creators.length>0){
 			return (		
 				<Grid container 
-					direction='row' 
-					justifyContent='space-around' 
-					alignItems='center' 
-					columnSpacing={{ sm: 2, md:4}}>	
+				direction='row' 
+				justifyContent='space-around' 
+				alignItems='center' 
+					columnSpacing={{ xs:0, sm: 1, md:4}}
+					sx={{px:{xs:0,md:3}}}>	
 					<Grid item xs={1} style={{textAlign: "right"}}>
 						{carouselIndex>0?
-							<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)} fontSize='large' style={{color:"#004691"}} />
+							<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />
 							:
 							<ArrowCircleLeftIcon style={{color:"#96aac8"}} />
 						}	
 					</Grid>
-					<Grid item sm={3} sx={{ display: { xs: 'none', sm: 'block' } }} style={{textAlign: "center"}} >			
-						<CardCreator creator={creators[carouselIndex]} />
+
+					<Grid item 
+						sm={3} 
+						sx={{ display: { xs: 'none', md: 'block' } }} 
+						style={{textAlign: "center"}} >			
+							<CardCreator creator={creators[carouselIndex]} />
 					</Grid>	
-					<Grid item xs={10} sm={4} style={{textAlign: "center"}}>				
-						<CardCreator creator={creators[carouselIndex+1]} />
-					</Grid>		
-					<Grid item sm={3} sx={{ display: { xs: 'none', sm: 'block' } }} style={{textAlign: "center"}}>				
-						<CardCreator creator={creators[carouselIndex+2]} />	
+
+					<Grid item 
+						xs={10} 
+						md={4}  
+						style={{textAlign: "center"}}>				
+							<CardCreator creator={creators[carouselIndex+1]} />
 					</Grid>	
+
+					<Grid item 
+						sm={3} 
+						sx={{ display: { xs: 'none', md: 'block' } }} 
+						style={{textAlign: "center"}}>				
+							<CardCreator creator={creators[carouselIndex+2]} />	
+					</Grid>	
+
 					<Grid item xs={1} style={{textAlign: "left"}}>			
 						{carouselIndex<creators.length-3?
-							<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} fontSize='large' style={{color:"#004691"}} />:
+							<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />:
 							<ArrowCircleRightIcon style={{color:"#96aac8"}} />
 						}
 					</Grid>									

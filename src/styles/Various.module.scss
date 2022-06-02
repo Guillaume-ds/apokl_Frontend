@@ -3,8 +3,8 @@
 .separator80{
     width:80%;
     margin-left:auto;
-    border:$apoklDarkBlue 1px solid;
     background-color: $apoklDarkBlue;
+    height:2px
 }
 
 .separator40{
@@ -12,6 +12,14 @@
     margin-left:auto;
     border:$apoklDarkBlue 1px solid;
     background-color: $apoklDarkBlue;
+}
+
+.smallSeparatorGradient{
+    background: $mainGradient;
+	background-size: 300% 300%;
+	animation: gradient 20s ease infinite;
+    height:2px;
+    border-radius: 2px;
 }
 
 .separatorGradient{

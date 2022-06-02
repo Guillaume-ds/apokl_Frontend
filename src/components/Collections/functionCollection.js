@@ -10,7 +10,6 @@ export async function fetchCollection(creator,collectionslug){
         "creator":creator,
         "slug":collectionslug
     }
-    
         const collectionsReceived = await axios.post("http://localhost:8000/api/creators/search-collections", body, config )
         return collectionsReceived.data.results[0]
         

@@ -10,11 +10,8 @@ import Web3Modal from 'web3modal'
 import {marketplaceAddress} from '../../../config'
 import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json';
 
-import Collectionstyles from '../../styles/Collection.module.scss';
 import FormStyles from "../../styles/Form.module.scss";
-
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import PostStyles from "../../styles/Post.module.scss";
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -36,7 +33,7 @@ const CreateRoomCollection = ({collection}) => {
 	const onPicture2Change = e => setPicture2(e.target.files[0]);
 
 	const handleClose = e => {
-    setMsg({...msg, content:'',open:false,severity:"error"})
+    setMsg({...msg, content:'',open:false,severity:"success"})
   }
 	useEffect(()=>{
 		if(collection){
@@ -64,10 +61,6 @@ const CreateRoomCollection = ({collection}) => {
 		
   }
 
-	const toggleDrawer = (value) => (event) => {
-  	if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {return}
-  	setToggle(value)
-	}
 
 	const createRoom = async e =>{
 		e.preventDefault();
@@ -103,60 +96,61 @@ const CreateRoomCollection = ({collection}) => {
 
 	return(
 		<div>
+
 			<Snackbar
-			anchorOrigin = {{ vertical: 'bottom', horizontal:'center' }}			
-			open = {msg.open}
-			onClose = {handleClose}
-			autoHideDuration={6000}
-			key = {'bottom_center'}>
-				<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
+				anchorOrigin = {{ vertical: 'bottom', horizontal:'center' }}			
+				open = {msg.open}
+				onClose = {handleClose}
+				autoHideDuration={6000}
+				key = {'bottom_center'}>
+					<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
 			</Snackbar> 
-			<div className={Collectionstyles.description}>
-				<h3>Actions</h3>
-				
-				<Grid container sx={{mt:10}} justifyContent='center' >
-        <div className={FormStyles.formCard}>
-        <h1 className={FormStyles.formCardTitle}>Create a new room</h1>
-        <div className={FormStyles.formCardContent}>
-            <FormControl  sx={{mt: 4, width:'80%'}}> 
-              <TextField
-                margin="dense"
-                variant="outlined"
-                required
-                fullWidth
-                id="title"
-                label="Post title"
-                name="title"
-                onChange={e => updateFormInput({ ...formInput, title: e.target.value })}/>                      
-            </FormControl>
-            <FormControl sx={{mt: 1, width:'80%'}} >   
-              <TextField
-                margin="dense"
-                variant="outlined"
-                required
-                fullWidth
-                id="content"
-                label="content"
-                name="content"
-                onChange={e => updateFormInput({ ...formInput, content: e.target.value })}
-                multiline
-                rows={4}/>     
-            </FormControl>  
-            
-            <Grid item sx={{my:5}}>
-							{loading?
-							<Loader color="#004491"/>
-							:
-							<button className={FormStyles.formButton} onClick={createRoom}>
-								Create Room
-							</button>
-							}              
-            </Grid>
-          </div>
-        </div>
-      </Grid>	
-						
-			</div>
+
+			<Grid 
+        container
+        justifyContent="space-around">
+					<Grid item width={{xs:"100%",md:"70%"}}>
+					<div className={PostStyles.post}>
+						<h1 className={FormStyles.formCardTitle}>Create a new room for an exclusive event</h1>
+						<div className={FormStyles.formCardContent}>
+							<FormControl  sx={{mt: 4, width:'80%'}}> 
+								<TextField
+									margin="dense"
+									variant="outlined"
+									required
+									fullWidth
+									id="title"
+									label="Post title"
+									name="title"
+									onChange={e => updateFormInput({ ...formInput, title: e.target.value })}/>                      
+							</FormControl>
+							<FormControl sx={{mt: 1, width:'80%'}} >   
+								<TextField
+									margin="dense"
+									variant="outlined"
+									required
+									fullWidth
+									id="content"
+									label="content"
+									name="content"
+									onChange={e => updateFormInput({ ...formInput, content: e.target.value })}
+									multiline
+									rows={4}/>     
+							</FormControl>  
+							
+							<Grid item sx={{my:5}}>
+								{loading?
+								<Loader color="#004491"/>
+								:
+								<button className={FormStyles.formButton} onClick={createRoom}>
+									Create Room
+								</button>
+								}              
+							</Grid>
+						</div>
+					</div>
+				</Grid>
+			</Grid>
 		</div>
 		)
 }
