@@ -10,7 +10,7 @@ export async function fetchCreator(creatorName){
         "creator":creatorName
     }
 
-    const url = "http://localhost:8000/api/creators/search-creators"
+    const url = "http://localhost:8000/api/profiles/search-creators"
 
     const creatorReceived = await axios.post(url, body, config)
 

@@ -8,87 +8,93 @@ import { Grid } from "@mui/material";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
-const CarouselNFT = (creatorName, id, tags) =>{
+const CarouselNFT = ({creatorName, id, tags}) =>{
 	const [backendNfts, setBackendNfts] = useState([])
 	const [nextBackendUrl,setNextBackendUrl]=useState(null)
 	const [previousBackendUrl,setPreviousBackendUrl]=useState(null)
 	const [carouselIndex,setCarouselIndex] = useState(0)
 	const [loaded,setLoaded] = useState(false)
 	const [nfts, setNfts] = useState([])
+	const [creators, setCreators] = useState([])
 	const searchURL = "http://localhost:8000/api/nfts/search-nfts"
 
 	useEffect(() => {
 		fetchNft(searchURL)
 	}, [tags,creatorName,id])
 
-
 	async function fetchNft(url){
 
 		const res = await getNftBackend(url,creatorName=creatorName,id=id)   
-		
+
 		setNextBackendUrl(res.nextBackendUrl)
-		setPreviousBackendUrl(res.previousBackendUrl)
-				
+		setPreviousBackendUrl(res.previousBackendUrl)				
 		setBackendNfts(res.nfts)
 
 		let nftsArray = []
+		let creatorInfoArray = []
 		for (let i = 0;i<res.nfts.length;i++){
-				const nft = await loadNFT(res.nfts[i].tokenId)
-				nftsArray = [...nftsArray,nft]				
+			const nft = await loadNFT(res.nfts[i].tokenId)
+			nftsArray = [...nftsArray,nft]		
+			creatorInfoArray = [...creatorInfoArray,res.nfts[i].creatorInfo]		
 		}
-		setNfts(nftsArray)
+		await setNfts(nftsArray)
+		setCreators(creatorInfoArray)
 		setLoaded(true)
 		}
 	if(!loaded){return(null)}
-	return(
-		<Grid container 
-		direction='row' 
-		justifyContent='space-around' 
-		alignItems='center' 
-		columnSpacing={{ sm: 2, md:4}}
-		sx={{px:{xs:1,md:3}}}>	
-		<Grid item style={{textAlign: "right"}}>
-			{carouselIndex>0?
-				<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)} fontSize='large' style={{color:"#004691"}} />
-				:
-				<ArrowCircleLeftIcon style={{color:"#96aac8"}} />
-			}	
+	if(loaded){
+		return(
+			<Grid container 
+			direction='row' 
+			justifyContent='space-around' 
+			alignItems='center' 
+			columnSpacing={{ sm: 2, md:4}}
+			sx={{px:{xs:1,md:3}}}>	
+			<Grid item style={{textAlign: "right"}}>
+				{carouselIndex>0?
+					<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)}  sx={{fontSize:{xs:"small",md:'large'}}} style={{color:"#004691",}} />
+					:
+					<ArrowCircleLeftIcon style={{color:"#96aac8"}} />
+				}	
+			</Grid>
+			<Grid item 
+				key={carouselIndex} 
+				sm={3} 
+				sx={{ display: { xs: 'none', sm: 'block' } }} 
+				style={{textAlign: "center"}} 
+				className={CollectionStyles.carouselCollection}
+			>			
+				<CardNft  nft={nfts[carouselIndex]} creatorInfo={creators[carouselIndex]}/>
+			</Grid>	
+			<Grid item 
+				key={carouselIndex+3} 						
+				xs={10} 
+				sm={4} 
+				style={{textAlign: "center"}}
+				className={CollectionStyles.carouselCollectionMain}
+			>				
+			<CardNft  nft={nfts[carouselIndex+1]} creatorInfo={creators[carouselIndex+1]}/>
+			</Grid>		
+			<Grid item 
+				key={carouselIndex+6} 
+				sm={3} 
+				sx={{ display: { xs: 'none', sm: 'block' } }} 
+				style={{textAlign: "center"}} 
+				className={CollectionStyles.carouselCollection}
+			>				
+				<CardNft  nft={nfts[carouselIndex+2]} creatorInfo={creators[carouselIndex+2]}/>
+			</Grid>	
+			<Grid item style={{textAlign: "left"}}>			
+				{carouselIndex<nfts.length-3?
+					<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />:
+					<ArrowCircleRightIcon style={{color:"#96aac8"}} />
+				}
+			</Grid>								
 		</Grid>
-		<Grid item 
-			key={carouselIndex} 
-			sm={3} 
-			sx={{ display: { xs: 'none', sm: 'block' } }} 
-			style={{textAlign: "center"}} 
-			className={CollectionStyles.carouselCollection}
-		>			
-			<CardNft  nft={nfts[carouselIndex]} />
-		</Grid>	
-		<Grid item 
-			key={carouselIndex+3} 						
-			xs={10} 
-			sm={4} 
-			style={{textAlign: "center"}}
-			className={CollectionStyles.carouselCollectionMain}
-		>				
-		<CardNft  nft={nfts[carouselIndex+1]} />
-		</Grid>		
-		<Grid item 
-			key={carouselIndex+6} 
-			sm={3} 
-			sx={{ display: { xs: 'none', sm: 'block' } }} 
-			style={{textAlign: "center"}} 
-			className={CollectionStyles.carouselCollection}
-		>				
-			<CardNft  nft={nfts[carouselIndex+2]} />
-		</Grid>	
-		<Grid item style={{textAlign: "left"}}>			
-			{carouselIndex<nfts.length-3?
-				<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} fontSize='large' style={{color:"#004691"}} />:
-				<ArrowCircleRightIcon style={{color:"#96aac8"}} />
-			}
-		</Grid>								
-	</Grid>
-	)
+		)
+		
+	}
+	
 }
 
 export default CarouselNFT;

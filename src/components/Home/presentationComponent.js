@@ -11,17 +11,18 @@ import VariousStyles from '../../styles/Various.module.scss';
 const PresentationComponent = () => {
     return(
         <Grid container
-              className={HomeStyles.accueil} 
+              className={HomeStyles.welcomeContainer} 
               id="accueil"   
               direction="row" 
               justifyContent="space-evenly" 
               alignItems="center" 
+              height="100vh"
               sx={{ px:{xs:0,md:2,lg:4}}}>
 
             <Grid 
               item 
               md={5} 
-              sx={{ml:{xs:1,sm:2,md:3,lg:4},pr:{xs:0,sm:2,md:3,lg:4}}}>
+              sx={{ml:{xs:1,sm:2,md:3,lg:4},mt:{xs:1,md:0},pr:{xs:0,sm:2,md:3,lg:4}}}>
                 
                 <Grid container direction="column">
                   <Grid item sx={{px:{xs:1,sm:2,md:3,lg:4}}} textAlign="justify">
@@ -40,10 +41,13 @@ const PresentationComponent = () => {
                     <hr className={VariousStyles.smallSeparatorGradient}></hr>
                   </Grid>
 
-                  <div onClick={()=>router.push(`http://localhost:3000/account/login`)}>
-                    <ApoklButton text={"Join us"}  />
-                  </div>
 
+                  <Grid container justifyContent="center">
+                    <Grid item width="120px"> 
+                      <ApoklButton onClick={()=>router.push(`/account/login`)} text={"Join us"}  />  
+                    </Grid>
+                  </Grid>              
+   
                 </Grid>
 
             </Grid>
@@ -54,7 +58,8 @@ const PresentationComponent = () => {
               md={6} 
               sx={{ml:{xs:1,sm:2,md:3,lg:4},
                 pr:{xs:0,sm:2,md:3,lg:4},
-                mt:{xs:5,md:0}}}>
+                mt:{xs:1,md:0},
+                mb:{xs:5,md:0}}}>
 
               <GetNftsBackend 
                 id={[1]} 

@@ -13,11 +13,12 @@ import { Grid } from "@mui/material";
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
-export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creatorInfo=null,setCreatorInfo=null }) {
+export default function GetNFTs({tags,creatorName=null,price,buyable,id,unique,creatorInfo=null,setCreatorInfo=null }) {
 	const [backendNfts, setBackendNfts] = useState([])
   const [nextBackendUrl,setNextBackendUrl]=useState(null)
   const [previousBackendUrl,setPreviousBackendUrl]=useState(null)
   const [loadingState, setLoadingState] = useState(false)
+  const [loaded, setLoaded] = useState(false)
   const [passedCreatorInfo, setPassedCreatorInfo] = useState(false)
   const searchURL = "http://localhost:8000/api/nfts/search-nfts"
 
@@ -29,26 +30,27 @@ export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creato
     if(!loadingState && backendNfts.length > 0 && !passedCreatorInfo){
       passCreatorInfo()     
     }})
-  
 
 	async function fetchNft(url){
     setLoadingState(true)
     scroll(0,0)
-    const res = await getNftBackend(url,creatorName=creatorName,price=price,tags=tags,id=id) 
+    const res = await getNftBackend(url,creatorName,price,tags,id) 
     
     setNextBackendUrl(res.nextBackendUrl)
     setPreviousBackendUrl(res.previousBackendUrl)
      
     setBackendNfts(res.nfts)
+    setLoaded(true)
     setLoadingState(false)
   }
 
   const passCreatorInfo = () =>{
     try{
-      setCreatorInfo(backendNfts[0].creator)
+      setCreatorInfo(backendNfts[0].creatorInfo)
       setPassedCreatorInfo(true)
     }catch{
       setPassedCreatorInfo(true)
+      console.log("failure")
     }    
   }
 
@@ -84,7 +86,7 @@ export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creato
   }
   
 
-  if(backendNfts.length === 0){
+  if(backendNfts.length === 0 && loaded){
     return(
       <Grid container direction="row" justifyContent="center" sx={{height:'70vh', pt:10}}>
       <div className={FormStyles.formCard}>
@@ -99,7 +101,7 @@ export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creato
       </div>
     </Grid>
     )
-  }else{
+  }else if(backendNfts.length > 0 && loaded){
   return (
   <Grid container 
         direction={"column"}>
@@ -111,7 +113,7 @@ export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creato
             columnSpacing={{ sm: 4, md: 10 }}>
         {backendNfts.map((nft)=>(  
             <GetNFT id={nft.tokenId} 
-                    creatorInfo={nft.creator} 
+                    creatorInfo={nft.creatorInfo} 
                     buyable={buyable}
                     unique={unique}/>   
         ))}
@@ -119,5 +121,11 @@ export default function GetNFTs({tags,creatorName,price,buyable,id,unique,creato
     </Grid>
     <ElementToLoad />
 	</Grid>		
-  );}
+  );}else{
+    return(
+      <Grid minHeight="10vh">
+
+      </Grid>
+    )
+  }
 }

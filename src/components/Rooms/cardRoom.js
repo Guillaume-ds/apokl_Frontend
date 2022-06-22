@@ -1,15 +1,16 @@
 import React, {useContext,useState} from "react";
 import { useRouter } from 'next/router';
+import axios from "axios";
 
 import AuthenticationContext from "../../../context/AuthenticationContext";
 
 import SmallCardCollection from "../Collections/smallCardCollection";
+import SmallCardCreator from "../Creators/smallCardCreator";
 import ApoklButton from "../apoklButton";
 import VariousStyles from '../../styles/Various.module.scss';
 import PostStyles from '../../styles/Post.module.scss';
 import ButtonStyles from "../../styles/Button.module.scss";
 import { Grid } from "@mui/material";
-import Artist from "../Creators/artist";
 
 
 
@@ -17,6 +18,12 @@ export default function CardRoom({room}) {
   const router = useRouter();
   const {user,accessToken} = useContext(AuthenticationContext)
   const [display,setDisplay] = useState("Collection")
+  const [accessClaimed,setAccessClaimed] = useState(false)
+  const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"red"})
+
+  const handleClose = e => {
+    setMsg({...msg, content:'',open:false,severity:"error"})
+  }
 
   function changeDisplay(displayName){
     setDisplay(displayName)
@@ -35,10 +42,9 @@ export default function CardRoom({room}) {
         "roomId":roomId,
         "address":account
     }
-
-    const res = await axios.post(`http://localhost:8000/api/rooms/claim-access`,body,config)
+    setAccessClaimed(true)
+    const res = await axios.post(`http://localhost:8000/api/events/claim-access`,body,config)
     setMsg({...msg, content:'Email sent, welcome to the event',open:true,severity:"success",color:"#fafafa"})
-    setLoaded(true)
 }
 
 
@@ -46,31 +52,31 @@ export default function CardRoom({room}) {
     <Grid 
         container 
         direction="row" 
-        sx={{ my:7,px:5 }} 
+        sx={{ px:{xs:1,sm:2,md:5} }} 
         alignItems="center"
         justifyContent="space-around"
-        height="40vh">
+        className={PostStyles.invitCard}>
         
-        <Grid item xs={12} sm={4} md={3} height="100%">             
+        <Grid item xs={12} sm={4.5} md={3.5} height="40vh" >             
             <Grid item height="90%">
                 {
                     display!="Creator"?
-                    <SmallCardCollection collection={room.collectionInfo} />
+                    <SmallCardCollection collection={room.collectionInfo} creatorName={room.creatorInfo.name}/>
                     :
-                    <Artist name={room.creatorInfo.name} />
+                    <SmallCardCreator creator={room.creatorInfo} />
                 }
                 
             </Grid>   
 
             <Grid item height="10%" justifyContent="space-around" alignItems="center">
-                <Grid container direction="row" alignItems="center" height="100%" justifyContent="center" sx={{mt:1}}>
+                <Grid container direction="row" alignItems="center" height="100%" justifyContent="center" sx={{mt:{xs:0,md:2}}}>
 
-                    <Grid item sx={{width:{xs:"50%",md:"30%"}}}>
+                    <Grid item sx={{width:{xs:"50%",md:"40%",lg:"30%"}}}>
                     <div className={display === "Collection" ? ButtonStyles.divButtonActive : ButtonStyles.divButton} 
                         onClick={()=>changeDisplay("Collection")}>Collection</div>
                     </Grid>
 
-                    <Grid item sx={{width:{xs:"50%",md:"30%"}}}>
+                    <Grid item sx={{width:{xs:"50%",md:"40%",lg:"30%"}}}>
                     <div className={display === "Creator" ? ButtonStyles.divButtonActive : ButtonStyles.divButton} 
                         onClick={()=>changeDisplay("Creator")}>Creator</div>
                     </Grid>
@@ -80,7 +86,7 @@ export default function CardRoom({room}) {
         </Grid>
         
 
-        <Grid item xs={12} sm={7} md={8} height="100%">
+        <Grid item xs={12} sm={7} md={8} height="40vh" sx={{mt:{xs:2,md:0}}}>
             <Grid item height="90%">
                 <div className={PostStyles.inviteContainer}>
                     <h2>{room.title}</h2>
@@ -95,9 +101,19 @@ export default function CardRoom({room}) {
                 </div> 
             </Grid>  
 
-            <Grid item height="10%" alignItems="center" sx={{mt:1}}>
-                <ApoklButton text={"Claim access"} onClick={()=>claimAccess(room.id)}/>  
-            </Grid>             
+            {
+                accessClaimed===false?
+                <Grid item height="10%" sx={{mt:{xs:1,md:0}}} onClick={()=>claimAccess(room.id)}>
+                    <Grid container justifyContent="center">
+											<Grid item width="120px"> 
+													<ApoklButton text={"Claim access"}  />  
+												</Grid>
+										</Grid>               
+                </Grid>  
+                :
+                null
+            }
+                       
         </Grid>
     </Grid> 
 

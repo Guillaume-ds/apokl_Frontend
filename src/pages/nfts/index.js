@@ -2,8 +2,9 @@ import React, { useState } from "react";
 
 import Layout from '../../hocs/Layout';
 import GetNftsBackend from "../../components/NFT/getNftsBackend";
-import Creatorstyles from '../../styles/Creator.module.scss';
 import SelectTags from "../../components/Actions/selectTags";
+import Creatorstyles from '../../styles/Creator.module.scss';
+
 
 import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
@@ -40,33 +41,24 @@ export default function Nfts() {
 
 					<h1>NFT Marketplace</h1>
 
-					<Grid container sx={{mt:4, mb:3}} justifyContent='space-around' alignItems='center'>
+					<Grid container sx={{mt:4, mb:3}} justifyContent='space-around' >
 						
-						<Grid item sx={{width:{ xs: '80%', md: '25%' }}}>
+						<Grid item sx={{width:{ xs: '80%', md: '20%' }}}>
 							<SelectTags tags={tags} setTags={setTags} />
 						</Grid>
 
-						<FormControl sx={{width:{ xs: '80%', md: '25%' }}}> 
-						<TextField
-							margin="dense"
-							variant="outlined"
-							sx={{ background:'white', borderRadius:2 }}
-							id="creator"
-							label="Collection creator"
-							name="creator"
-							onChange={e => setCreator( e.target.value )}/>                      
-					</FormControl>
-
-					<FormControl sx={{width:{ xs: '80%', md: '25%' }}}>   
-						<TextField
-							margin="dense"
-							variant="outlined"
-							sx={{ background:'white', borderRadius:2 }}
-							id="Keywords"
-							label="Keywords"
-							name="Keywords"
-							onChange={e => setKeywords( e.target.value)}/>     
-					</FormControl>  
+						
+						<FormControl sx={{width:{ xs: '80%', md: '70%' }}}> 
+							<TextField
+								margin="dense"
+								variant="outlined"
+								sx={{ background:'white', borderRadius:2, my:{xs:2,md:0} }}
+								id="creator"
+								label="Creator"
+								name="creator"
+								onChange={e => setCreator( e.target.value )}/>                      
+						</FormControl>
+ 
 				</Grid>
 			</Grid> 
       <Grid container 

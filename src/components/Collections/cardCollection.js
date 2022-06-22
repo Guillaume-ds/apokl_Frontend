@@ -23,21 +23,10 @@ export default function CardNft({collection}) {
       }else{  
       } 
   return (
-    <div>
       <div className={Collectionstyles.collectionCard}>
-        <div className={Collectionstyles.collectionCardHeader} >
-          <div className={Collectionstyles.collectionCardOverlay} style={styling}>
-            <h1 className={Collectionstyles.collectionCardTitle}>{collection.name}</h1>											
-          </div>
-        </div>	
-        <div className={Collectionstyles.collectionCardBody}>
-          <Grid className={Collectionstyles.collectionInfo} container direction='row' justifyContent='space-between' alignItems='center'>
-            <div>{collection.tags.map(tag =>(<p className={Collectionstyles.collectionTag}>{tag}</p>))}</div>
-            <p>{collection.nfts_array.length} NFTs</p> 
-          </Grid>
-          <p className={Collectionstyles.collectionCardDescription}>{collection.description} </p>	 
-          <Grid container direction="row" sx={{ml:0}} alignItems='center' justifyContent="space-between">
-            <Grid item>
+        <div className={Collectionstyles.collectionCardHeader} style={styling} >
+          <div className={Collectionstyles.collectionCardOverlay} >
+            <h1 className={Collectionstyles.collectionCardTitle}>{collection.name}</h1>		
             <Grid container direction="row" sx={{ml:0}} alignItems='center'>
               {
                 collection.creator.picture?
@@ -50,15 +39,29 @@ export default function CardNft({collection}) {
                 <p className={Collectionstyles.collectionCardUserInfo} >Created by</p>
                 <p>{collection.creator.name}</p>
               </Grid>
-            </Grid>
-            </Grid>     
-            <Link href={`http://localhost:3000/collections/${collection.creator.name}/${collection.slug}`}>    
-              <ArrowCircleRightIcon style={{color:'rgb(0, 28, 128)'}} fontSize='large'/>
-            </Link>     
+            </Grid>									
+          </div>
+        </div>	
+        <div className={Collectionstyles.collectionCardBody}>
+          <Grid className={Collectionstyles.collectionInfo} 
+            container 
+            direction='row' 
+            justifyContent='space-between' 
+            alignItems='center'
+            sx={{my:1}} 
+            >
+            <div>{collection.tags.map(tag =>(<span className={Collectionstyles.collectionTag}>{tag}</span>))}</div>
+            <div>{collection.nfts_array.length} NFTs</div> 
           </Grid>
+          <div className={Collectionstyles.collectionCardDescription}>{collection.description} </div>	 
+          
         </div>
+        <span className={Collectionstyles.collectionCardArrow}>   
+            <Link href={`http://localhost:3000/collections/${collection.creator.name}/${collection.slug}`}>    
+              <ArrowCircleRightIcon fontSize='large' className={Collectionstyles.collectionCardLinkIcon}/>
+            </Link>     
+          </span>
       </div>
-    </div>
   );}else{
     return null
   }

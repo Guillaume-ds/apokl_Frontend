@@ -4,10 +4,7 @@ import WithAuth from '../hocs/WithAuth';
 import AuthenticationContext from "../../context/AuthenticationContext"; 
 import Alert from '@mui/material/Alert';
 
-import FormStyles from "../styles/Form.module.scss";
 
-import Web3Modal from "web3modal";
-import { ethers } from 'ethers'
 
 import Artist from '../components/Creators/artist';
 import CardRoom from '../components/Rooms/cardRoom';
@@ -43,7 +40,6 @@ const AccountPage = () => {
 		const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 		const account = accounts[0];	
 		setAdd(account)
-		console.log(accounts)
 
 		const config = {
 			headers: {
@@ -57,15 +53,40 @@ const AccountPage = () => {
 			'collectionId':"None"
 		}
 
-		const res = await axios.post(`http://localhost:8000/api/rooms/get-rooms`,body,config)
-		console.log(res)
+		const res = await axios.post(`http://localhost:8000/api/events/get-events`,body,config)
 		setRooms(res.data.results)
 		setLoaded(true)
 	}
 
-	
+	const ListRooms =() => {
+		if(!loaded){
+			return(
+				null
+			)
+		}
+		else if(rooms.length<1 && loaded){
+			return(
+				<Grid sx={{py:5}} style={{color:"#0F0F4B"}} textAlign="center">
+					<h2>You don't have access to exclusive rooms yes</h2>
+				</Grid>
+			)
+		}else{
+		return(
+			<Grid
+				container 
+				direction="column"
+				alignItems="center"
+				justifyContent="center">	
+					{rooms.map(room=>(
+						<Grid item width="100%" sx={{my:{xs:10,md:7}}}>
+							<CardRoom room={room} />
+						</Grid>				
+					))}
 
-	console.log(rooms)
+			</Grid>
+		)}
+	}
+
 	return(
 		<Layout>
 			<Snackbar
@@ -83,25 +104,17 @@ const AccountPage = () => {
 				direction="column"
 				alignItems="center"
 				justifyContent="center">
-					<Grid item width={{xs:"90%",md:"50%",xl:"40%"}}>
+					<Grid item width={{xs:"90%",md:"50%",xl:"40%"}} height="40vh">
 						<Artist name={user.username} />
 					</Grid>
 			</Grid>
-			<Grid
-				container 
-				sx={{ py:5 }} 
-				direction="column"
-				alignItems="center"
-				justifyContent="center">
-					<Grid item sx={{py:5}}>
-					<h3>Claim access to exclusive event and receive the invitation by email</h3>
-					</Grid>
-					
-					{rooms.map(room=>(
-						<CardRoom room={room} />				
-					))}
 
+			<Grid sx={{py:5}} style={{color:"#0F0F4B"}} textAlign="center">
+				<h2>Claim access to exclusive event and receive the invitation by email</h2>
 			</Grid>
+
+			<ListRooms/>
+			
 		</Layout>
 	)
 

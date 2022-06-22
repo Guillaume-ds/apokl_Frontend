@@ -6,11 +6,11 @@ import CardCollection from "./cardCollection";
 import CollectionStyles from '../../styles/Collection.module.scss';
 
 import { Grid } from "@mui/material";
-import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 
-const CarouselCollections = ({tags=null,nfts=null,creator=null,keywords=null,ids=null}) => {
+const CarouselCollections = ({tags=null,nfts=null,creatorName=null,keywords=null,ids=null}) => {
 	const router = useRouter();
   const [collections, setCollections] = useState([])
 	const [carouselIndex,setCarouselIndex] = useState(0)
@@ -24,19 +24,19 @@ const CarouselCollections = ({tags=null,nfts=null,creator=null,keywords=null,ids
 		}
 		const body = {
 			"ids":ids,
-			"creator":creator,
+			"creator":creatorName,
 			"tags":tags,
 			"nfts":nfts
 		}
 
-		const collectionsReceived = await axios.post("http://localhost:8000/api/creators/search-collections", body, config )
+		const collectionsReceived = await axios.post("http://localhost:8000/api/collections/search-collections", body, config )
 		setCollections(collectionsReceived.data.results)
-		
+		console.log(collectionsReceived)
 		}
 
 		useEffect(()=>{
 			fetchCollections();
-		},[tags,nfts,creator,keywords])
+		},[tags,nfts,creatorName,keywords])
 
 		if(collections.length>0){
 			return (		
@@ -44,46 +44,46 @@ const CarouselCollections = ({tags=null,nfts=null,creator=null,keywords=null,ids
 					direction='row' 
 					justifyContent='space-around' 
 					alignItems='center' 
-					columnSpacing={{ xs:0, sm: 1, md:4}}
-					sx={{px:{xs:0,md:3}}}>	
-					<Grid item style={{textAlign: "right"}}>
+					columnSpacing={{ xs:0, sm: 0, md:2}}
+					sx={{px:{xs:0,md:0}}}>	
+					<Grid container 
+						xs={1} 
+						lg={2}
+						justifyContent="center"
+						alignItems="center">
 						{carouselIndex>0?
-							<ArrowCircleLeftIcon onClick={()=>setCarouselIndex(carouselIndex-1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />
+							<ArrowBackIosNewIcon 
+								onClick={()=>setCarouselIndex(carouselIndex-1)} 
+								className={CollectionStyles.carouselArrowActive} />
 							:
-							<ArrowCircleLeftIcon style={{color:"#96aac8"}} />
+							<ArrowBackIosNewIcon className={CollectionStyles.carouselArrow} />
 						}	
 					</Grid>
-					<Grid item 
-						key={carouselIndex} 
-						sm={3} 
-						sx={{ display: { xs: 'none', md: 'block' } }} 
-						style={{textAlign: "center"}} 
-						className={CollectionStyles.carouselCollection}
-					>			
-						<CardCollection  collection={collections[carouselIndex]} />
-					</Grid>	
-					<Grid item 
+
+					<Grid container 
 						key={carouselIndex+3} 						
-						xs={10} 
-						md={4} 
-						style={{textAlign: "center"}}
+						xs={10}
+						md={9}
+						lg={8}
 						className={CollectionStyles.carouselCollectionMain}
-					>				
-						<CardCollection collection={collections[carouselIndex+1]} />
-					</Grid>		
-					<Grid item 
-						key={carouselIndex+6} 
-						sm={3} 
-						sx={{ display: { xs: 'none', md: 'block' } }} 
-						style={{textAlign: "center"}} 
-						className={CollectionStyles.carouselCollection}
-					>				
-						<CardCollection collection={collections[carouselIndex+2]} />	
+						justifyContent='center' 
+						height={{xs:"60vh",md:"70vh"}}
+					>		
+						<CardCollection collection={collections[carouselIndex]} />					
 					</Grid>	
-					<Grid item style={{textAlign: "left"}}>			
-						{carouselIndex<collections.length-3?
-							<ArrowCircleRightIcon onClick={()=>setCarouselIndex(carouselIndex+1)} style={{color:"#004691", fontSize:{xs:"small",md:'large'}}} />:
-							<ArrowCircleRightIcon style={{color:"#96aac8"}} />
+	
+					<Grid 
+						container 
+						xs={1} 
+						lg={2}
+						justifyContent="center"
+						alignItems="center">			
+						{carouselIndex<collections.length-1?
+							<ArrowForwardIosIcon 
+								onClick={()=>setCarouselIndex(carouselIndex+1)} 
+								className={CollectionStyles.carouselArrowActive} />
+							:
+							<ArrowForwardIosIcon className={CollectionStyles.carouselArrow} />
 						}
 					</Grid>									
 				</Grid>

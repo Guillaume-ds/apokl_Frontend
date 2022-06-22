@@ -3,12 +3,12 @@ import { useRouter } from 'next/router'
 import CollectionStyles from '../../styles/Collection.module.scss';
 import { Grid } from "@mui/material";
 
-const SmallCardCollection = ({collection,creatorName}) => {
+const SmallCardCreator = ({creator}) => {
     const router = useRouter();
-    if(collection){
-        if(collection.picture){
+    if(creator){
+        if(creator.picture){
           var styling = {
-            backgroundImage: `url('${collection.picture}')`,
+            backgroundImage: `url('${creator.picture}')`,
             backgroundPosition:'center',
             backgroundRepeat: 'no-repeat',
             backgroundSize:"cover",
@@ -20,10 +20,11 @@ const SmallCardCollection = ({collection,creatorName}) => {
             alignItems="center" 
             className={CollectionStyles.smallCollectionCard} 
             style={styling} 
-            onClick={()=>router.push(`/collections/${creatorName}/${collection.slug}`)}>
-            <h3 className={CollectionStyles.smallCollectionCardTitle}>{collection.name}</h3>
+            sx={{pt:"45%"}}
+            onClick={()=>router.push(`/creators/${creator.name}`)}>
+            <h3 className={CollectionStyles.smallCollectionCardTitle}>{creator.name}</h3>
         </Grid>
     )
 }
 
-export default SmallCardCollection;
+export default SmallCardCreator;

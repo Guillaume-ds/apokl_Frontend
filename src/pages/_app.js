@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { AuthenticationProvider } from '../../context/AuthenticationContext'
-import styles from '../styles/global.scss'
+import styles from '../styles/global.scss';
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {

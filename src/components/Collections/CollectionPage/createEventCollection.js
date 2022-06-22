@@ -1,17 +1,17 @@
 import React, {useState,useContext,useEffect} from "react";
 import axios from "axios";
 
-import AuthenticationContext from '../../../context/AuthenticationContext';
-import withAuth from '../../hocs/withAuth';
+import AuthenticationContext from '../../../../context/AuthenticationContext';
+import withAuth from '../../../hocs/withAuth';
 
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
 
-import {marketplaceAddress} from '../../../config'
-import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json';
+import {marketplaceAddress} from '../../../../config'
+import NFTMarketplace  from '../../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json';
 
-import FormStyles from "../../styles/Form.module.scss";
-import PostStyles from "../../styles/Post.module.scss";
+import FormStyles from "../../../styles/Form.module.scss";
+import PostStyles from "../../../styles/Post.module.scss";
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -86,7 +86,7 @@ const CreateRoomCollection = ({collection}) => {
 					"users":[]
 				}
 		
-				const URL = `http://localhost:8000/rooms/`;
+				const URL = `http://localhost:8000/events/`;
 				const res = await axios.post(URL,data,config)
 				setLoading(false)
 				setMsg({...msg, content:'Room successfully created',open:true,severity:"success",color:"#fafafa"})
@@ -111,7 +111,7 @@ const CreateRoomCollection = ({collection}) => {
         justifyContent="space-around">
 					<Grid item width={{xs:"100%",md:"70%"}}>
 					<div className={PostStyles.post}>
-						<h1 className={FormStyles.formCardTitle}>Create a new room for an exclusive event</h1>
+						<h1 className={FormStyles.formCardTitle}>Organise an exclusive event</h1>
 						<div className={FormStyles.formCardContent}>
 							<FormControl  sx={{mt: 4, width:'80%'}}> 
 								<TextField
@@ -120,7 +120,7 @@ const CreateRoomCollection = ({collection}) => {
 									required
 									fullWidth
 									id="title"
-									label="Post title"
+									label="Event name"
 									name="title"
 									onChange={e => updateFormInput({ ...formInput, title: e.target.value })}/>                      
 							</FormControl>
@@ -131,7 +131,7 @@ const CreateRoomCollection = ({collection}) => {
 									required
 									fullWidth
 									id="content"
-									label="content"
+									label="Content"
 									name="content"
 									onChange={e => updateFormInput({ ...formInput, content: e.target.value })}
 									multiline

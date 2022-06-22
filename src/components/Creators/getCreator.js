@@ -9,16 +9,16 @@ import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 
 
-const getCreator = ({tags,creator,keywords}) => {
+const getCreator = ({tags,creatorName,keywords}) => {
 	const router = useRouter();
   const [creators, setCreators] = useState([])
   const [nextBackendUrl,setNextBackendUrl]=useState(null)
   const [previousBackendUrl,setPreviousBackendUrl]=useState(null)
-	const searchURL = "http://localhost:8000/api/creators/search-creators"
+	const searchURL = "http://localhost:8000/api/profiles/search-creators"
 
 	useEffect(()=>{
 		fetchCreators(searchURL);
-	},[tags,creator,keywords])
+	},[tags,creatorName,keywords])
 
 	const fetchCreators = async(url) => {
 		const config = {
@@ -28,7 +28,7 @@ const getCreator = ({tags,creator,keywords}) => {
 		}
 		const body = {
 			"tags":tags,
-			"name":creator,
+			"name":creatorName,
 			"keywords":keywords
 		}
 
@@ -76,12 +76,11 @@ const getCreator = ({tags,creator,keywords}) => {
 			direction='row' 
 			justifyContent='space-around' 
 			alignItems='center' 
-			sx={{p:7}} 
-			rowSpacing={10} 
-			columnSpacing={{ sm: 2, md: 6 }}>				
+			sx={{py:2,px:4}}
+			 >				
 			{creators.length>0?
 			creators.map((creator,i) => (
-				<Grid item xs={12} md={5} xl={4}>
+				<Grid item xs={12} md={5} xl={4} sx={{py:4,px:2}} height="350px">
 					<CardCreator creator={creator} key={i} />
 				</Grid>				
 			))

@@ -17,7 +17,7 @@ export default function Nft() {
 	const id = slug.id
 	const [creatorInfo, setCreatorInfo] = useState({})
 	const [displayNft,setDisplayNft] = useState(true)
-	
+
 	function changeToDisplayNFT(){
 		if(!displayNft){
 			setDisplayNft(true)
@@ -29,6 +29,20 @@ export default function Nft() {
 		}		
 	}
 
+	const DisplayButtons = () =>{
+		return(
+			<Grid container direction="row" justifyContent="center">
+				<Grid item width="120px" height="20px" sx={{my:{xs:1,md:0}}}>
+				<div className={displayNft?ButtonStyles.divButtonActive:ButtonStyles.divButton} 
+					onClick={()=>changeToDisplayNFT()}>NFT</div>
+				</Grid>
+				<Grid item width="120px" height="20px" sx={{my:{xs:1,md:0}}}>
+				<div className={displayNft?ButtonStyles.divButton:ButtonStyles.divButtonActive} 
+					onClick={()=>changeToDisplayCreator()}>Creator</div>
+				</Grid>
+			</Grid>
+		)		
+	}
 
 
 
@@ -39,19 +53,19 @@ export default function Nft() {
 			justifyContent="center" 
 			alignItems="center"
 			direction="column"
-			sx={{px:6,mt:10}} > 
+			sx={{px:{xs:1,md:6},mt:10}} > 
 
 			<Grid 
 				container 
 				width="100%" 
-				height="70vh" 
+				height="80vh" 
 				style={{backgroundColor:"#f8f8ff"}} 
 				justifyContent="center" 
 				alignItems="center"
 				alignContent="center">
 				
 					{displayNft?	
-					<Grid item width={{xs:"90%",md:"50%",xl:"40%"}}>		
+					<Grid item width={{xs:"100%",md:"50%",xl:"40%"}}>		
 						<GetNftsBackend 
 							id={[parseInt(id)]} 
 							buyable={null} 
@@ -60,44 +74,18 @@ export default function Nft() {
 							setCreatorInfo={setCreatorInfo}  />		
 					</Grid>	
 					:
-					<Grid item width={{xs:"90%",md:"50%",xl:"40%"}}>
+					<Grid item width={{xs:"100%",md:"50%",xl:"40%"}} height='40vh'>
 						<Artist 
-							name={creatorInfo.name} />
+							name={creatorInfo.name} 
+							/>
 					</Grid>
 					}
-				
+
+				<Grid item sx={{my:5}} width="100%" >	
+					<DisplayButtons />
+				</Grid>
 			</Grid>
-
-			<Grid item sx={{my:5}}>
-				
-					{
-						displayNft?
-						<Grid container direction="row" justifyContent="center">
-							<Grid item width="120px">
-							<div className={ButtonStyles.divButtonActive} 
-								onClick={()=>changeToDisplayNFT()}>NFT</div>
-							</Grid>
-							<Grid item width="120px">
-							<div className={ButtonStyles.divButton} 
-								onClick={()=>changeToDisplayCreator()}>Creator</div>
-							</Grid>
-						</Grid>
-
-						:
-
-						<Grid container direction="row" justifyContent="center">
-							<Grid item width="120px">
-							<div className={ButtonStyles.divButton} 
-								onClick={()=>changeToDisplayNFT()}>NFT</div>
-							</Grid>
-							<Grid item width="120px">
-							<div className={ButtonStyles.divButtonActive} 
-								onClick={()=>changeToDisplayCreator()}>Creator</div>
-							</Grid>
-						</Grid>
-					}
-					
-			</Grid>			
+		
 		</Grid>
 		<Grid 
 			item      
@@ -114,7 +102,7 @@ export default function Nft() {
 
 		
 				
-		<GetCollections nfts={[1]} />
+		<GetCollections nfts={[id]} />
 	  </Layout>
 	)
   }

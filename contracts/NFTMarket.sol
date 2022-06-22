@@ -57,7 +57,7 @@ contract NFTMarketplace is ERC721URIStorage {
       return owner;
     }
 
-    function withdraw(uint256 amount) private onlyOwner {
+    function withdraw(uint256 amount) public onlyOwner {
       require(owner == msg.sender, "Only marketplace owner can whidraw funds.");
       (bool success, ) = owner.call{value:amount}("");
       require(success, "Transfer failed.");
@@ -170,14 +170,12 @@ contract NFTMarketplace is ERC721URIStorage {
     }
 
     /* Returns unsold market items (check in the contract if item is unsold) for market place*/
-    function fetchUnsoldMarketItems(uint256[] memory _tokenIds) public view returns (MarketItem[] memory) {
-      uint arrayLen = _tokenIds.length;
+    function fetchUnsoldMarketItems(uint256[] memory _unsoldTokenIds) public view returns (MarketItem[] memory) {
+      uint arrayLen = _unsoldTokenIds.length;
       uint itemsCount = 0;
-      uint currentIndex = 0;
-      
 
       for (uint i = 0; i < arrayLen; i++) {
-      if (idToMarketItem[_tokenIds[i]].sold == false) {
+      if (idToMarketItem[_unsoldTokenIds[i]].sold == false) {
           itemsCount +=1;
         }        
       }
@@ -185,8 +183,8 @@ contract NFTMarketplace is ERC721URIStorage {
       MarketItem[] memory items = new MarketItem[](itemsCount);
 
       for (uint i = 0; i < arrayLen; i++) {
-      if (idToMarketItem[_tokenIds[i]].sold == false) {
-          MarketItem storage currentItem = idToMarketItem[_tokenIds[i]];
+      if (idToMarketItem[_unsoldTokenIds[i]].sold == false) {
+          MarketItem storage currentItem = idToMarketItem[_unsoldTokenIds[i]];
           items[i] = currentItem;
         }        
       }

@@ -1,21 +1,12 @@
 import React, {useState,useContext,useEffect} from "react";
 import axios from "axios";
 
-import AuthenticationContext from '../../../context/AuthenticationContext';
-import withAuth from '../../hocs/withAuth';
+import AuthenticationContext from '../../../../context/AuthenticationContext';
+import withAuth from '../../../hocs/withAuth';
 
-import { ethers } from 'ethers'
-import Web3Modal from 'web3modal'
+import FormStyles from "../../../styles/Form.module.scss";
+import PostStyles from "../../../styles/Post.module.scss";
 
-import {marketplaceAddress} from '../../../config'
-import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json';
-
-import Collectionstyles from '../../styles/Collection.module.scss';
-import FormStyles from "../../styles/Form.module.scss";
-import PostStyles from "../../styles/Post.module.scss";
-
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -30,36 +21,32 @@ import Button from '@mui/material/Button';
 
 
 const CreatePostCollection = ({collection}) => {	
-	const {user, accessToken,creator} = useContext(AuthenticationContext)
-  const [collectionNftIds,setCollectionNftIds] = useState([])
+	const { accessToken,creator} = useContext(AuthenticationContext)
 	const [formInput, updateFormInput] = useState({ title: '', content: ''}) 
 	const [picture, setPicture] = useState("");
 	const onPictureChange = e => setPicture(e.target.files[0]);
 	const [picture2, setPicture2] = useState("");
 	const onPicture2Change = e => setPicture2(e.target.files[0]);
+  const [msg,setMsg] = useState({content:"",open:false,severity:"error",color:"#fafafa"})
 	
-	useEffect(()=>{
-		if(collection){
-			setCollectionNftIds(collection.nfts_array)
-		}		
-	},[collection])
 
-	const createPost = async e => {		
-		
+  const handleClose = e => {
+    setMsg({...msg, content:'',open:false,severity:"error"})
+  }
+
+	const createPost = async e => {				
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
 				'Authorization': 'Bearer ' + accessToken
 			}
 		}
-
     const body = {
       "title":formInput['title'],
       "content":formInput['content'],
       "creator":creator.id,
       "collection":collection.id
     }
-
 		const formData = new FormData();     
 		formData.append('title', formInput['title']);
     formData.append('content', formInput['content']); 
@@ -73,16 +60,31 @@ const CreatePostCollection = ({collection}) => {
     }
 		
 		const URL = `http://localhost:8000/posts/`;
-		axios
-			.post(URL, body, config)
-			.catch((err) =>{ })
-    console.log("formData")
+    try{
+      const post = await axios.post(URL, body, config)   
+      if(post.status===201){
+        setMsg({...msg, content:'Post created',open:true,severity:"success"})
+      }else{
+        setMsg({...msg, content:'Error occured',open:false,severity:"error"})
+      }
+
+    }catch{
+      setMsg({...msg, content:'Error occured',open:false,severity:"error"})
+    }
 	}
 
 	return(
       <Grid 
         container
         justifyContent="center">
+          <Snackbar
+          anchorOrigin = {{ vertical: 'bottom', horizontal:'center' }}			
+          open = {msg.open}
+          onClose = {handleClose}
+          autoHideDuration={6000}
+          key = {'bottom_center'}>
+            <Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
+          </Snackbar>
           <Grid item width={{xs:"100%",md:"70%"}}>
         <div className={PostStyles.post}>
           <h1 className={FormStyles.formCardTitle}>Create a new post</h1>
@@ -107,6 +109,7 @@ const CreatePostCollection = ({collection}) => {
                   id="content"
                   label="content"
                   name="content"
+                  value={formInput.content}
                   onChange={e => updateFormInput({ ...formInput, content: e.target.value })}
                   multiline
                   rows={4}/>     

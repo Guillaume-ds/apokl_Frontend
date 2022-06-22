@@ -98,7 +98,7 @@ const ModifyProfile = () => {
 			"tags":myTags,
 			"description":description
 		}
-			const { data } = await axios.put('http://localhost:8000/api/creators/update-creator', body, config)
+			const { data } = await axios.put('http://localhost:8000/api/profiles/update-creator', body, config)
 	}
 
 	const changePicture = async() => {
@@ -116,7 +116,7 @@ const ModifyProfile = () => {
 		const formData = new FormData();
 		formData.append('picture', picture);
 
-		const { data } = await axios.put('http://localhost:8000/api/creators/update-creator', formData, config)	
+		const { data } = await axios.put('http://localhost:8000/api/profiles/update-creator', formData, config)	
 	}
 
 	return (

@@ -15,7 +15,8 @@ import {marketplaceAddress} from '../../../config'
 import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
 import CardNft from '../../components/NFT/cardNft';
-import FormStyles from "../../styles/Form.module.scss"
+import FormStyles from "../../styles/Form.module.scss";
+import ButtonStyles from "../../styles/Button.module.scss";
 import SelectTags from "../../components/Actions/selectTags";
 
 import { Grid, Snackbar,ListItemText } from "@mui/material";
@@ -28,11 +29,6 @@ import Button from '@mui/material/Button';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Slider from '@mui/material/Slider';
 import Tooltip from '@mui/material/Tooltip';
-import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -40,9 +36,6 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
-
-
-
 
 const CreateItem = () => {
   const {accessToken,creator} = useContext(AuthenticationContext)
@@ -56,14 +49,7 @@ const CreateItem = () => {
   const handleClose = e => {
     setMsg({...msg, content:'',open:false,severity:"error"})
   }
-  const handleTagsChange = (event) => {
-		const {
-			target: { value },
-		} = event;
-		setTags(
-			typeof value === 'string' ? value.split(',') : value,
-		);
-	};
+  
 
 	async function onChange(e) {
 		/* upload image to IPFS */
@@ -144,26 +130,34 @@ const CreateItem = () => {
   }
 
   async function startSale() {
-    let i = 0;
-    let creationFail = false
-    if(nbNft>0 && formInput.price>0){
-      while(i<nbNft){
-        let tk = await listNFTForSale();
-        if(tk===0){
-          setMsg({...msg, content:'Error occured',open:true,severity:"success", color:"#fafafa"})
-          creationFail = true
-          break
-        }
-        await listNftBackend(tk)
-        i++
-      }
-      if(creationFail){
-        setMsg({...msg, content:'Error occured',open:true,severity:"error", color:"#fafafa"})
-      }else{
-        setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
-      }  
+    if(!fileUrl){
+      setMsg({...msg, content:'Please upload an image',open:true,severity:"error", color:"#fafafa"})
+    }else if(formInput.price <= 0){
+      setMsg({...msg, content:'Please select a positive price',open:true,severity:"error", color:"#fafafa"})
+    }else if(nbNft <= 0){
+      setMsg({...msg, content:'Please select a positive number of NFT to creat',open:true,severity:"error", color:"#fafafa"})
     }else{
-      setMsg({...msg, content:'Select a positive price and number of NFT',open:true,severity:"error", color:"#fafafa"})
+      let i = 0;
+      let creationFail = false
+      if(nbNft>0 && formInput.price>0){
+        while(i<nbNft){
+          let tk = await listNFTForSale();
+          if(tk===0){
+            setMsg({...msg, content:'Error occured',open:true,severity:"success", color:"#fafafa"})
+            creationFail = true
+            break
+          }
+          await listNftBackend(tk)
+          i++
+        }
+        if(creationFail){
+          setMsg({...msg, content:'Error occured',open:true,severity:"error", color:"#fafafa"})
+        }else{
+          setMsg({...msg, content:'NFT successfully created',open:true,severity:"success", color:"#fafafa"})
+        }  
+      }else{
+        setMsg({...msg, content:'Select a positive price and number of NFT',open:true,severity:"error", color:"#fafafa"})
+      } 
     } 
         
   }
@@ -221,12 +215,13 @@ const CreateItem = () => {
               </Grid>
               <Grid item 
                 xs={12} md={5.5} 
-                style={{border:"rgba(100,100,100,0.4) 1px solid", height:"60px",borderRadius:"5px"}} >
+                className={ButtonStyles.fileInputButton}
+                style={{height:"60px"}} >
                 { !fileUrl?
                   <Grid container direction="column" alignItems="center" justifyContent="center"  
-                    style={{height:"60px"}}>
-                    <Grid item>
-                    <Button component="label" >
+                    style={{height:"60px" , width:"100%"}}>
+                    <Grid item style={{height:"60px" , width:"100%"}}>
+                    <Button component="label" style={{height:"60px", width:"100%"}}>
                       <CloudUploadIcon fontSize='small' sx={{px:1}} style={{color:"rgb(0, 50, 150)"}}/>Upload Image
                         <input
                           hidden
@@ -240,7 +235,13 @@ const CreateItem = () => {
                       </Grid>
                     </Grid>
                     :
-                    <LibraryAddCheckIcon sx={{ width:'100%', my:4 }} style={{color:"#004491"}}/>
+                    <Grid 
+                      container 
+                      alignItems="center" 
+                      justifyContent="center"
+                      sx={{width:'100%', height:"50px"}}>
+                      <LibraryAddCheckIcon  style={{color:"#004491"}} />
+                    </Grid>
                   }   
                 </Grid>   
             </Grid>            

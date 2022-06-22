@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-
+import React, { useEffect, useState, useContext } from "react";
 
 import { ethers } from 'ethers'
 import Web3Modal from "web3modal"
+
+import AuthenticationContext from "../../../context/AuthenticationContext";
 
 import Layout from '../../hocs/Layout';
 
 import {marketplaceAddress} from '../../../config'
 import NFTMarketplace  from '../../../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
-import { Grid, Container, Button } from "@mui/material";
+import { Grid, Button } from "@mui/material";
 
 
 export default function Nfts() {
+    const {user} = useContext(AuthenticationContext)
   const [owner, setOwner] = useState('')
   const [Balance, setBalance] = useState('1')
 
@@ -44,9 +45,13 @@ export default function Nfts() {
     const signer = provider.getSigner()
     const contract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, signer)
     const O = await contract.getOwner()
-    const Owner = O.toString()
+    let Owner = O.toString()
     setOwner(Owner)
   }
+
+  useEffect(()=>{
+    getOwner()
+  },[])
 
     return (
     <Layout>
@@ -57,6 +62,7 @@ export default function Nfts() {
       <div>
         This is the balance : {Balance}
       </div>
+      <span>{owner} </span>
     </Layout>)
 
 }

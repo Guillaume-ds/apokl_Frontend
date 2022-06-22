@@ -66,39 +66,6 @@
 
 
   
-.socialIcons a {
-  display: inline-block;
-}
-  
-.socialIcons a:before {
-  transform: scale(1);
-  -ms-transform: scale(1);
-  -webkit-transform: scale(1);
-  content: " ";
-  width: 45px;
-  height: 45px;
-  border-radius: 100%;
-  display: block;
-  background: linear-gradient(45deg, #ff003c, #c648c8);
-  transition: all 265ms ease-out;
-}
-  
-.socialIcons a:hover:before {
-  transform: scale(0);
-  transition: all 265ms ease-in;
-}
-  
-.socialIcons a:hover i {
-  transform: scale(2.2);
-  -ms-transform: scale(2.2);
-  -webkit-transform: scale(2.2);
-  color: #ff003c;
-  background: -webkit-linear-gradient(45deg, #ff003c, #c648c8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: all 265ms ease-in;
-}
-  
 .gridContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -167,6 +134,7 @@
 /* ---------------- Creator flip card ---------------------- */
 .col{
   cursor: pointer;
+  height:100%;
 }
 
 .container{
@@ -174,6 +142,8 @@
           transform-style: preserve-3d;
 	-webkit-perspective: 100px;
 	        perspective: 1000px;
+          height:100%;
+          
 }
 
 .front,
@@ -191,8 +161,6 @@
 	        backface-visibility: hidden;
 	text-align: center;
   height:100%;
-	min-height: 250px;
-	height: auto;	
 	font-size: 1.5rem;
 }
 
@@ -241,7 +209,8 @@
     position: absolute;
     left: 0;
     width: 100%;
-    padding: 2rem;
+    height: 100%;
+    padding: 1rem;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     outline: 1px solid transparent;
@@ -279,7 +248,8 @@
 
 .front .inner p{
   font-size: 2rem;
-  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
   position: relative;
 }
 
@@ -301,6 +271,41 @@
   font-family: 'Georgia';
   font-weight: 300;
 }
+
+.description{
+  overflow-y: scroll;
+  height: 50%;
+  font-size:0.7em;
+  text-align: left;
+  background-color: $apoklVeryLightBlue;
+  padding: 1rem;
+}
+.description::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.socialIconsContainer{
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-y: hidden;
+  overflow-x: scroll;
+}
+
+.socialIconsContainer::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.socialIcon{
+  color:$apoklDarkBlue;
+}
+
+.socialIcon:hover{
+  color:$apoklMediumBlue;
+}
+
 
 
 

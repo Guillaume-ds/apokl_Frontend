@@ -3,11 +3,10 @@ import { useRouter } from 'next/router'
 
 import CardNft from './cardNft'
 import { ownedNFTs } from './functionNFT'
+import ApoklButton from '../apoklButton'
 import { Grid } from '@mui/material'
 
 import ButtonStyles from '../../styles/Button.module.scss';
-
-
 
 
 export default function OwnedNfts() {
@@ -25,7 +24,6 @@ export default function OwnedNfts() {
     setLoading('loaded') 
   }
 
-
     
   function listNFT(nft) {
     router.push(`/nfts/resell-nft?id=${nft.tokenId}&tokenURI=${nft.tokenURI}`)
@@ -42,8 +40,11 @@ export default function OwnedNfts() {
             nfts.map((nft, i) => (
               <Grid item xs={12} md={6} lg={4} key={i} >
                 <CardNft nft={nft} />
-                <div onClick={()=>listNFT(nft)} className={ButtonStyles.button}>resell</div>
-                  <p>{nft.id}</p>                
+                <Grid container justifyContent="center">
+                  <Grid item width="120px"onClick={()=>listNFT(nft)}> 
+                    <ApoklButton text={"Resell NFT"}  />  
+                  </Grid>
+                </Grid>                           
               </Grid>
             ))
           }

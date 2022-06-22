@@ -138,7 +138,7 @@ export async function ownedNFTs() {
     }
     nfts = [...nfts,item]
   }))
-  console.log(nfts,'nfts')
+
   return nfts
   }
 
@@ -172,6 +172,14 @@ export async function ownedNFTs() {
     let listingPrice = await contract.getListingPrice()
 
     listingPrice = listingPrice.toString()
-    let transaction = await contract.resellToken(id, priceFormatted, { value: listingPrice })
-    await transaction.wait()
+    try{
+      
+      let transaction = await contract.resellToken(id, priceFormatted, { value: listingPrice })
+      await transaction.wait()
+      return "success"
+    }catch{
+      return "failure"
+    }
+
+    
   }

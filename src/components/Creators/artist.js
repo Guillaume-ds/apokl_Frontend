@@ -4,26 +4,18 @@ import axios from "axios";
 import CardCreator from "./cardCreator";
 
 
-
-
-const Artist = ({name}) => {
+const Artist = ({name=""}) => {
 	const [artist, setArtist] = useState({});
 
 	function getArtist(){
-		const config = {
-			headers: {
-				'Content-Type': 'application/json'
-			}
-		}
-		const body = {
-			"name":name
-		}
-		axios.post(`http://127.0.0.1:8000/api/creators/search-creators`,body,config)
+		if(name && name!=''){
+			axios.get(`http://127.0.0.1:8000/api/profiles/get-specific-creator/${name}`)
 			.then(res => {
-				setArtist(res.data.results[0]);
-				
+				console.log(res, "here")
+				setArtist(res.data);				
 			})
-			.catch(err => {});		
+		}		
+					
 	}
 
 	useEffect(() => {

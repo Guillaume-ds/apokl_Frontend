@@ -1,14 +1,14 @@
 import React,{useContext,useState,useEffect} from "react";
 import axios from 'axios';
 
-import AuthenticationContext from '../../../context/AuthenticationContext';
+import AuthenticationContext from '../../../../context/AuthenticationContext';
 
-import GetNftsBackend from "../NFT/getNftsBackend";
+import GetNftsBackend from "../../NFT/getNftsBackend";
 
-import Collectionstyles from '../../styles/Collection.module.scss';
-import PostStyles from '../../styles/Post.module.scss';
-import VariousStyles from '../../styles/Various.module.scss';
-import ButtonStyles from '../../styles/Button.module.scss';
+import Collectionstyles from '../../../styles/Collection.module.scss';
+import PostStyles from '../../../styles/Post.module.scss';
+import VariousStyles from '../../../styles/Various.module.scss';
+import ButtonStyles from '../../../styles/Button.module.scss';
 
 import CommentCollection from "./commentCollection";
 
@@ -31,7 +31,7 @@ const ContentCollection = ({collection, access, backend}) => {
 				<Grid 
 					item      
 					className={VariousStyles.separatorGradient}
-					sx={{my:15}}>
+					sx={{my:10}}>
 				</Grid>
 				<Grid 
 					item      
@@ -62,7 +62,7 @@ const ContentCollection = ({collection, access, backend}) => {
 						"access":String(access),
 						"collection":collection.id
 				}
-			const res = await axios.post(`http://localhost:8000/api/rooms/get-posts`,body,config)
+			const res = await axios.post(`http://localhost:8000/api/postsAndComments/get-posts`,body,config)
 			setPosts(res.data.results)
 			setNextPage(res.data.next)
 			setLoaded(true)
@@ -72,7 +72,7 @@ const ContentCollection = ({collection, access, backend}) => {
 		const SeeCommentsButton = () => {
 			if(!seeComments){
 				return(
-					<Grid container direction="row" justifyContent="center" sx={{py:7}}>
+					<Grid container direction="row" justifyContent="center" sx={{pt:3,pb:7}}>
 						<Grid item width="150px">
 						<div className={ButtonStyles.divButtonActive} 
 							onClick={()=>setSeeComments(true)}>See comments</div>
@@ -82,7 +82,7 @@ const ContentCollection = ({collection, access, backend}) => {
 				
 			}else if (seeComments){
 				return(
-					<Grid container direction="row" justifyContent="center"  sx={{py:7}}>
+					<Grid container direction="row" justifyContent="center"  sx={{pt:3,pb:7}}>
 						<Grid item width="150px">
 						<div className={ButtonStyles.divButton} 
 							onClick={()=>setSeeComments(false)}>Hide comments</div>

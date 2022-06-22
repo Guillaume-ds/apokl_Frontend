@@ -6,12 +6,10 @@ import FormStyles from "../../styles/Form.module.scss";
 
 import Grid from "@mui/material/Grid";
 import {TailSpin as Loader} from 'react-loader-spinner';
-import Button from '@mui/material/Button';
 import AuthenticationContext from '../../../context/AuthenticationContext'
 
 const Activate = () => {
 
-  const [tags, setTags] = useState([]);
   const {user,accessToken,creator} = useContext(AuthenticationContext)
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +24,7 @@ const Activate = () => {
       "user":user.id,
 			"name":user.username
 		}
-    const { data } = await axios.post('http://localhost:8000/creators/',body,config)
+    const { data } = await axios.post('http://localhost:8000/profiles/',body,config)
 	}
 
   if(user && creator.name!=="" ){

@@ -1,13 +1,15 @@
 import React, {useContext} from "react";
 import Layout from '../../hocs/Layout';
+import WithAuth from "../../hocs/withAuth";
 import AuthenticationContext from '../../../context/AuthenticationContext'
+
 
 import ModifyProfile from '../../components/Account/modify-account.js';
 import ActivateAccount from '../../components/Creators/activate.js';
 import ChangePassword from '../../components/Account/change-password.js';
 import Artist from '../../components/Creators/artist';
 import styles from '../../styles/Creator.module.scss';
-import { Grid, Container } from "@mui/material";
+import { Grid } from "@mui/material";
 import { Typography } from "@mui/material";
 import {useRouter} from "next/router";
 
@@ -15,9 +17,9 @@ import {useRouter} from "next/router";
 
 const AccountPage = () => {
 	const router = useRouter()
-	const {user,accessToken} = useContext(AuthenticationContext)
-
-	if (user){
+	const {user,accessToken,creator} = useContext(AuthenticationContext)
+	
+	if (user && creator.name != ''){
 		return(
 			<Layout>
 
@@ -28,8 +30,15 @@ const AccountPage = () => {
           direction="column"
 					alignItems="center"
 					justifyContent="center">
-					<Artist name={user.username} accessToken={accessToken}/>
-					<ActivateAccount />
+						{
+							creator?
+							<Grid item width={{xs:"90%",md:"50%",xl:"40%"}} height="40vh">
+								<Artist	name={creator.name} />
+							</Grid>
+							
+							:
+							<ActivateAccount />
+						}					
 				</Grid>
 
 				<Grid container direction="column" justifyContent="center" sx={{ py:{xs:5,md:10}}}>
@@ -60,4 +69,4 @@ const AccountPage = () => {
 	}
 }
 
-export default AccountPage;
+export default WithAuth(AccountPage);

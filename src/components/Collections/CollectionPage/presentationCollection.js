@@ -1,5 +1,5 @@
-import Collectionstyles from '../../styles/Collection.module.scss';
-import Artist from "../Creators/artist"
+import Collectionstyles from '../../../styles/Collection.module.scss';
+import Artist from "../../Creators/artist"
 import { Grid } from "@mui/material"
 
 
@@ -10,8 +10,8 @@ const CollectionPresentation = ({collection}) => {
         direction={{sx:"column", md:"row"}}
         justifyContent="space-around"
         alignItems="center"
-        sx={{mt:15}}>
-        <Grid item xs={10} md={4}>
+        sx={{mt:10}}>
+        <Grid item xs={10} md={4} height='40vh'>
             <Artist name={collection.creator.name} />
         </Grid>	
         <Grid item xs={12} md={7}>

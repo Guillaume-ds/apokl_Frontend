@@ -9,13 +9,14 @@ export const AuthenticationProvider = ({ children }) => {
 	const [accessToken, setAccessToken] = useState(null)
 	const [error, setError] = useState(null)
 	const [creator,setCreator] = useState({"name":"","picture":null})	
-	const [loaded, setLoaded] = useState(false);
+	const [creatorLoaded, setCreatorLoaded] = useState(false);
+	const [userLoaded, setUserLoaded] = useState(false);
 
 	const router = useRouter()
-
+	
 	useEffect(() => checkIfUserLoggedIn(), [])
 	useEffect(() =>{
-		if(!loaded){
+		if(creatorLoaded === false && accessToken){
 			getCreator(accessToken)
 		}
 	})
@@ -46,8 +47,7 @@ export const AuthenticationProvider = ({ children }) => {
 			if (accessResponse && accessResponse.access) {
 				setAccessToken(accessResponse.access)
 			}
-
-			router.push('/')
+			//window.location.reload()
 		} catch(error) {
 		  if (error.response && error.response.data) {
 		  	setError(error.response.data.message)
@@ -112,6 +112,7 @@ export const AuthenticationProvider = ({ children }) => {
 			// remove the access token and the user from the state
 			setUser(null)
 			setAccessToken(null)
+			setCreator(null)
 		} catch(error) {
 		  if (error.response && error.response.data) {
 		  	setError(error.response.data.message)
@@ -130,11 +131,12 @@ export const AuthenticationProvider = ({ children }) => {
 		try {
 			// api request to api/user in nextjs
 			const { data } = await axios.post('http://localhost:3000/api/user')
-
+			setUserLoaded(true)
 			// set user and access token in state
 			setUser(data.user)
 			setAccessToken(data.access)
 		} catch(error) {
+			setUserLoaded(true)
 			if (error.response & error.response.data) {
 		  		// setError(error.response.data.message)
 		  		return      
@@ -164,17 +166,18 @@ export const AuthenticationProvider = ({ children }) => {
 					'Authorization' : `Bearer ${accessToken}`
 				}
 			}
-			const res = await axios.post('http://localhost:8000/api/creators/context-creator',null,config)
-      setCreator(res.data)
-			setLoaded(true)
+			const res = await axios.post('http://localhost:8000/api/profiles/context-creator',null,config)
+      		setCreator(res.data)
+			setCreatorLoaded(true)
 			return res.data      
 		} catch(error) {
+			
 		}
 	}
 
 
 	return (
-		<AuthenticationContext.Provider value={{ user, accessToken, error, creator, getCreator, login, register, logout, clearError }}>
+		<AuthenticationContext.Provider value={{ creatorLoaded, userLoaded, user, accessToken, error, creator, getCreator, login, register, logout, clearError }}>
 			{children}
 		</AuthenticationContext.Provider>
 	)

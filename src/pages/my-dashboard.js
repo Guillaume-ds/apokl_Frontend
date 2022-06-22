@@ -1,67 +1,142 @@
-import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import Web3Modal from 'web3modal'
+import { useState,useContext } from 'react'
+import Layout from '../hocs/Layout';
+import WithAuth from "../hocs/WithAuth";
+import AuthenticationContext from '../../context/AuthenticationContext';
 
 import CarouselNFT from '../components/NFT/carouselNFT';
+import CarouselCollection from '../components/Collections/carouselCollection';
+import OwnedNFT from '../components/NFT/ownedNFTs';
+import Artist from '../components/Creators/artist';
+import GetNFTs from '../components/NFT/getNftsBackend';
+import OwnedNfts from '../components/NFT/ownedNFTs';
+import GetCollections from '../components/Collections/getCollections';
 
-import {marketplaceAddress} from '../config'
-import NFTMarketplace  from '../artifacts/contracts/NFTMarket.sol/NFTMarketplace.json'
 
-export default function CreatorDashboard() {
-  const [nfts, setNfts] = useState([])
-  const [loadingState, setLoadingState] = useState('not-loaded')
-  useEffect(() => {
-    loadNFTs()
-  }, [])
-  async function loadNFTs() {
-    const web3Modal = new Web3Modal({
-      network: 'mainnet',
-      cacheProvider: true,
-    })
-    const connection = await web3Modal.connect()
-    const provider = new ethers.providers.Web3Provider(connection)
-    const signer = provider.getSigner()
+import VariousStyles from '../styles/Various.module.scss';
+import ButtonStyles from '../styles/Button.module.scss';
 
-    const contract = new ethers.Contract(marketplaceAddress, NFTMarketplace.abi, signer)
-    const data = await contract.fetchItemsListed()
+import { Grid } from '@mui/material';
 
-    const items = await Promise.all(data.map(async i => {
-      const tokenUri = await contract.tokenURI(i.tokenId)
-      const meta = await axios.get(tokenUri)
-      let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
-      let item = {
-        price,
-        tokenId: i.tokenId.toNumber(),
-        seller: i.seller,
-        owner: i.owner,
-        image: meta.data.image,
-      }
-      return item
-    }))
 
-    setNfts(items)
-    setLoadingState('loaded') 
+const CreatorDashboard = () => {
+  const {creator} = useContext(AuthenticationContext)
+
+  const [activeDisplay, setActiveDiplay] = useState('overview')  
+
+  function changeActiveDisplay(str){
+    setActiveDiplay(str)
   }
-  if (loadingState === 'loaded' && !nfts.length) return (<h1 className="py-10 px-20 text-3xl">No NFTs listed</h1>)
+
+  const ButtonsSelectDisplay = () =>{
+    return(
+      <Grid container 
+        md={4} 
+        sx={{mt:{xs:4,sm:4,md:7},px:{xs:2,sm:4,md:7,lg:10}, pb:{xs:2,sm:1,md:8},pt:{xs:2,sm:1,md:5}}} 
+        direction="column" 
+        alignItems="center" className={ButtonStyles.divButtonCard}>
+          
+          <Grid item sx={{my:0}} textAlign="center">
+            <h2>Personnal dashboard</h2>
+          </Grid>
+          
+          <Grid item width="120px" >
+            <div className={activeDisplay==="overview"?ButtonStyles.divButtonActive:ButtonStyles.divButton} 
+              onClick={() => changeActiveDisplay("overview")}>Overview
+            </div>
+          </Grid>
+          <Grid item width="120px" >
+            <div className={activeDisplay==="created"?ButtonStyles.divButtonActive:ButtonStyles.divButton} 
+              onClick={() => changeActiveDisplay("created")}>Created NFT
+            </div>
+          </Grid>
+          <Grid item width="120px" >
+          <div className={activeDisplay==="owned"?ButtonStyles.divButtonActive:ButtonStyles.divButton} 
+            onClick={()=>changeActiveDisplay("owned")}>Owned NFT</div>
+          </Grid>
+          <Grid item width="120px">
+          <div className={activeDisplay==="collections"?ButtonStyles.divButtonActive:ButtonStyles.divButton} 
+            onClick={()=>changeActiveDisplay("collections")}>Collections</div>
+          </Grid>
+
+        </Grid> 
+    )
+  }
+
+  const DisplayComponent = () => {
+    switch(activeDisplay){
+      case "overview":
+        return(
+          <Grid container direction="column" >
+            <Grid item sx={{my:8}} minHeight="45vh">
+            <CarouselNFT creatorName={creator.name} />
+            </Grid>
+            <Grid item sx={{my:8}}>
+            <CarouselCollection creatorName={creator.name} />
+            </Grid>
+          </Grid>
+        )
+        break;
+      case "created":
+        return(
+          <Grid container sx={{p:{xs:2,sm:4,md:6,lg:8}}}>
+            <GetNFTs creatorName={creator.name} />
+          </Grid>  
+        )
+        break;
+      case "owned":
+        return(
+          <Grid container sx={{p:{xs:2,sm:4,md:6,lg:8}}}>
+            <OwnedNFT/>
+          </Grid>
+        )
+        break;
+      case "collections":
+        return(
+          <Grid container sx={{p:{xs:2,sm:4,md:6,lg:8}}}>
+            <GetCollections creatorName={creator.name} />
+          </Grid>
+        )
+        break;
+      
+      default:
+        return null
+    }
+  }
+  
+
   return (
-    <div>
-      <div className="p-4">
-        <h2 className="text-2xl py-2">Items Listed</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-          {
-            nfts.map((nft, i) => (
-              <div key={i} className="border shadow rounded-xl overflow-hidden">
-                <img src={nft.image} className="rounded" />
-                <div className="p-4 bg-black">
-                  <p className="text-2xl font-bold text-white">Price - {nft.price} Eth</p>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-      <CarouselNFT creatorName="guillaume"/>
-    </div>
+    <Layout>
+      <Grid 
+				container 
+        sx={{mb:5}}
+				id="accueil" 
+				direction="row"
+				alignItems="center"
+				justifyContent="space-around">
+
+        <Grid 
+          item
+          xs={11}
+          md={7}
+          sx={{mt:7, px:{xs:2,sm:4,md:10}}}
+          height="50vh">
+          <Artist name={creator.name}  />            
+        </Grid>
+
+        <ButtonsSelectDisplay />
+
+			</Grid> 
+
+      <Grid 
+        item      
+        className={VariousStyles.separatorGradient}
+        sx={{mb:5,mt:0}}>
+      </Grid>
+
+      <DisplayComponent />
+      
+    </Layout>
   )
 }
+
+export default WithAuth(CreatorDashboard);

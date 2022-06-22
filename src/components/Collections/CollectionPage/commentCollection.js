@@ -1,11 +1,11 @@
 import React, {useState,useContext} from "react";
 import axios from "axios";
 
-import AuthenticationContext from '../../../context/AuthenticationContext';
-import withAuth from '../../hocs/withAuth';
+import AuthenticationContext from '../../../../context/AuthenticationContext';
+import withAuth from '../../../hocs/withAuth';
 
-import PostStyles from "../../styles/Post.module.scss";
-import ButtonStyles from "../../styles/Button.module.scss";
+import PostStyles from "../../../styles/Post.module.scss";
+import ButtonStyles from "../../../styles/Button.module.scss";
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -76,7 +76,7 @@ const PostComment = ({collection,access,post,setLoaded}) => {
 				variant="standard"
 				fullWidth
 				id="content"
-				label="Comment"
+				label=". Comment"
 				name="content"
 				onChange={e => updateContent(e.target.value)}
 				rows={2}

@@ -1,35 +1,32 @@
 import React, {useState} from "react";
 
 import Creatorstyles from '../../styles/Creator.module.scss';
-import Formstyles from '../../styles/Form.module.scss';
-import Collectionstyles from '../../styles/Collection.module.scss';
-import SelectTags from "../../components/Actions/selectTags";
 
+import SelectTags from "../../components/Actions/selectTags";
 import GetCreator from "../../components/Creators/getCreator";
 
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Layout from '../../hocs/Layout';
 
 
-export const getServerSideProps = async () => {
-  return {
-    props: {
-      backend: process.env.BACKEND_URL,
-    },
-  };
-};
-
-
-
-
 const Creators = () => {
 
 	const [tags, setTags] = useState([])
-	const [name, setName] = useState('')
-	const [keywords, setKeywords] = useState('')
+	const [creatorName, setCreator] = useState(null)
+	const [keywords, setKeywords] = useState(null)
+	
+	function handleNameChange(e){
+		e.preventDefault();
+		if(e.target.value!=''){
+			setName( e.target.value )
+		}else if(e.target.value===''){
+			setName( null )
+		}
+	}
 
+	
 
     return (
 			<Layout>
@@ -43,39 +40,28 @@ const Creators = () => {
 				alignItems="center"
 				justifyContent="center">
 
-					<Typography vairant="h3">Creators</Typography>
+						<h1>Creators</h1>
 
 					<Grid container sx={{mt:4, mb:3}} justifyContent='space-around' alignItems='center'>
 
-						<Grid item sx={{width:{ xs: '80%', md: '25%' }}}>
+						<Grid item sx={{width:{ xs: '80%', md: '20%' }}}>
 							<SelectTags tags={tags} setTags={setTags} />
 						</Grid>
-
-						<FormControl sx={{width:{ xs: '80%', md: '25%' }}}> 
+						
+						<FormControl sx={{width:{ xs: '80%', md: '70%' }}}> 
 							<TextField
 								margin="dense"
 								variant="outlined"
-								sx={{ background:'white', borderRadius:2 }}
+								sx={{ background:'white', borderRadius:2, my:{xs:2,md:0} }}
 								id="creator"
-								label="Collection creator"
+								label="Creator"
 								name="creator"
-								onChange={e => setName( e.target.value )}/>                      
-						</FormControl>
-
-					<FormControl sx={{width:{ xs: '80%', md: '25%' }}}>   
-						<TextField
-							margin="dense"
-							variant="outlined"
-							sx={{ background:'white', borderRadius:2 }}
-							id="Keywords"
-							label="Keywords"
-							name="Keywords"
-							onChange={e => setKeywords( e.target.value )}/>     
-					</FormControl>  
+								onChange={e => setCreator( e.target.value )}/>                      
+						</FormControl> 
 				</Grid>
-				<button className={Formstyles.formButton}  onClick={()=>getCollections()}>Search</button>
+
 			</Grid>
-			<GetCreator  tags={tags} creator={name}keywords={keywords}/>
+				<GetCreator  tags={tags} creatorName={creatorName} keywords={keywords}/>
 			</Layout>
     )
 }

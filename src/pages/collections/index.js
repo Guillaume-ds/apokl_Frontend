@@ -17,7 +17,6 @@ const Collections = () => {
 	const [tags, setTags] = useState([])
 	const [nfts, setNfts] = useState([])
 	const [creator, setCreator] = useState('')
-	const [keywords, setKeywords] = useState('')
  
     return (
 			<Layout>
@@ -31,38 +30,28 @@ const Collections = () => {
 				alignItems="center"
 				justifyContent="center">
 
-					<Typography vairant="h3">NFT Collections</Typography>
+					<h1>Collections of NFT</h1>
 
 					<Grid container sx={{mt:4, mb:3}} justifyContent='space-around' alignItems='center'>
 
-						<Grid item sx={{width:{ xs: '80%', md: '25%' }}}>
+						<Grid item sx={{width:{ xs: '80%', md: '20%' }}}>
 							<SelectTags tags={tags} setTags={setTags} />
 						</Grid>
 
-						<FormControl sx={{width:{ xs: '80%', md: '25%' }}}> 
-						<TextField
-							margin="dense"
-							variant="outlined"
-							sx={{ background:'white', borderRadius:2 }}
-							id="creator"
-							label="Collection creator"
-							name="creator"
-							onChange={e => setCreator( e.target.value )}/>                      
-					</FormControl>
-
-					<FormControl sx={{width:{ xs: '80%', md: '25%' }}}>   
-						<TextField
-							margin="dense"
-							variant="outlined"
-							sx={{ background:'white', borderRadius:2 }}
-							id="Keywords"
-							label="Keywords"
-							name="Keywords"
-							onChange={e => setKeywords( e.target.value)}/>     
-					</FormControl>  
+						
+						<FormControl sx={{width:{ xs: '80%', md: '70%' }}}> 
+							<TextField
+								margin="dense"
+								variant="outlined"
+								sx={{ background:'white', borderRadius:2, my:{xs:2,md:0} }}
+								id="creator"
+								label="Creator"
+								name="creator"
+								onChange={e => setCreator( e.target.value )}/>                      
+						</FormControl>
 				</Grid>
 			</Grid>
-			<GetCollection tags={tags} nfts={nfts} creator={creator} keywords={keywords} ids={[]} />
+			<GetCollection tags={tags} nfts={nfts} creatorName={creator} ids={[]} />
 			</Layout>
     )
 }

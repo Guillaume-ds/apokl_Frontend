@@ -64,10 +64,11 @@ export default function CreatedNfts({setCollectionNftsIds, collectionNftsIds}) {
   }, [creator])
 
   
-  if (loadingState === 'loaded' && backendNfts.length===0) {
+  if (backendNfts.length===0) {
     return (
-      <Grid container direction="row" style={{textAlign: "center",justifyContent:"space-evenly"}} sx={{mt:10}}>
+      <Grid container direction="column" style={{textAlign: "center",justifyContent:"space-evenly"}} sx={{mt:10}}>
         <h1>No NFTs listed</h1>
+        <p>You need to create NFT that will give access to your collection ! </p>
       </Grid>
     )
   }else{

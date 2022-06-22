@@ -2,12 +2,12 @@ import React, {useState,useContext} from "react";
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 
-import withAuth from '../../hocs/WithAuth';
-import AuthenticationContext from '../../../context/AuthenticationContext';
+import withAuth from '../../../hocs/WithAuth';
+import AuthenticationContext from '../../../../context/AuthenticationContext';
 
-import SelectCreatedNfts from "../NFT/selectCreatedNfts";
+import SelectCreatedNfts from "../../NFT/selectCreatedNfts";
 
-import FormStyles from "../../styles/Form.module.scss";
+import FormStyles from "../../../styles/Form.module.scss";
 
 import { Grid, Snackbar } from "@mui/material";
 import Alert from '@mui/material/Alert';
@@ -44,7 +44,7 @@ const EditCollection = ({collection}) => {
 		formData.append('picture', picture);
 		formData.append('slug', collection.slug)
 
-		const { data } = await axios.put('http://localhost:8000/api/creators/update-collection', formData, config)
+		const { data } = await axios.put('http://localhost:8000/api/collections/update-collection', formData, config)
 	}
 
 	const changeNfts = async() => {
@@ -62,7 +62,7 @@ const EditCollection = ({collection}) => {
 		'slug': collection.slug}
 
 		try{
-			const  data  = await axios.put('http://localhost:8000/api/creators/update-collection', body, config)			
+			const  data  = await axios.put('http://localhost:8000/api/collections/update-collection', body, config)			
 			setMsg({...msg, content:'Collection updated',open:true,severity:"success", color:"#fafafa"})
 		}catch{
 			setMsg({...msg, content:'Error : please refresh the page',open:true,severity:"error", color:"#fafafa"})

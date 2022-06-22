@@ -1,62 +1,53 @@
 import Grid from "@mui/material/Grid";
+import { useRouter } from 'next/router';
 
 import ApoklButton from "../apoklButton";
-import GetNftsBlockchain from "../NFT/getNftsBlockchain";
+import Artist from "../Creators/artist";
 
 import HomeStyles from '../../styles/Home.module.scss';
 
 
-const PresentationComponent = () => {
+const PresentationComponent = ({creatorName=null}) => {
+  const router = useRouter();
     return(
         <Grid container
-              className={HomeStyles.accueil} 
+              className={HomeStyles.welcomeContainer}
               id="accueil"   
               direction="row" 
               justifyContent="space-evenly" 
               alignItems="center" 
-              sx={{ px:{xs:0,md:2,lg:4}}}>
-            <Grid 
-              item 
-              md={6} 
-              sx={{ml:{xs:0,md:2},pr:{xs:1,md:4}}}>
-              <h1 >
-                Exclusivity by NFT
-              </h1>
-              <h3>
-                Exploit the full potential of the NFT on a single plateform.
-              </h3>
-              <h3>
-                Join unique communities, interact with creators and get access to exclusive events.
-              </h3>
-              <div onClick={()=>router.push(`http://localhost:3000/account/login`)}>
-              <ApoklButton text={"Join us"}  />
-              </div>
-              
-            </Grid>
+              sx={{ px:{xs:0,md:2,lg:4}, py:{xs:2,md:3,lg:5}}}
+              >        
 
 
             <Grid 
               item 
-              md={5} 
-              sx={{ml:{md:2},pr:{md:4}}}>
+              xs={11}
+              sm={10}
+              md={4} 
+              sx={{my:1}}
+              height="35vh"
+              >             
 
-              <Grid container 
-                justifyContent="space-around"
-                direction='row'  
-                sx={{px:6}}
-                rowSpacing={10} 
-                paddingTop={10}
-                columnSpacing={{ sm: 2, md: 4 }} > 
+              <Artist name={creatorName}/>
+           
+            </Grid>  
 
-                <Grid item md={12}>
+            <Grid 
+              container 
+              display={{xs:"none",md:"inline"}}
+              md={3.5} 
+              sx={{my:1}}
+              justifyContent="center"
+              textAlign="center">             
 
-                  <GetNftsBlockchain 
-                  id={2} 
-                  buyable={false}
-                  creatorInfo={{"name": "guillaume"}}/>
-
+              <h1>Welcome back {creatorName}</h1>
+              <p>Access your dashboard to see the latest exclusivites</p>
+              <Grid container justifyContent="center">
+                <Grid item width="120px" onClick={()=>router.push(`/my-dashboard`)}> 
+                  <ApoklButton text={"Dashboard"}  />  
                 </Grid>
-              </Grid>
+              </Grid>              
             </Grid>           
         </Grid>
     )

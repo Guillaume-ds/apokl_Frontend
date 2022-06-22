@@ -8,8 +8,6 @@
 }
 
 
-
-
 .nftCard:hover .nftCardHeader{
   height:20vh;
 }
@@ -34,13 +32,15 @@
   background: rgb(0, 7, 204);
 }
 
+//Header
+
 .nftCardHeader{
-  position: sticky;
+  position: relative;
   top:0px;
-  padding-top:1px;
   background-color: #f6f6f6;
   box-shadow: 0px 0px 5px 3px rgba(100, 70, 100, 0.4);
   height:50vh;
+  width: 100%;
   vertical-align: middle;
   background-repeat:no-repeat;
   background-size:cover;  
@@ -67,53 +67,66 @@
   transform: translate(-50%, -100%);
 }
 
-.nftCardBody {
-	padding-left: 1rem;
-  padding-right: 1rem;
+//Body
 
+.nftCardBody{
+  padding-left: 1em;
+  padding-right:1em;
+  z-index:0;
+  position:relative;
+  top:0px;
 }
 
-.nftCreatorPicture{
-	border-radius: 50%;
-}
-
-.nftCardUser {
-  display: flex;
+.nftCardUser{
   height:10vh;
 }
 
-.nftCardInfo{
+.nftCardDescription{
   border-radius: 5px;
   padding:1em;
+  margin:0.5em;
   color:#333;
-	min-height:14vh;/* // body's heigth*/
+	min-height:17vh;/* // body's heigth*/
 	overflow-y: auto;
   -webkit-box-shadow: 0px 0px 2px 1px rgba(170, 130, 170,0.2),inset 0px 0px 3px 1px rgba(170, 130, 170,0.2);
   box-shadow: 0px 0px 2px 1px rgba(170, 130, 170,0.2),inset 0px 0px 3px 1px rgba(170, 130, 170,0.2);
 }
 
-.nftCardInfo::-webkit-scrollbar {
+.nftCardDescription::-webkit-scrollbar {
   width: 1px;
   height: 1px;
 }
 
-.nftCardInfo::-webkit-scrollbar-track {
+.nftCardDescription::-webkit-scrollbar-track {
   border-radius: 100vh;
   background: #fafafa;
 }
 
-.nftCardInfo::-webkit-scrollbar-thumb {
+.nftCardDescription::-webkit-scrollbar-thumb {
   background: rgb(82, 0, 204);
   border-radius: 10px;
   border: 2px solid #faffff;
 }
 
-.nftCardInfo::-webkit-scrollbar-thumb:hover {
+.nftCardDescription::-webkit-scrollbar-thumb:hover {
   background: rgb(0, 7, 204);
 }
 
-.userInfo small {
+.nftCreatorPicture{ 
+	border-radius: 50%;
+}
+
+.nftCardInfo {
+  display: flex;
+  height:7vh;
+}
+
+.topNote small {
   color: #545d7a;
+}
+
+.bottomNote{
+  margin:0px;
 }
 
 .userName {

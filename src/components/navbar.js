@@ -103,7 +103,8 @@ const Nav = (props) => {
 		}
 	}
 
-  return (
+	if(user){
+  	return (
     	<AppBar postion='static'>
     		<Toolbar className={NavbarStyles.navbarTop}>
 
@@ -223,8 +224,13 @@ const Nav = (props) => {
 									sx={{my:1, mr:"30%"}}>
 								</Grid>
 
-								<ListItem button component="a" href='/nfts/my-nfts' className={NavbarStyles.NavButton} >												
-										<ListItemText primary='My Nfts' sx={{pl:1}} />
+								<ListItem button onClick={()=>router.push(
+											{ pathname: '/nfts/my-nfts' , 
+											query: { message: 'Owned' } }, 
+											'/nfts/my-nfts'
+											)} 
+											className={NavbarStyles.NavButton} >												
+										<ListItemText primary='Owned Nfts' sx={{pl:1}} />
 								</ListItem>		
 								<ListItem button component="a" href='/nfts/my-nfts' className={NavbarStyles.NavButton} >												
 										<ListItemText primary='Created Nfts' sx={{pl:1}} />
@@ -296,7 +302,154 @@ const Nav = (props) => {
 				</a>}
 				</Toolbar>			
 			</AppBar>
-  )
+		)
+	}else{
+		return (
+			<AppBar postion='static'>
+				<Toolbar className={NavbarStyles.navbarTop}>
+		
+					<IconButton edge='start'  color='inherit' aria-label='menu' onClick={toggleDrawer(true)}>
+						<MenuIcon className={NavbarStyles.menuIcon}/>
+					</IconButton>
+		
+				<Drawer
+					anchor={'left'}
+					open={toggle}
+					onClose={toggleDrawer(!toggle)}>
+				
+					<Box sx={{
+						width: 270,
+						height: '100%'}}
+						className={NavbarStyles.drawerBox}>
+		
+						<Grid item			
+									textAlign="center">
+							<div className={NavbarStyles.cardUser} >
+								<AccountIcon />
+								<p sx={{mx:5}}
+									className={NavbarStyles.navbarLink}
+									onClick={() => router.push('/account/login')}>
+											Welcome, please log in 
+								</p>
+							</div>
+						</Grid>						
+							
+						<Accordion expanded={expanded === 'panel2'} 
+								onChange={handleChange('panel2')}  
+								sx={{mx:2,my:2,pl:2}} 
+								className={NavbarStyles.accordionTitle}>
+		
+							<AccordionSummary
+								aria-controls="panel2bh-content"
+								id="panel2bh-header">
+								Market place
+							</AccordionSummary>
+		
+							<AccordionDetails>
+								<ListItem button component="a" href='/collections/' className={NavbarStyles.navButton} >												
+										<ListItemText primary='Collections' sx={{pl:1}} />
+								</ListItem>											
+								<ListItem button component="a" href='/nfts/' className={NavbarStyles.navButton} >												
+										<ListItemText primary='Nfts' sx={{pl:1}} />
+								</ListItem>
+								<ListItem button component="a" href='/creators/' className={NavbarStyles.navButton} >												
+										<ListItemText primary='Creators' sx={{pl:1}} />
+								</ListItem>
+							</AccordionDetails>
+						</Accordion>
+						
+						<Accordion expanded={expanded === 'panel3'} 
+								onChange={handleChange('panel3')}  
+								sx={{mx:2,my:2,pl:2}} 
+								className={NavbarStyles.accordionTitle}>
+							<AccordionSummary
+								aria-controls="panel3bh-content"
+								id="panel3bh-header">	
+								Create
+							</AccordionSummary>
+							<AccordionDetails >
+
+							<Button onClick={() => router.push('/account/login')}  sx={{justifyContent: 'center', width:'100%'}}>							
+									<ListItemIcon><LoginIcon /></ListItemIcon> 
+									<p>Login</p>
+								</Button>	
+										
+							</AccordionDetails>
+						</Accordion>
+		
+						<Accordion expanded={expanded === 'panel4'} 
+								onChange={handleChange('panel4')}  
+								sx={{mx:2,my:2,pl:2}} 
+								className={NavbarStyles.accordionTitle}>
+							<AccordionSummary
+								aria-controls="panel4bh-content"
+								id="panel4bh-header">
+								My assets
+							</AccordionSummary>
+							<AccordionDetails>
+
+								<Button onClick={() => router.push('/account/login')}  sx={{justifyContent: 'center', width:'100%'}}>							
+									<ListItemIcon><LoginIcon /></ListItemIcon> 
+									<p>Login</p>
+								</Button>	
+
+							</AccordionDetails>
+						</Accordion>
+		
+						<Accordion expanded={expanded === 'panel1'}  
+								onChange={handleChange('panel1')} 
+								sx={{mx:2, my:0, pl:2}} 
+								className={NavbarStyles.accordionTitle}>
+							<AccordionSummary
+								justifyContent="flex-end"
+								aria-controls="panel1bh-content"
+								id="panel1bh-header">
+								My account	
+							</AccordionSummary>
+							<AccordionDetails >
+
+								<Button onClick={() => router.push('/account/login')}  sx={{justifyContent: 'center', width:'100%'}}>							
+									<ListItemIcon><LoginIcon /></ListItemIcon> 
+									<p>Login</p>
+								</Button>	
+
+							</AccordionDetails>
+						</Accordion>
+						
+		
+						<Box  
+							container
+							position="fixed"  
+							sx={{ top: 'auto',bottom: 0,
+									width: 270}}
+							align="center"
+							justify="center"
+							className={NavbarStyles.boxBottom}>
+								<Button onClick={() => router.push('/account/login')}  sx={{justifyContent: 'center', width:'100%'}}>							
+									<ListItemIcon><LoginIcon /></ListItemIcon> 
+									<p>Login</p>
+								</Button>											
+							</Box>
+					</Box>
+		
+				</Drawer>
+						
+				<Link href='/' >
+					<IconButton >
+						<Image src={Apokl} width={180} height={50} />
+					</IconButton>
+				</Link>
+				<a href="/account/login" className={NavbarStyles.loginLink}>							
+					Login
+				</a>
+				</Toolbar>			
+			</AppBar>
+		)
+	}
 }
 
 export default Nav;
+
+
+
+

@@ -1,6 +1,9 @@
+@import "variables";
+
 .formCard{
     border-radius: 10px;
-    box-shadow: 1px 2px 5px rgb(100, 100, 100), -1px -2px 5px rgb(250, 250, 250);
+    -webkit-box-shadow: $boxShadow;
+    box-shadow: $boxShadow;
     margin-left: 10%;
     margin-right: 10%;
     background-color: rgb(254, 254, 254);
@@ -79,4 +82,5 @@
 .multiSelectValues{
     display: block;
 }
+
 

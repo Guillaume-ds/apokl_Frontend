@@ -5,6 +5,8 @@ import Link from "next/link";
 import AuthenticationContext from "../../context/AuthenticationContext";
 import Layout from "./Layout";
 
+import LoginComponent from "../components/Account/login";
+
 import FormStyles from "../styles/Form.module.scss"
 
 import { Grid } from "@mui/material";
@@ -12,22 +14,18 @@ import { Grid } from "@mui/material";
 
 const WithAuth = Component => {
   const Auth = (props) => {
-    const { user } = useContext(AuthenticationContext);
-    if (!user) {
+    const { user, userLoaded } = useContext(AuthenticationContext);
+    if(!userLoaded){
+      return(
+        <Layout>
+
+        </Layout>
+      )
+    }
+    if (userLoaded && !user) {
       return (
 				<Layout>
-          <Grid container direction="row" justifyContent="center" sx={{height:'70vh', pt:10}}>
-            <div className={FormStyles.formCard}>
-            <h1 className={FormStyles.formCardTitle}>Please Log In </h1>
-              <div className={FormStyles.formCardContent}>
-                <div className={FormStyles.formCardItem}>	
-                  <Link href='/account/login'>
-                    <button className={FormStyles.formButton} >Login</button>
-                  </Link>
-                </div>              
-              </div>
-            </div>
-          </Grid>      
+          <LoginComponent  />
 				</Layout>
       );
     }

@@ -26,7 +26,7 @@ const CarouselCreators = ({tags,name}) => {
 			"name":name
 		}
 
-		const creatorsReceived = await axios.post("http://localhost:8000/api/creators/search-creators", body, config )
+		const creatorsReceived = await axios.post("http://localhost:8000/api/profiles/search-creators", body, config )
 		setCreators(creatorsReceived.data.results)
 		}
 

@@ -6,12 +6,13 @@ import Image from 'next/image';
 import Layout from '../../../hocs/Layout';
 import AuthenticationContext from '../../../../context/AuthenticationContext';
 
+import PresentationCollection from "../../../components/Collections/CollectionPage/presentationCollection";
+import ContentCollection from "../../../components/Collections/CollectionPage/contentCollection";
+import EditCollection from "../../../components/Collections/CollectionPage/editCollection";
+import CreatorActions from "../../../components/Collections/CollectionPage/creatorActions";
+
 import Collectionstyles from '../../../styles/Collection.module.scss';
 import VariousStyles from '../../../styles/Various.module.scss';
-import PresentationCollection from "../../../components/Collections/presentationCollection";
-import ContentCollection from "../../../components/Collections/contentCollection";
-import EditCollection from "../../../components/Collections/editCollection";
-import CreatorActions from "../../../components/Collections/creatorActions";
 
 import AccountIcon from '@material-ui/icons/AccountCircle';
 
@@ -51,13 +52,20 @@ const Collection = () => {
 		}
 	})	
 
+	useEffect(()=>{
+		if(collection && loaded && !isCreator){
+			setAccessFunction()
+		}					
+	},[collection])
+
 	async function getCollection(){
 		const collectionRes = await fetchCollection(creatorName,collectionSlug)	
 		setCollection(collectionRes)
 		try{
 			setCreatorInfo(collectionRes['creator'])
+			setLoaded(true)
 		}catch{
-
+			setLoaded(true)
 		}		
 		
 	}
@@ -108,30 +116,32 @@ const Collection = () => {
 				<Alert severity={msg.severity} style={{color:msg.color, background:"#004491"}} >{msg.content}</Alert>
 			</Snackbar>
 
-			<div className={Collectionstyles.header} >
-				<div className={Collectionstyles.overlay}  style={styling}>
-					<h1 className={Collectionstyles.collectionTitle}>{collection?collection.name:""}</h1>															
-				</div>
-				<Grid container direction="row" sx={{mb:2, px:10}} alignItems='center' justifyContent='space-around'>
-					<Grid item>
-						<Grid container direction="row" sx={{mb:1}} alignItems='center'>
-						{
-                creatorInfo.picture?
-                <Image src={creatorInfo.picture} width={40} height={40} className={Collectionstyles.collectionCreatorPicture}/> 
-                :
-                <AccountIcon fontSize='large' onClick={()=>router.push(`http://localhost:3000/creators/${collection.creator}`)}/>
-              }
-							<Grid item direction="column" sx={{ml:1}}>
-								<p className={Collectionstyles.userInfo} >Created by</p>
-								<p>{creatorName}</p>
-							</Grid>
-							</Grid>
-						</Grid>
+			<div className={Collectionstyles.header} style={styling}>
+				<div className={Collectionstyles.overlay} >
 
-					<Grid item>
+					<h1 className={Collectionstyles.collectionTitle}>{collection?collection.name:""}</h1>															
+				
+				<Grid container direction="row" sx={{px:10}} justifyContent='space-around'>
+					
+					<Grid container direction="row" width={{xs:"90%",md:"40%"}} justifyContent='center' alignItems="center">
+						{
+							creatorInfo.picture?
+							<Image src={creatorInfo.picture} width={40} height={40} className={Collectionstyles.collectionCreatorPicture}/> 
+							:
+							<AccountIcon fontSize='large' onClick={()=>router.push(`/creators/${collection.creator}`)}/>
+						}
+						<Grid item direction="column" sx={{ml:1}} >
+							<p className={Collectionstyles.userInfo} >Created by</p>
+							<p>{creatorName}</p>
+						</Grid>
+					</Grid>
+
+					
+
+					<Grid container width={{xs:"90%",md:"40%"}}>
 						{!user ?
 							<Grid container direction="row" alignItems='center' justifyContent='center'>
-								<p className={Collectionstyles.button} onClick={()=>router.push(`http://localhost:3000/account/login`)}>Please log in to check access</p>
+								<p className={Collectionstyles.button} onClick={()=>router.push(`/account/login`)}>Please log in to check access</p>
 							</Grid>	
 							:
 							null
@@ -159,6 +169,7 @@ const Collection = () => {
 						}
 					</Grid>
 				</Grid>
+				</div>
 			</div>
 			{
 				collection?
@@ -177,10 +188,19 @@ const Collection = () => {
 				(!edit && isCreator) ?
 				<>
 				<Grid 
-					item      
+					item   
+					textAlign="center"   
 					className={VariousStyles.separator40}
-					sx={{mt:{xs:10,md:20},mb:10, mr:"30%"}}>
+					sx={{my:{xs:10,md:15},mb:7, mr:"30%"}}>
+						
 				</Grid>
+				<Grid 
+					item   
+					textAlign="center"
+					sx={{mb:5}}>
+					<h2>Creator's Actions</h2>	
+				</Grid>
+				
 				<CreatorActions collection={collection} />			
 				<ContentCollection collection={collection} access={true} />
 				</>
